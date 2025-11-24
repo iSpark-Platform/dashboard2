@@ -1,0 +1,75 @@
+/*-------------------
+  Call To Action Styles
+---------------------*/
+.online-art-wrapper {
+    background: #f6f1ea;
+    padding: 50px 0;
+    overflow: hidden;
+    &::before {
+        display: none;
+    }
+    .thumbnail {
+        margin-right: 50px;
+        text-align: right;
+        @media #{$md-layout-1} {
+            margin-top: 40px;
+            margin-right: 0;
+            text-align: center;
+        }
+    }
+    .section-title {
+        margin-top: 85px;
+        @media #{$md-layout-1} {
+            text-align: center;
+            margin-top: 0;
+        }
+    }
+    .shape-group {
+        li {
+            &.shape-01 {
+                left: -231px;
+                top: -110px;
+            }
+            &.shape-02 {
+                left: -163px;
+                top: 6px;
+            }
+            &.shape-03 {
+                right: 24%;
+                top: 0px;
+            }
+            &.shape-04 {
+                right: 30%;
+                top: 75px;
+            }
+            &.shape-05 {
+                right: -125px;
+                bottom: 10px;
+            }
+            &.shape-06 {
+                right: -165px;
+                bottom: -29px;
+                span {
+                    height: 100px;
+                    width: 100px;
+                    border: 15px solid var(--color-tertiary);
+                    display: block;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+    .shape-group {
+        li {
+            &.shape-07 {
+                left: -30px;
+                bottom: -30px;
+            }
+            &.shape-08 {
+                right: 0;
+                top: 0;
+            }
+        }
+    }
+}
+  

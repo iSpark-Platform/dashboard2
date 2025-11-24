@@ -1,0 +1,93 @@
+/*-------------------
+  About Styles
+---------------------*/
+.about-style-3 {
+    &.about-style-16 {
+        padding: 0;
+        @media #{$smlg-device} {
+            padding: 80px 0 0 0;
+        }
+
+        .about-content {
+            p {
+                margin-top: 25px;
+                max-width: 470px;
+            }
+            .about-btn {
+                margin-top: 33px;
+            }
+        }
+        .about-image-gallery {
+            padding: 127px 0 65px 170px;
+            @media #{$md-layout-1} {
+                padding: 30px 0 65px 170px;
+            }
+            @media #{$sm-layout} {
+                padding: 0;
+                text-align: center;
+            }
+            .main-img-1 {
+                border-radius: 0;
+                border-top-left-radius: 200px;
+                border-top-right-radius: 200px;
+                border-bottom-right-radius: 50px;
+                position: relative;
+                z-index: -2;
+            }
+            .main-img-inner {
+                position: relative;
+                left: -166px;
+                bottom: -50px;
+                @media #{$sm-layout} {
+                    display: none;
+                }
+                
+                &::after {
+                    content: "";
+                    position: absolute;
+                    width: 240px;
+                    height: 310px;
+                    background: var(--color-white);
+                    border-radius: 0;
+                    border-top-left-radius: 120px;
+                    border-top-right-radius: 120px;
+                    border-bottom-left-radius: 50px;
+                    left: 49px;
+                    bottom: 4px;
+                    z-index: -1;
+                    @media #{$large-mobile} {
+                        display: none;
+                    }
+                }
+                .main-img-2 {
+                    border-radius: 0;
+                    border-top-left-radius: 120px;
+                    border-top-right-radius: 120px;
+                    border-bottom-left-radius: 50px;
+                    left: 30px;
+                    right: inherit;
+                    @media #{$large-mobile} {
+                        display: none;
+                    }
+                }
+            }
+            
+            .shape-group {
+                li {
+                    &.shape-1 {
+                        right: inherit;
+                        top: 133px;
+                        left: 100px;
+                        z-index: -3;
+                    }
+                    &.shape-2 {
+                        right: inherit;
+                        top: 81px;
+                        left: 158px;
+                        z-index: 0;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,128 @@
+/*-------------------
+  Course Styles
+---------------------*/
+.course-area-18 {
+    overflow: hidden;
+    padding-bottom: 80px;
+    .course-style-21 {
+        box-shadow: none;
+        &::before {
+            display: none;
+        }
+        .inner {
+            height: 500px;
+            position: relative;
+            @media #{$sm-layout} {
+                height: 100%;
+            }
+            .thumbnail {
+                a {
+                    border-radius: 5px;
+                    &::after {
+                        border-radius: 5px;
+                    }
+                    img {
+                        border-radius: 5px;
+                    }
+                }
+            }
+        }
+        .content {
+            width: 310px;
+            background-color: var(--color-white);
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 55px 20px 30px 30px;
+            border-radius: 5px;
+            margin: 0 auto;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            @media #{$sm-layout} {
+                width: 100%;
+                padding: 55px 20px 55px 30px;
+            }
+            .course-level {
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(39.07deg, #1AB69D 14.65%, #31B978 85.16%);;
+                border-radius: 50%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: -40px;
+                left: 30px;
+                z-index: 1;
+            }
+            .title {
+                margin-bottom: 16px;
+            }
+            .course-rating {
+                margin-top: -7px;
+            }
+            .content-wrap {
+                transition: var(--transition-2);
+                opacity: 0;
+                visibility: hidden;
+                .course-price {
+                    margin-top: 5px;
+                    margin-bottom: -120px;
+                    visibility: hidden;
+                    opacity: 0;
+                }
+                .read-more-btn {
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: var(--transition);
+    
+                    .edu-btn {
+                        height: 50px;
+                        line-height: 52px;
+                    }
+                }
+                p {
+                    margin-bottom: 0;
+                    visibility: hidden;
+                    opacity: 0;
+                }
+            }
+        }
+        &:hover {
+            .thumbnail {
+                margin-bottom: 0;
+                a {
+                    &:after {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                    img {
+                        transform: scale(1.1);
+                    }
+                }
+            }
+            .content {
+                .content-wrap {
+                    opacity: 1;
+                    visibility: visible;
+                    .course-price {
+                        margin-bottom: 10px;
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                    p {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                    .read-more-btn {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+    

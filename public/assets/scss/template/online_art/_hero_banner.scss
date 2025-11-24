@@ -1,0 +1,98 @@
+/*-------------------
+  Hero Banner Styles
+---------------------*/
+.hero-style-16 {
+    &.art-banner {
+        background: #faf7f2;
+        min-height: 750px;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: url(../../../images/bg/bg-image-44.svg);
+            background-repeat: no-repeat;
+            @media #{$md-layout-1} {
+                display: none;
+            }
+        }
+        .banner-content {
+            @media #{$md-layout-1} {
+                padding-top: 90px;
+            }
+            @media #{$small-mobile} {
+                padding-top: 70px;
+            }
+            .pre-title {
+                font-size: 20px;
+                line-height: 2.5; 
+                letter-spacing: 1px; 
+            }
+            .shape-group {
+                li {
+                    &.shape-1 {
+                        top: -139px;
+                        left: 195px;
+                    }
+                    &.shape-2 {
+                        left: -265px;
+                        bottom: -140px;
+                    }
+                }
+            }
+        }
+        .banner-thumbnail {
+            margin-right: 0;
+            margin-bottom: -117px;
+            @media #{$smlg-device} {
+                margin-bottom: -164px;
+            }
+            @media #{$md-layout-1} {
+                margin-bottom: 0;
+            }
+            .thumbnail {
+                img {
+                    border-radius: 250px;
+                    border-bottom-left-radius: 0;
+                }
+            }
+            .shape-group {
+                li {
+                    &.shape-3 {
+                        top: -10px;
+                        left: inherit;
+                        right: -28%;
+                        z-index: 0;
+                    }
+                    &.shape-4 {
+                        top: inherit;
+                        right: inherit;
+                        bottom: 80px;
+                        left: -140px;
+                        z-index: -1;
+                    }
+                    &.shape-5 {
+                        top: 235px;
+                        left: 17px;
+                        bottom: inherit;
+                        right: inherit;
+                    }
+                    &.shape-6 {
+                        top: 0;
+                        right: 0;
+                        bottom: inherit;
+                    }
+                }
+            }
+        }
+        .shape-7 {
+            position: absolute;
+            right: 0;
+            top: 150px;
+        }
+    }
+}

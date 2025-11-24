@@ -1,0 +1,22 @@
+/*-------------------
+  Features Styles
+---------------------*/
+.features-area-11 {
+    background-color: var(--color-lighten01);
+
+    .features-grid-wrap {
+        gap: 30px;
+
+        .features-box {
+            padding: 30px;
+            .content {
+                .title {
+                    margin-bottom: 8px;
+                }
+            }
+            .icon {
+                margin: 0 auto 10px;
+            }
+        }
+    }
+}

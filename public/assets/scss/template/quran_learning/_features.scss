@@ -1,0 +1,46 @@
+/*-------------------------
+    Feature style
+-------------------------*/
+.features-area-10 {
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 165px;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url(../../../images/bg/bg-image-51.webp);
+        background-position: center center;
+        background-repeat: no-repeat;
+        z-index: -1;
+    }
+    .section-title {
+        margin-bottom: 100px;
+        @media #{$md-layout-1} {
+            margin-bottom: 40px;
+        }
+    }
+    .features-box {
+        padding: 40px;
+
+        &.color-primary-style {
+            .icon {
+                background-color: rgb(26, 182, 157);
+            }
+        }
+        &.color-secondary-style {
+            .icon {
+                background-color: rgb(238, 74, 98);
+            }
+        }
+        &.color-extra08-style {
+            .icon {
+                background-color: rgb(70, 100, 228);
+            }
+        }
+    }
+}

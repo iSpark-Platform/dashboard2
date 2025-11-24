@@ -1,0 +1,111 @@
+/*-------------------------
+    Pricing Style
+-------------------------*/
+.pricing-area-1 {
+	position: relative;
+	&::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background: url(../../../images/bg/bg-image-58.webp);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+	.section-title {
+		position: relative;
+		margin-bottom: 0;
+		z-index: 1;
+		p {
+			max-width: 570px;
+			margin: 20px auto 0;
+		}
+	}
+	.gym-nav-wrapper {
+		width: 448px;
+		height: 70px;
+		margin: 0px auto 100px;
+		h5 {
+			display: inline-block;
+		}
+		.year-wrap {
+			position: relative;
+			top: 99%;
+    		left: 13px;
+		}
+		.month-wrap {
+			position: relative;
+			top: -67%;
+    		right: -328px;
+		}
+	}
+	.gym-tab-nav{
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		.gym-tab-slider-tabs{
+			display: block;
+			float: left;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			position: relative;			
+			overflow: hidden;
+			background: #F0F4F5;
+			border-radius: 40px;
+			width: 150px;
+			height: 70px;
+			user-select: none; 
+			&:after{
+				content: "";
+				width: 50px;
+				height: 50px;
+				background: linear-gradient(49.83deg, #1AB69D 14.37%, #31B978 85.88%);
+				position: absolute;
+				top: 10px;
+    			left: 15px;
+				transition: all 250ms ease-in-out;
+				border-radius: 50%;
+			}
+			&.slide:after{
+				left: 56%;
+			}
+		}
+		.tab-slider-trigger {
+			width: 50px;
+			height: 50px;
+			text-align: center;
+			position: relative;
+			z-index: 2;
+			cursor: pointer;
+			display: inline-block;
+			transition: color 250ms ease-in-out;
+			user-select: none; 
+			&.active {
+				color: #fff;
+			}
+		}
+		.gym-tab-nav-text {
+			display: flex;
+			gap: 120px;
+		}	
+	}
+	.tab-content-box {
+		.pricing-table {
+			.pricing-btn {
+				.edu-btn {
+					&.active {
+						background-color: var(--color-primary);
+						color: var(--color-white);
+						border: none;
+					}
+				}
+			}
+		}
+	}
+}
+  

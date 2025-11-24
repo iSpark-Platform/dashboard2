@@ -1,0 +1,61 @@
+*   [33mb74275a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mpush-to-dashboard[m[33m)[m Update instructor tools section and button labels
+[31m|[m[32m\[m  
+[31m|[m * [33m573fd85[m Update package-lock.json after switching to npm
+[31m|[m * [33m861f77b[m Switch to npm: remove yarn.lock and use package-lock.json
+[31m|[m * [33mc1444a0[m Profile button for landing page
+[31m|[m * [33m0ec6aff[m faq area updated
+[31m|[m * [33md389567[m error handling
+[31m|[m *   [33me551c59[m Merge branch 'main' of https://github.com/iSpark-Platform/iSparkSkillsAI
+[31m|[m [33m|[m[34m\[m  
+[31m|[m [33m|[m *   [33mb5cf50b[m Merge branch 'main' of https://github.com/iSpark-Platform/iSparkSkillsAI
+[31m|[m [33m|[m [35m|[m[36m\[m  
+[31m|[m [33m|[m * [36m|[m [33m0d5d171[m updated instructors, instructors details and faq
+[31m|[m * [36m|[m [36m|[m [33m39464a5[m amplify updates
+[31m|[m [36m|[m [36m|[m[36m/[m  
+[31m|[m [36m|[m[36m/[m[36m|[m   
+[31m|[m * [36m|[m [33mbce3474[m errors corrected for amplify
+[31m|[m * [36m|[m [33mc1c7c88[m login try now button
+[31m|[m [36m|[m[36m/[m  
+[31m|[m * [33m6f30877[m updated files
+* [36m|[m [33m7f32487[m Initial commit
+[36m|[m[36m/[m  
+* [33mf22c275[m Update files
+*   [33ma10bc22[m Merge branch 'main' of https://github.com/iSpark-Platform/iSparkSkillsAI
+[1;31m|[m[1;32m\[m  
+[1;31m|[m * [33mb263c08[m Update Files
+* [1;32m|[m [33m9e95777[m Updated checkout page and Try Now button
+[1;32m|[m[1;32m/[m  
+* [33mf5b46c5[m Cart ₹ and Course Review Changes
+* [33m2684a88[m Updated images
+* [33m2a01b93[m update files
+* [33meaff3b9[m Fix Register import and alias
+* [33mf589991[m Add path alias for @
+* [33ma51b46c[m Add Netlify SPA redirect rule
+* [33md14e731[m Save local changes before pull
+* [33m7df1063[m Add Netlify redirect rules
+*   [33mc6050ee[m Merge branch 'main' of https://github.com/iSpark-Platform/iSparkSkillsAI
+[1;33m|[m[1;34m\[m  
+[1;33m|[m * [33ma49c4eb[m Firebase Login error handled
+* [1;34m|[m [33maa811e5[m updated internship page
+[1;34m|[m[1;34m/[m  
+* [33mf155d32[m login Register added
+*   [33m1ad078b[m Merge branch 'main' of https://github.com/iSpark-Platform/iSparkSkillsAI
+[1;35m|[m[1;36m\[m  
+[1;35m|[m * [33m24c0538[m Update files
+[1;35m|[m * [33m874d078[m remove core-js
+[1;35m|[m * [33m7408890[m fix vercel config
+[1;35m|[m *   [33m6960e1d[m Merge branch 'main' of https://github.com/iSpark-Platform/iSparkSkillsAI
+[1;35m|[m [31m|[m[32m\[m  
+[1;35m|[m [31m|[m * [33me058005[m isparkskills-update for terminal
+[1;35m|[m * [32m|[m [33mecf7e7c[m Remove functions config
+[1;35m|[m * [32m|[m [33mc344ce6[m fix vercel config
+* [32m|[m [32m|[m [33m856d6c2[m ChatBot UI added
+[32m|[m [32m|[m[32m/[m  
+[32m|[m[32m/[m[32m|[m   
+* [32m|[m [33m2e84473[m Instructor Details changed
+[32m|[m[32m/[m  
+* [33m683bfc2[m update file
+* [33m554cb4c[m update files
+* [33md622807[m update features.scss
+* [33m4b75858[m some Changes before pull
+* [33m31df87a[m  initial

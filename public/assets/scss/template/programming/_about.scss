@@ -1,0 +1,65 @@
+/*-------------------
+    About Style
+---------------------*/
+.about-style-4 {
+    &.programming-about {
+        margin-top: -70px;
+        .about-image-gallery {
+            .main-img-1 {
+                padding: 30px;
+                border-radius: 10px;
+                img {
+                    border-radius: 5px;
+                }
+            }
+            .shape-group {
+                .shape-1 {
+                    left: -119px;
+                    right: inherit;
+                    top: 46px;
+                }
+                .shape-2 {
+                    right: inherit;
+                    left: -58px;
+                    top: -31px;
+                    z-index: 0;
+                    bottom: inherit;
+                }
+                .shape-3 {
+                    right: -23px;
+                    left: inherit;
+                    bottom: -13px;
+                }
+                .shape-4 {
+                    right: 115px;
+                    bottom: 11px;
+                    z-index: -1;
+                    span {
+                        display: block;
+                        height: 80px;
+                        width: 80px;
+                        background-color: rgb(248, 184, 31);
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+        .about-content {
+            @media #{$md-layout-1} {
+                padding-left: 0;
+            }
+            .section-title {
+                p {
+                    padding-right: 20px;
+                }
+            }
+            .features-list {
+                li {
+                    &::before {
+                        font-weight: var(--p-regular);
+                    }
+                }
+            }
+        }
+    }
+}

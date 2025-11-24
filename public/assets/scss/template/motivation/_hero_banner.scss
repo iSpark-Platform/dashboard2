@@ -1,0 +1,155 @@
+.hero-style-12 {
+    &.hero-banner {
+        position: relative;
+        .banner-content {
+            padding-top: 100px;
+            margin-left: -20px;
+            @media (max-width:1500px) {
+                margin-left: 0;
+            }
+            @media #{$lg-layout} {
+                padding-top: 0;
+            }
+            @media #{$md-layout-1} {
+                padding-top: 60px;
+             }
+            .pre-title {
+                display: inline-block;
+                margin-bottom: 15px;
+            }
+            p {
+                br {
+                    @media #{$large-mobile} {
+                        display: none;
+                    }      
+                }
+            }
+            .banner-btn-video {
+                display: flex;
+                justify-content: left;
+                list-style: none;
+                padding-left: 0;
+
+                @media #{$md-layout-1} {
+                   justify-content: center; 
+                }
+                @media #{$small-mobile} {
+                    display: block;
+                }
+
+                .banner-btn {
+                    a {
+                        &:hover {
+                            color: var(--color-white);
+                        }
+                    }
+                }
+                .video-btn {
+                    margin-left: 20px;
+                    i {
+                        text-align: center;
+                        height: 60px;
+                        width: 60px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        line-height: 62px;
+                        background: #d4f1e6;
+                        color: var(--color-primary);
+                        border-radius: 50%;
+                        font-size: 18px;
+                        transition: var(--transition);
+                    }
+                    span {
+                        font-size: var(--font-size-b1);
+                        font-weight: var(--p-medium);
+                        color: var(--color-black);
+                        padding-left: 10px;
+                    }
+                    &:hover {
+                        i {
+                            color: var(--color-white);
+                            background-color: var(--color-primary);
+                        }
+                    }
+                }
+            }
+        }
+        .banner-thumbnail {
+            margin-right: -366px;
+            margin-top: -110px;
+            @media #{$custom-lg-device-six} {
+                margin-right: -240px;
+            }
+            @media #{$custom-laptop-device} {
+                margin-right: -152px;
+            }
+            @media #{$lg-layout} {
+                margin-right: -132px;
+                margin-top: 0;
+            }
+            @media #{$md-layout-1} {
+                margin-right: 0;
+                margin-top: 0;
+            }
+            .thumbnail {
+                img {
+                    border-top-left-radius: 370px;
+                    border-bottom-right-radius: 365px;
+                    border-bottom-left-radius: 360px;
+                }
+            }
+        }
+        .edublink-animated {
+            position: relative;
+            .shape-group {
+                li {
+                    &.shape-1 {
+                        left: -437px;
+                        top: -300px;
+                        span {
+                            width: 400px;
+                            height: 400px;
+                            border-radius: 50%;
+                            display: block;
+                            border: 1px solid var(--color-border);
+                        }
+                    }
+                    &.shape-2 {
+                        left: -270px;
+                        top: 11px;
+                    }
+                    &.shape-3 {
+                        left: -110px;
+                        top: 38px;
+                        span {
+                            width: 70px;
+                            height: 70px;
+                            border-radius: 50%;
+                            background: var(--color-tertiary);
+                            display: block;
+                        }
+                    } 
+                    &.shape-4 {
+                        right: 0;
+                        top: 80px;
+                        animation: edublink-sm-x-move 3.5s alternate infinite linear;
+                    }
+                }
+            }
+        }
+        .shape-group {
+            li {
+                &.shape-5 {
+                    right: 34%;
+                    bottom: 114px;
+                    z-index: 1;
+                }
+                &.shape-6 {
+                    right: 32%;
+                    bottom: 97px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,97 @@
+/*-------------------
+  About Styles
+---------------------*/
+.about-style-4 {
+    &.online-art-about {
+        position: relative;
+        .about-image-gallery-1 {
+            .main-img-3 {
+                img {
+                    border-radius: 225px;
+                    border-bottom-left-radius: 0;
+                }
+            }
+            .shape-group {
+                li {
+                    &.shape-1 {
+                        right: 57px;
+                        top: 88px;
+                    }
+                    &.shape-2 {
+                        right: 66px;
+                        top: 32px;
+                        z-index: 0;
+                    }
+                }
+            }
+        }
+        .about-image-gallery-2 {
+            .about-content {
+                max-width: 520px;
+                @media #{$md-layout-1} {
+                    max-width: 100%;
+                    padding-left: 0;
+                }
+            }
+            .main-img-4 {
+                margin-top: 55px;
+                @media #{$sm-layout} {
+                    text-align: center;
+                }
+                img {
+                    border-radius: 165px;
+                    border-bottom-right-radius: 0;
+                }
+            }
+            .main-img-5 {
+                text-align: right;
+                margin-top: 133px;
+                @media #{$smlg-device} {
+                  margin-top: 75px; 
+                }
+                @media #{$md-layout-1} {
+                    margin-top: 177px;
+                }
+                @media #{$sm-layout} {
+                    margin-top: 30px;
+                    text-align: center;
+                }
+                img {
+                    border-radius: 100px;
+                    border-bottom-left-radius: 0;
+                }
+            }
+            .shape-group {
+                li {
+                    &.shape-3 {
+                        right: -206px;
+                        bottom: 220px;
+                    }
+                    &.shape-4 {
+                        right: -85px;
+                        bottom: 201px;
+                        span {
+                            display: block;
+                            height: 101px;
+                            width: 101px;
+                            border: 15px solid var(--color-tertiary);
+                            border-radius: 50%;
+                        }
+                    }
+                }
+            }
+        }
+        .shape-group {
+            li {
+                &.shape-5 {
+                    left: 0;
+                    top: -263px;
+                }
+                &.shape-6 {
+                    right: 0;
+                    top: 20px;
+                }
+            }
+        }
+    }
+}

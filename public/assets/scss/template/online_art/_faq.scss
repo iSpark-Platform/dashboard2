@@ -1,0 +1,75 @@
+/*-------------------
+  FAQ Styles
+---------------------*/
+.faq-style-10 {
+    .faq-accordion {
+        .accordion-item {
+            border-radius: inherit;
+            box-shadow: none;
+            .accordion-header {
+                border-radius: 10px;
+                box-shadow: 0px 10px 50px 0px rgba(26,46,85,0.1);
+                .accordion-button {
+                    background-color: var(--color-white);
+                    color: var(--color-black);
+                    &::before {
+                        color: var(--color-body);
+                    }
+                    &.collapsed {
+                        background-color: var(--color-white);
+                        color: var(--color-heading);
+                        border-radius: 10px;
+                    }
+                }
+            }
+            .accordion-collapse  {
+                border-top: 1px solid var(--color-border);
+                background-color: var(--color-white);
+                box-shadow: var(--shadow-darker);
+                border-bottom-right-radius: 50px;
+                border-bottom-left-radius: 10px;
+                position: relative;
+                z-index: 2;
+            }
+        }
+    }
+    .edu-faq-gallery {
+        .thumbnail-1 {
+            img {
+                border-radius: 0;
+            }
+        }
+        .shape-group {
+            li {
+                &.shape-1 {
+                    left: inherit;
+                    top: 33px;
+                    right: -15px;
+                }
+                &.shape-2 {
+                    left: inherit;
+                    top: -36px;
+                    right: 4px;
+                    z-index: 0
+                }
+            }
+        }
+    }
+    .edu-faq-content {
+        .shape-group {
+            li {
+                &.shape-3 {
+                    left: inherit;
+                    bottom: -81px;
+                    right: -222px;
+                }
+                &.shape-4 {
+                    left: inherit;
+                    bottom: -91px;
+                    right: -303px;
+                    z-index: 0;
+                }
+            }
+        }
+    }
+}

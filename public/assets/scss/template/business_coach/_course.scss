@@ -1,0 +1,105 @@
+.course-area-12 {
+     ul {
+        list-style: none;
+        .section-title {
+            display: inline-block;
+            margin-top: 0;
+            @media #{$md-layout-1} {
+                display: block;
+                text-align: center !important;
+            }
+        }
+        .slider-nav-wrapper {
+            text-align: right;
+            margin-top: -140px;
+            margin-bottom: 55px;
+            @media #{$md-layout-1} {
+                margin-top: -15px !important;
+                margin-bottom: 33px !important;
+                text-align: center !important;
+            
+            }
+
+            .swiper-navigation {
+                .swiper-btn-nxt,
+                .swiper-btn-prv {
+                    box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+                }
+            }
+        }
+    }
+    .business-course-activation {
+        margin: 0 -33% 0 0;
+        @media #{$md-layout-1} {
+            margin: 0;
+        }
+    }
+    .shape-group {
+        li {
+            &.shape-1 {
+                right: 0;
+                bottom: 0;
+            }
+        }
+    }
+}
+.edu-course {
+    &.course-style-15 {
+        background-color: transparent;
+        .inner {
+            position: relative;
+            .thumbnail {
+                a {
+                    border-radius: 5px;
+    
+                    &::after {
+                        border-radius: 5px;
+                    }
+                    img {
+                        border-radius: 5px;
+                    }
+                }
+            }
+            .course-price {
+                background: var(--gradient-primary);
+                color: var(--color-white);
+                font-size: 22px;
+                font-weight: var(--p-bold);
+                width: 70px;
+                height: 70px;
+                line-height: 70px;
+                text-align: center;
+                border-radius: 50%;
+                position: absolute;
+                right: 20px;
+                margin-top: -38px;
+            }
+            .course-meta {
+                padding-left: 0;
+                margin-bottom: 20px;
+                margin-top: 30px;
+                li {
+                    display: inline-block;
+                    font-size: 13px;
+                    color: var(--color-heading);
+                    background-color: var(--color-white);
+                    line-height: 22px;
+                    border-radius: 30px;
+                    margin-right: 10px;
+                    padding: 4px 18px;
+                    box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.15);
+                    transition: var(--transition);
+    
+                    .icon-course {
+                        color: var(--color-body);
+                        margin-right: 6px;
+                    }
+                }
+            }
+            .content {
+                padding: 0;
+            }
+        }
+    }
+}
+  

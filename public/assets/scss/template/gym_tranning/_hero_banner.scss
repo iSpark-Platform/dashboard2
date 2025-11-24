@@ -1,0 +1,115 @@
+/*-------------------
+  Hero Banner Styles
+---------------------*/
+.hero-style-20 {
+    min-height: 930px;
+    margin-top: -90px;
+    background: url(../../../images/bg/ggg.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    @media #{$md-layout-1} {
+        min-height: 100%;
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background: url(../../../images/bg/bg-image-54.webp);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .banner-content {
+        margin-top: 90px;
+        @media #{$md-layout-1} {
+            margin-top: 190px;
+        }
+        .title {
+            color: var(--color-white);
+        }
+        p {
+            color: var(--color-white);
+            max-width: 480px;
+            @media #{$md-layout-1} {
+                max-width: 100%;
+            }
+        }
+        .shape-group {
+            li {
+                &.shape-1 {
+                    left: -134px;
+                    top: -100px;
+                }
+                &.shape-2 {
+                    left: -154px;
+                    top: -13px;
+
+                    span {
+                        width: 120px;
+                        height: 120px;
+                        border: 15px solid var(--color-tertiary);
+                        display: block;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+    }
+    .banner-thumbnail {
+        margin-right: -100px;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 30px;
+        margin-left: -155px;
+        margin-bottom: -83px;
+        @media #{$smlg-device} {
+            margin-bottom: -198px;
+        }
+        @media #{$sm-layout} {
+            margin-bottom: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .shape-group {
+            li {
+                &.shape-3 {
+                    left: 195px;
+                    top: 167px;
+
+                    span {
+                        width: 570px;
+                        height: 570px;
+                        background: rgba(255, 255, 255, 0.1);
+                        display: block;
+                        border-radius: 50%;
+                    }
+                }
+                &.shape-4 {
+                    top: 221px;
+                    right: 62px;
+                    z-index: -1;
+                }
+                &.shape-5 {
+                    bottom: inherit;
+                    right: 91px;
+                    top: 156px;
+                    z-index: 1;
+                }
+                &.shape-6 {
+                    right: inherit;
+                    left: 135px;
+                    bottom: 280px;
+                    z-index: 123;
+                }
+            }
+        }
+    }
+}

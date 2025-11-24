@@ -1,0 +1,55 @@
+/*-------------------
+    About Styles
+---------------------*/
+.about-style-17 {
+    .section-title {
+        margin-top: -115px;
+        @media #{$md-layout-1} {
+            margin-top: 0;
+        }
+    }
+    .about-content {
+        margin-left: 75px;
+
+        @media #{$md-layout-1} {
+            padding-left: 0;
+            margin-left: 0;
+        }
+        .title {
+            font-weight: var(--p-semi-bold);
+        }
+        p {
+            color: var(--color-heading);
+        }
+    }
+    .about-image-gallery {
+        text-align: center;
+        @media #{$md-layout-1} {
+            padding: 50px 0 60px;
+        }
+        .main-img-1 {
+            img {
+                border-radius: 300px;
+            }
+        }
+        .shape-group {
+            li {
+                &.shape-1 {
+                    top: 72px;
+                    left: 76px;
+                }
+                &.shape-2 {
+                    right: inherit;
+                    bottom: inherit;
+                    top: 121px;
+                    left: 35px;
+                    z-index: 0;
+                }
+                &.shape-3 {
+                    right: -55px;
+                    top: 107px;
+                }
+            }
+        }
+    }
+}

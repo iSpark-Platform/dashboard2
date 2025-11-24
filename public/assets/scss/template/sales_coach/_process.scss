@@ -1,0 +1,129 @@
+/*-------------------
+  Hero Banner Styles
+---------------------*/
+.process-area-1 {
+    .process-gallery {
+        .gallery-thumbnail {
+            .thumbnail {
+             &.thumbnail-1 {
+                text-align: right;
+                @media #{$sm-layout} {
+                    text-align: center;
+                }
+                 img {
+                    border-radius: 230px;
+                    }
+                }
+             &.thumbnail-2 {
+                 margin-top: -241px;
+                 @media #{$sm-layout} {
+                    display: none;
+                }
+                    img {
+                        border-radius: 5px;
+                        box-shadow: var(--shadow-darker);
+
+                    }
+                }
+            } 
+        }
+        .shape-group {
+            li {
+                &.shape-1 {
+                    right: 47px;
+                    top: -58px;
+                    z-index: 0;
+                    span {
+                        display: block;
+                        height: 120px;
+                        width: 120px;
+                        border: 15px solid var(--color-tertiary);
+                        border-radius: 50%;
+                    }
+                }
+                &.shape-2 {
+                    right: -6px;
+                    top: -9px;
+                }
+            }
+        }
+    }
+    .process-content {
+        margin-top: 30px;
+        .section-title {
+            p {
+                margin-bottom: 30px;
+                margin-top: 30px;
+            }
+        }
+        .course-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            position: relative;
+            gap: 10px;
+            margin-top: 55px;
+            @media #{$lg-layout} {
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 40px;
+            }
+            @media #{$large-mobile} {
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 20px;
+            }
+
+            .course-content {
+                width: 170px;
+                height: 210px;
+                background-color: var(--color-white);
+                box-shadow: var(--shadow-darker);
+                display: inline-grid;
+                text-align: center;
+                align-items: center;
+                justify-content: center;
+                padding: 20px 0;
+                border-radius: 5px;
+                @media #{$lg-layout} {
+                    width: 100%;
+                }
+                @media #{$large-mobile} {
+                    width: 100%;
+                }
+
+                .course-number {
+                    width: 60px;
+                    height: 60px;
+                    line-height: 60px;
+                    border-radius: 35px;
+                    text-align: center;
+                    margin: 0 auto;
+
+                    &.course-primary {
+                        background: rgba(26, 182, 157, 0.1);
+                        color: rgb(26, 182, 157);
+                    }
+                    &.course-secondary {
+                        background: rgba(238, 74, 98, 0.1);
+                        color: rgb(238, 74, 98);
+                    }
+                    &.course-extra {
+                        background: rgba(87, 103, 238, 0.1);
+                        color: rgb(87, 103, 238);
+                    }
+                    span {
+                        font-size: 16px;
+                        font-weight: var(--p-semi-bold);
+                        font-family: var(--font-secondary);
+                    }
+                }
+                .course-title {
+                    h4 {
+                        font-size: 18px;
+                        font-weight: var(--p-semi-bold);
+                        font-family: var(--font-secondary);
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}
