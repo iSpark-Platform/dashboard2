@@ -28,7 +28,7 @@ const InstructorDashboard = () => {
   const BACKGROUND = "#F8F9FF";
   
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [instructorName] = useState("Dr. Aravind Kumar");
+  const [instructorName] = useState("Anbarasi S");
   const [notifications] = useState(5);
   
   // Update date every minute
@@ -188,17 +188,8 @@ const InstructorDashboard = () => {
             <p style={styles.dateText}>{formatDate(currentDate)}</p>
           </div>
         </div>
-        <div style={styles.headerRight}>
-          <div style={styles.notificationBell}>
-            <FiBell size={20} color="#666" />
-            {notifications > 0 && (
-              <span style={styles.notificationBadge}>{notifications}</span>
-            )}
-          </div>
-          <div style={styles.profileAvatar}>
-            {instructorName.split(' ').map(n => n[0]).join('')}
-          </div>
-        </div>
+      
+    
       </div>
 
       <div style={styles.content}>
