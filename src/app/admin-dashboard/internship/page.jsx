@@ -1,20 +1,20 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiFilter, FiPlus, FiEdit, FiUsers, FiCalendar, FiEye, FiGrid, FiList } from 'react-icons/fi';
-import { useRouter } from "next/navigation";
+import { FiSearch, FiFilter, FiPlus, FiEdit, FiUsers, FiCalendar, FiEye, FiGrid, FiList, FiUpload, FiCheckCircle, FiClock, FiUserCheck, FiFileText, FiBarChart, FiX, FiDownload } from 'react-icons/fi';
 
 const ManageInternships = () => {
   const [internships, setInternships] = useState([]);
   const [filteredInternships, setFilteredInternships] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedInternship, setSelectedInternship] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState('');
   const itemsPerPage = 9;
   
-  // Simulate fetching data from API
   useEffect(() => {
-    // Mock data
     const mockInternships = [
       {
         id: 1,
@@ -24,8 +24,10 @@ const ManageInternships = () => {
         startDate: '2023-12-01',
         endDate: '2024-02-28',
         studentCount: 45,
+        attendanceRate: 92,
+        materialsUploaded: 12,
         status: 'Active',
-        thumbnail: '	http://localhost:3000/assets/images/course/course-04/smart%20robotics.jpg'
+        thumbnail: 'http://localhost:3000/assets/images/course/course-04/smart%20robotics.jpg'
       },
       {
         id: 2,
@@ -35,6 +37,8 @@ const ManageInternships = () => {
         startDate: '2023-11-15',
         endDate: '2024-01-15',
         studentCount: 32,
+        attendanceRate: 88,
+        materialsUploaded: 8,
         status: 'Active',
         thumbnail: 'http://localhost:3000/assets/images/course/course-04/ml.jpg'
       },
@@ -43,9 +47,11 @@ const ManageInternships = () => {
         title: 'IoT & IIoT for Smart Systems and Industry 4.0',
         instructor: 'Mike Johnson',
         category: 'Design',
-        startDate: '2023-12-10',
-        endDate: '2024-02-10',
+        startDate: '2024-12-10',
+        endDate: '2025-02-10',
         studentCount: 28,
+        attendanceRate: 0,
+        materialsUploaded: 3,
         status: 'Upcoming',
         thumbnail: 'http://localhost:3000/assets/images/course/course-04/iiot.jpg'
       },
@@ -57,8 +63,10 @@ const ManageInternships = () => {
         startDate: '2023-10-01',
         endDate: '2023-12-01',
         studentCount: 56,
+        attendanceRate: 95,
+        materialsUploaded: 15,
         status: 'Completed',
-        thumbnail: '	http://localhost:3000/assets/images/course/course-04/cloud.jpg'
+        thumbnail: 'http://localhost:3000/assets/images/course/course-04/cloud.jpg'
       },
       {
         id: 5,
@@ -68,17 +76,17 @@ const ManageInternships = () => {
         startDate: '2023-11-20',
         endDate: '2024-01-20',
         studentCount: 38,
+        attendanceRate: 90,
+        materialsUploaded: 10,
         status: 'Active',
         thumbnail: 'http://localhost:3000/assets/images/course/course-04/3d.jpg'
       },
-     
     ];
     
     setInternships(mockInternships);
     setFilteredInternships(mockInternships);
   }, []);
   
-  // Filter internships based on search term and category
   useEffect(() => {
     let filtered = internships;
     
@@ -97,22 +105,44 @@ const ManageInternships = () => {
     setCurrentPage(1);
   }, [searchTerm, categoryFilter, internships]);
   
-  // Get current internships for pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentInternships = filteredInternships.slice(indexOfFirstItem, indexOfLastItem);
   
-const router = useRouter();
+  const handleCreateInternship = () => {
+    alert('Redirecting to create internship page...');
+  };
 
-const handleCreateInternship = () => {
-  router.push('/admin-dashboard/create-internship');
-};
+  const handleViewDetails = (internship) => {
+    setSelectedInternship(internship);
+    setModalType('details');
+    setShowModal(true);
+  };
 
+  const handleUploadMaterials = (internship) => {
+    setSelectedInternship(internship);
+    setModalType('upload');
+    setShowModal(true);
+  };
 
-  // Change page
+  const handleViewAttendance = (internship) => {
+    setSelectedInternship(internship);
+    setModalType('attendance');
+    setShowModal(true);
+  };
+
+  const handleViewReport = (internship) => {
+    setSelectedInternship(internship);
+    setModalType('report');
+    setShowModal(true);
+  };
+
+  const handleEdit = (internship) => {
+    alert(`Editing: ${internship.title}`);
+  };
+
   const paginate = pageNumber => setCurrentPage(pageNumber);
   
-  // Get status badge style
   const getStatusBadgeStyle = (status) => {
     switch (status) {
       case 'Active':
@@ -125,6 +155,31 @@ const handleCreateInternship = () => {
         return { backgroundColor: '#f8fafc', color: '#475569' };
     }
   };
+
+  const getActionButtons = (internship) => {
+    switch (internship.status) {
+      case 'Active':
+        return [
+         
+          { icon: FiEye, label: 'View Details', action: () => handleViewDetails(internship), color: '#6366f1' },
+          { icon: FiEdit, label: 'Edit', action: () => handleEdit(internship), color: '#7c3aed' }
+        ];
+      case 'Upcoming':
+        return [
+          { icon: FiUpload, label: 'Prepare Materials', action: () => handleUploadMaterials(internship), color: '#1640FF' },
+          { icon: FiUsers, label: 'View Enrolled', action: () => handleViewDetails(internship), color: '#059669' },
+          { icon: FiEdit, label: 'Edit', action: () => handleEdit(internship), color: '#7c3aed' }
+        ];
+      case 'Completed':
+        return [
+          { icon: FiBarChart, label: 'View Report', action: () => handleViewReport(internship), color: '#059669' },
+          { icon: FiFileText, label: 'Final Materials', action: () => handleUploadMaterials(internship), color: '#1640FF' },
+          { icon: FiEye, label: 'View Details', action: () => handleViewDetails(internship), color: '#6366f1' }
+        ];
+      default:
+        return [];
+    }
+  };
   
   return (
     <div style={styles.container}>
@@ -133,7 +188,6 @@ const handleCreateInternship = () => {
         <p style={styles.subtitle}>View, edit, and manage all internship programs</p>
       </div>
       
-      {/* Search and Filters */}
       <div style={styles.filtersContainer}>
         <div style={styles.searchContainer}>
           <FiSearch size={18} color="#718096" style={styles.searchIcon} />
@@ -184,14 +238,12 @@ const handleCreateInternship = () => {
           </button>
         </div>
         
-      <button style={styles.createButton} onClick={handleCreateInternship}>
-  <FiPlus size={18} />
-  <span>Create Internship</span>
-</button>
-
+        <button style={styles.createButton} onClick={handleCreateInternship}>
+          <FiPlus size={18} />
+          <span>Create Internship</span>
+        </button>
       </div>
       
-      {/* Internships Grid/List */}
       {viewMode === 'grid' ? (
         <div style={styles.internshipsGrid}>
           {currentInternships.map(internship => (
@@ -199,7 +251,7 @@ const handleCreateInternship = () => {
               <div style={styles.cardImageContainer}>
                 <img src={internship.thumbnail} alt={internship.title} style={styles.cardImage} />
                 <div style={styles.cardStatusBadge}>
-                  <span style={getStatusBadgeStyle(internship.status)}>{internship.status}</span>
+                  <span style={{...styles.statusBadge, ...getStatusBadgeStyle(internship.status)}}>{internship.status}</span>
                 </div>
               </div>
               
@@ -207,30 +259,58 @@ const handleCreateInternship = () => {
                 <h3 style={styles.cardTitle}>{internship.title}</h3>
                 <p style={styles.cardInstructor}>{internship.instructor}</p>
                 
-                <div style={styles.cardDetails}>
-                  <div style={styles.cardDetail}>
-                    <FiCalendar size={14} color="#718096" />
-                    <span style={styles.cardDetailText}>
-                      {new Date(internship.startDate).toLocaleDateString()} - {new Date(internship.endDate).toLocaleDateString()}
-                    </span>
-                  </div>
-                  
-                  <div style={styles.cardDetail}>
+                <div style={styles.cardStats}>
+                  <div style={styles.statItem}>
                     <FiUsers size={14} color="#718096" />
-                    <span style={styles.cardDetailText}>{internship.studentCount} Students</span>
+                    <span style={styles.statText}>{internship.studentCount} Students</span>
+                  </div>
+                  {internship.status !== 'Upcoming' && (
+                    <div style={styles.statItem}>
+                      <FiUserCheck size={14} color="#059669" />
+                      <span style={styles.statText}>{internship.attendanceRate}% Attendance</span>
+                    </div>
+                  )}
+                  <div style={styles.statItem}>
+                    <FiFileText size={14} color="#1640FF" />
+                    <span style={styles.statText}>{internship.materialsUploaded} Materials</span>
                   </div>
                 </div>
                 
                 <div style={styles.cardActions}>
-                  <button style={styles.cardActionButton}>
-                    <FiEye size={14} />
-                    <span>View Details</span>
-                  </button>
-                  <button style={styles.cardActionButton}>
-                    <FiEdit size={14} />
-                    <span>Edit</span>
-                  </button>
+                  {getActionButtons(internship).slice(0, 2).map((button, index) => (
+                    <button
+                      key={index}
+                      onClick={button.action}
+                      style={{...styles.cardActionButton, borderColor: button.color, color: button.color}}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = button.color;
+                        e.currentTarget.style.color = '#fff';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fff';
+                        e.currentTarget.style.color = button.color;
+                      }}
+                    >
+                      <button.icon size={14} />
+                      <span>{button.label}</span>
+                    </button>
+                  ))}
                 </div>
+                
+                {getActionButtons(internship).length > 2 && (
+                  <div style={styles.moreActions}>
+                    {getActionButtons(internship).slice(2).map((button, index) => (
+                      <button
+                        key={index}
+                        onClick={button.action}
+                        style={styles.moreActionButton}
+                      >
+                        <button.icon size={14} color={button.color} />
+                        <span style={{color: button.color}}>{button.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -253,37 +333,49 @@ const handleCreateInternship = () => {
                 
                 <p style={styles.listItemInstructor}>{internship.instructor}</p>
                 
-                <div style={styles.listItemDetails}>
-                  <div style={styles.listItemDetail}>
-                    <FiCalendar size={14} color="#718096" />
-                    <span style={styles.listItemDetailText}>
-                      {new Date(internship.startDate).toLocaleDateString()} - {new Date(internship.endDate).toLocaleDateString()}
-                    </span>
-                  </div>
-                  
-                  <div style={styles.listItemDetail}>
+                <div style={styles.listItemStats}>
+                  <div style={styles.statItem}>
                     <FiUsers size={14} color="#718096" />
-                    <span style={styles.listItemDetailText}>{internship.studentCount} Students</span>
+                    <span style={styles.statText}>{internship.studentCount} Students</span>
+                  </div>
+                  {internship.status !== 'Upcoming' && (
+                    <div style={styles.statItem}>
+                      <FiUserCheck size={14} color="#059669" />
+                      <span style={styles.statText}>{internship.attendanceRate}% Attendance</span>
+                    </div>
+                  )}
+                  <div style={styles.statItem}>
+                    <FiFileText size={14} color="#1640FF" />
+                    <span style={styles.statText}>{internship.materialsUploaded} Materials</span>
                   </div>
                 </div>
               </div>
               
               <div style={styles.listItemActions}>
-                <button style={styles.listItemActionButton}>
-                  <FiEye size={16} />
-                  <span>View Details</span>
-                </button>
-                <button style={styles.listItemActionButton}>
-                  <FiEdit size={16} />
-                  <span>Edit</span>
-                </button>
+                {getActionButtons(internship).map((button, index) => (
+                  <button
+                    key={index}
+                    onClick={button.action}
+                    style={{...styles.listItemActionButton, borderColor: button.color, color: button.color}}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = button.color;
+                      e.currentTarget.style.color = '#fff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#fff';
+                      e.currentTarget.style.color = button.color;
+                    }}
+                  >
+                    <button.icon size={16} />
+                    <span>{button.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
           ))}
         </div>
       )}
       
-      {/* Pagination */}
       {filteredInternships.length > itemsPerPage && (
         <div style={styles.pagination}>
           <button
@@ -325,13 +417,126 @@ const handleCreateInternship = () => {
           </button>
         </div>
       )}
+
+      {/* Modal */}
+      {showModal && selectedInternship && (
+        <div style={styles.modalOverlay} onClick={() => setShowModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>
+                {modalType === 'details' && 'Internship Details'}
+             
+            
+                {modalType === 'report' && 'Final Report'}
+              </h2>
+              <button style={styles.modalClose} onClick={() => setShowModal(false)}>
+                <FiX size={20} />
+              </button>
+            </div>
+            
+            <div style={styles.modalBody}>
+              <h3 style={styles.modalInternshipTitle}>{selectedInternship.title}</h3>
+              
+              {modalType === 'details' && (
+                <div>
+                  <p><strong>Instructor:</strong> {selectedInternship.instructor}</p>
+                  <p><strong>Category:</strong> {selectedInternship.category}</p>
+                  <p><strong>Duration:</strong> {new Date(selectedInternship.startDate).toLocaleDateString()} - {new Date(selectedInternship.endDate).toLocaleDateString()}</p>
+                  <p><strong>Students Enrolled:</strong> {selectedInternship.studentCount}</p>
+                  <p><strong>Materials Uploaded:</strong> {selectedInternship.materialsUploaded}</p>
+                  {selectedInternship.status !== 'Upcoming' && (
+                    <p><strong>Attendance Rate:</strong> {selectedInternship.attendanceRate}%</p>
+                  )}
+                </div>
+              )}
+              
+              {modalType === 'upload' && (
+                <div>
+                  <p style={styles.modalText}>Upload course materials, assignments, and resources for students.</p>
+                  <div style={styles.uploadArea}>
+                    <FiUpload size={48} color="#718096" />
+                    <p>Drag and drop files here or click to browse</p>
+                    <button style={styles.uploadButton}>Select Files</button>
+                  </div>
+                  <div style={styles.uploadedList}>
+                    <p><strong>Previously uploaded ({selectedInternship.materialsUploaded}):</strong></p>
+                    <ul>
+                      <li>Week 1 - Introduction.pdf</li>
+                      <li>Week 2 - Assignment.docx</li>
+                      <li>Week 3 - Video Tutorial.mp4</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+              
+              {modalType === 'attendance' && (
+                <div>
+                  <div style={styles.attendanceStats}>
+                    <div style={styles.attendanceStat}>
+                      <FiUserCheck size={32} color="#059669" />
+                      <p style={styles.attendanceStatNumber}>{selectedInternship.attendanceRate}%</p>
+                      <p style={styles.attendanceStatLabel}>Average Attendance</p>
+                    </div>
+                    <div style={styles.attendanceStat}>
+                      <FiUsers size={32} color="#1640FF" />
+                      <p style={styles.attendanceStatNumber}>{Math.round(selectedInternship.studentCount * selectedInternship.attendanceRate / 100)}</p>
+                      <p style={styles.attendanceStatLabel}>Students Present</p>
+                    </div>
+                  </div>
+                  <div style={styles.attendanceList}>
+                    <p><strong>Recent Sessions:</strong></p>
+                    <div style={styles.sessionItem}>
+                      <span>Nov 20, 2024</span>
+                      <span style={{color: '#059669'}}>94% Present</span>
+                    </div>
+                    <div style={styles.sessionItem}>
+                      <span>Nov 18, 2024</span>
+                      <span style={{color: '#059669'}}>91% Present</span>
+                    </div>
+                    <div style={styles.sessionItem}>
+                      <span>Nov 15, 2024</span>
+                      <span style={{color: '#059669'}}>90% Present</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {modalType === 'report' && (
+                <div>
+                  <div style={styles.reportStats}>
+                    <div style={styles.reportStat}>
+                      <FiCheckCircle size={24} color="#059669" />
+                      <p style={styles.reportStatNumber}>{selectedInternship.studentCount}</p>
+                      <p style={styles.reportStatLabel}>Completed</p>
+                    </div>
+                    <div style={styles.reportStat}>
+                      <FiBarChart size={24} color="#1640FF" />
+                      <p style={styles.reportStatNumber}>{selectedInternship.attendanceRate}%</p>
+                      <p style={styles.reportStatLabel}>Success Rate</p>
+                    </div>
+                    <div style={styles.reportStat}>
+                      <FiFileText size={24} color="#7c3aed" />
+                      <p style={styles.reportStatNumber}>{selectedInternship.materialsUploaded}</p>
+                      <p style={styles.reportStatLabel}>Materials</p>
+                    </div>
+                  </div>
+                  <button style={styles.downloadButton}>
+                    <FiDownload size={16} />
+                    Download Full Report
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 const styles = {
   container: {
-    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     backgroundColor: '#f5f7fa',
     minHeight: '100vh',
     padding: '20px',
@@ -375,8 +580,7 @@ const styles = {
     borderRadius: '8px',
     border: '1px solid #e2e8f0',
     fontSize: '14px',
-    outline: 'none',
-    transition: 'border-color 0.2s'
+    outline: 'none'
   },
   filterContainer: {
     position: 'relative',
@@ -411,11 +615,11 @@ const styles = {
   viewToggleButton: {
     padding: '10px',
     border: 'none',
-    backgroundColor: '#fff',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    transition: 'all 0.2s'
   },
   createButton: {
     display: 'flex',
@@ -429,11 +633,11 @@ const styles = {
     fontSize: '14px',
     fontWeight: '500',
     cursor: 'pointer',
-    transition: 'background-color 0.2s'
+    transition: 'all 0.2s'
   },
   internshipsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
     gap: '20px',
     marginBottom: '24px'
   },
@@ -441,7 +645,7 @@ const styles = {
     backgroundColor: '#fff',
     borderRadius: '12px',
     overflow: 'hidden',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
     transition: 'transform 0.2s, box-shadow 0.2s'
   },
   cardImageContainer: {
@@ -458,54 +662,85 @@ const styles = {
     top: '12px',
     right: '12px'
   },
+  statusBadge: {
+    padding: '4px 12px',
+    borderRadius: '20px',
+    fontSize: '12px',
+    fontWeight: '600'
+  },
   cardContent: {
     padding: '16px'
   },
   cardTitle: {
-    fontSize: '18px',
+    fontSize: '16px',
     fontWeight: '600',
-    margin: '0 0 8px 0',
-    color: '#1a202c'
+    margin: '0 0 4px 0',
+    color: '#1a202c',
+    lineHeight: '1.4'
   },
   cardInstructor: {
-    fontSize: '14px',
+    fontSize: '13px',
     color: '#718096',
     margin: '0 0 12px 0'
   },
-  cardDetails: {
+  cardStats: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
-    marginBottom: '16px'
+    gap: '6px',
+    marginBottom: '12px',
+    padding: '12px',
+    backgroundColor: '#f8fafc',
+    borderRadius: '8px'
   },
-  cardDetail: {
+  statItem: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px'
   },
-  cardDetailText: {
-    fontSize: '14px',
-    color: '#4a5568'
+  statText: {
+    fontSize: '13px',
+    color: '#4a5568',
+    fontWeight: '500'
   },
   cardActions: {
-    display: 'flex',
-    gap: '8px'
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '8px',
+    marginBottom: '8px'
   },
   cardActionButton: {
-    flex: '1',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '6px',
     padding: '8px',
     borderRadius: '6px',
-    border: '1px solid #e2e8f0',
+    border: '1.5px solid',
     backgroundColor: '#fff',
-    color: '#4a5568',
     fontSize: '12px',
     fontWeight: '500',
     cursor: 'pointer',
-    transition: 'background-color 0.2s, color 0.2s'
+    transition: 'all 0.2s'
+  },
+  moreActions: {
+    display: 'flex',
+    gap: '8px',
+    justifyContent: 'space-between'
+  },
+  moreActionButton: {
+    flex: '1',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '4px',
+    padding: '6px',
+    borderRadius: '6px',
+    border: 'none',
+    backgroundColor: 'transparent',
+    fontSize: '11px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
   },
   internshipsList: {
     display: 'flex',
@@ -517,16 +752,16 @@ const styles = {
     backgroundColor: '#fff',
     borderRadius: '12px',
     overflow: 'hidden',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
     display: 'flex',
-    padding: '16px'
+    padding: '16px',
+    gap: '16px'
   },
   listItemImageContainer: {
     width: '120px',
     height: '120px',
     borderRadius: '8px',
     overflow: 'hidden',
-    marginRight: '16px',
     flexShrink: 0
   },
   listItemImage: {
@@ -535,65 +770,54 @@ const styles = {
     objectFit: 'cover'
   },
   listItemContent: {
-    flex: '1'
+    flex: '1',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   },
   listItemHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px'
+    alignItems: 'flex-start',
+    marginBottom: '4px'
   },
   listItemTitle: {
-    fontSize: '18px',
+    fontSize: '16px',
     fontWeight: '600',
     margin: '0',
-    color: '#1a202c'
-  },
-  statusBadge: {
-    padding: '4px 8px',
-    borderRadius: '4px',
-    fontSize: '12px',
-    fontWeight: '500'
+    color: '#1a202c',
+    lineHeight: '1.4',
+    flex: '1',
+    marginRight: '12px'
   },
   listItemInstructor: {
-    fontSize: '14px',
+    fontSize: '13px',
     color: '#718096',
-    margin: '0 0 12px 0'
+    margin: '0 0 8px 0'
   },
-  listItemDetails: {
+  listItemStats: {
     display: 'flex',
-    flexDirection: 'column',
-    gap: '8px'
-  },
-  listItemDetail: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
-  },
-  listItemDetailText: {
-    fontSize: '14px',
-    color: '#4a5568'
+    gap: '16px',
+    flexWrap: 'wrap'
   },
   listItemActions: {
     display: 'flex',
     flexDirection: 'column',
     gap: '8px',
-    marginLeft: '16px'
+    flexShrink: 0
   },
   listItemActionButton: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: '6px',
     padding: '8px 12px',
     borderRadius: '6px',
-    border: '1px solid #e2e8f0',
+    border: '1.5px solid',
     backgroundColor: '#fff',
-    color: '#4a5568',
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: '500',
     cursor: 'pointer',
-    transition: 'background-color 0.2s, color 0.2s',
+    transition: 'all 0.2s',
     whiteSpace: 'nowrap'
   },
   pagination: {
@@ -609,9 +833,155 @@ const styles = {
     backgroundColor: '#fff',
     color: '#4a5568',
     fontSize: '14px',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000
+  },
+  modal: {
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    width: '90%',
+    maxWidth: '600px',
+    maxHeight: '80vh',
+    overflow: 'auto',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+  },
+  modalHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '20px',
+    borderBottom: '1px solid #e2e8f0'
+  },
+  modalTitle: {
+    fontSize: '20px',
+    fontWeight: '600',
+    margin: 0,
+    color: '#1a202c'
+  },
+  modalClose: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: '#718096',
+    padding: '4px',
+    borderRadius: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  modalBody: {
+    padding: '20px'
+  },
+  modalInternshipTitle: {
+    fontSize: '16px',
+    fontWeight: '600',
+    margin: '0 0 16px 0',
+    color: '#1a202c'
+  },
+  modalText: {
+    fontSize: '14px',
+    color: '#4a5568',
+    margin: '0 0 16px 0'
+  },
+  uploadArea: {
+    border: '2px dashed #cbd5e0',
+    borderRadius: '8px',
+    padding: '24px',
+    textAlign: 'center',
+    marginBottom: '20px'
+  },
+  uploadButton: {
+    padding: '8px 16px',
+    borderRadius: '6px',
+    border: 'none',
+    backgroundColor: '#1640FF',
+    color: '#fff',
+    fontSize: '14px',
     fontWeight: '500',
     cursor: 'pointer',
-    transition: 'background-color 0.2s, color 0.2s'
+    marginTop: '12px'
+  },
+  uploadedList: {
+    marginTop: '20px'
+  },
+  attendanceStats: {
+    display: 'flex',
+    gap: '24px',
+    marginBottom: '24px'
+  },
+  attendanceStat: {
+    textAlign: 'center',
+    flex: '1'
+  },
+  attendanceStatNumber: {
+    fontSize: '24px',
+    fontWeight: '700',
+    margin: '8px 0',
+    color: '#1a202c'
+  },
+  attendanceStatLabel: {
+    fontSize: '14px',
+    color: '#718096',
+    margin: 0
+  },
+  attendanceList: {
+    borderTop: '1px solid #e2e8f0',
+    paddingTop: '16px'
+  },
+  sessionItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '8px 0',
+    borderBottom: '1px solid #f1f5f9'
+  },
+  reportStats: {
+    display: 'flex',
+    gap: '16px',
+    marginBottom: '24px'
+  },
+  reportStat: {
+    textAlign: 'center',
+    flex: '1',
+    padding: '16px',
+    borderRadius: '8px',
+    backgroundColor: '#f8fafc'
+  },
+  reportStatNumber: {
+    fontSize: '20px',
+    fontWeight: '700',
+    margin: '8px 0',
+    color: '#1a202c'
+  },
+  reportStatLabel: {
+    fontSize: '14px',
+    color: '#718096',
+    margin: 0
+  },
+  downloadButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 16px',
+    borderRadius: '6px',
+    border: 'none',
+    backgroundColor: '#1640FF',
+    color: '#fff',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    margin: '0 auto'
   }
 };
 

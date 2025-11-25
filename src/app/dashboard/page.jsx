@@ -1,26 +1,27 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import {
-  FiUsers,
-  FiBookOpen,
-  FiVideo,
-  FiCheckCircle,
-  FiBell,
-  FiFileText,
-  FiUpload,
-  FiClipboard,
-  FiUserCheck,
-  FiVolumeX,
-  FiEye,
-  FiTrash2,
-  FiPlus,
-  FiCalendar,
-  FiClock,
-  FiTrendingUp,
-  FiDownload,
-  FiVolume2,
-  FiChevronRight
-} from 'react-icons/fi';
+  Users,
+  BookOpen,
+  Video,
+  CheckCircle,
+  Bell,
+  FileText,
+  Upload,
+  Clipboard,
+  UserCheck,
+  Volume2,
+  Eye,
+  Trash2,
+  Plus,
+  Clock,
+  TrendingUp,
+  Download,
+  ChevronRight,
+  Calendar,
+  Award,
+  BarChart3
+} from 'lucide-react';
 
 const InstructorDashboard = () => {
   const PRIMARY = "#1640FF";
@@ -30,8 +31,11 @@ const InstructorDashboard = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [instructorName] = useState("Anbarasi S");
   const [notifications] = useState(5);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [selectedInternship, setSelectedInternship] = useState(null);
+  const [showMaterials, setShowMaterials] = useState(false);
+  const [actionMessage, setActionMessage] = useState('');
   
-  // Update date every minute
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDate(new Date());
@@ -44,63 +48,52 @@ const InstructorDashboard = () => {
     return date.toLocaleDateString('en-US', options);
   };
   
-  // Stats data
   const stats = [
-    { icon: FiUsers, label: "Total Students", value: "1,248", color: PRIMARY },
-    { icon: FiBookOpen, label: "Active Internships", value: "8", color: ACCENT },
-    { icon: FiVideo, label: "Total Live Classes", value: "156", color: "#10b981" },
-    { icon: FiCheckCircle, label: "Assignments Created", value: "42", color: "#8b5cf6" }
+    { icon: Users, label: "Total Students", value: "1,248", color: PRIMARY, change: "+12%" },
+    { icon: BookOpen, label: "Active Internships", value: "8", color: ACCENT, change: "+2" },
+    { icon: Video, label: "Total Live Classes", value: "156", color: "#10b981", change: "+8%" },
+    { icon: CheckCircle, label: "Completion Rate", value: "87%", color: "#8b5cf6", change: "+5%" }
   ];
   
-  // Current internships
   const internships = [
     {
       id: 1,
       name: "Smart Robotics & Industry 4.0 Automation",
-      status: "Live Now",
+      status: "Live",
+      statusColor: "#10b981",
       students: 145,
-      todayClass: "14:00 - 15:30"
+      todayClass: "14:00 - 15:30",
+      progress: 65
     },
     {
       id: 2,
       name: "Applied AI & Machine Learning",
       status: "Upcoming",
+      statusColor: PRIMARY,
       students: 198,
-      todayClass: "16:00 - 17:30"
+      todayClass: "16:00 - 17:30",
+      progress: 45
     },
     {
       id: 3,
       name: "IoT & IIoT for Smart Systems",
       status: "Completed",
+      statusColor: "#64748b",
       students: 167,
-      todayClass: "10:00 - 11:30"
+      todayClass: "10:00 - 11:30",
+      progress: 100
     },
     {
       id: 4,
       name: "Cloud & Edge Computing",
       status: "Upcoming",
+      statusColor: PRIMARY,
       students: 134,
-      todayClass: "Tomorrow 10:00"
-    },
-    {
-      id: 5,
-      name: "3D Printing & Digital Fabrication",
-      status: "No Class",
-      students: 89,
-      todayClass: "Friday 14:00"
+      todayClass: "Tomorrow 10:00",
+      progress: 30
     }
   ];
   
-  // Today's live class
-  const liveClass = {
-    title: "Smart Robotics & Industry 4.0 Automation - Advanced Motion Control",
-    time: "14:00 - 15:30",
-    status: "Live Now",
-    students: 145,
-    topic: "Module 5: Implementing PID Controllers in Robot Kinematics"
-  };
-  
-  // Recent materials
   const materials = [
     {
       id: 1,
@@ -136,191 +129,545 @@ const InstructorDashboard = () => {
     }
   ];
   
-  // Quick actions
   const quickActions = [
-    { icon: FiUpload, label: "Upload Material", color: PRIMARY },
-    { icon: FiClipboard, label: "Create Assignment", color: ACCENT },
-    { icon: FiUserCheck, label: "See Attendance", color: "#10b981" },
-    { icon: FiVolume2, label: "Post Announcement", color: "#f59e0b" },
-    { icon: FiUsers, label: "View Students", color: "#8b5cf6" },
-    { icon: FiPlus, label: "Add New Internship", color: "#ec4899" }
+    { icon: Upload, label: "Upload Material", color: PRIMARY, action: "📤 Opening upload dialog..." },
+    { icon: Clipboard, label: "Create Assignment", color: ACCENT, action: "📝 Creating new assignment..." },
+    { icon: UserCheck, label: "View Attendance", color: "#10b981", action: "✅ Loading attendance records..." },
+    { icon: Volume2, label: "Post Announcement", color: "#f59e0b", action: "📢 Opening announcement editor..." },
+    { icon: Users, label: "Manage Students", color: "#8b5cf6", action: "👥 Loading student management..." },
+    { icon: BarChart3, label: "View Analytics", color: "#ec4899", action: "📊 Loading analytics dashboard..." }
   ];
   
-  // Announcements
   const announcements = [
     {
       id: 1,
       title: "Assignment Submission Deadline Extended",
       time: "2 hours ago",
       internship: "Applied AI & ML",
-      type: "important"
+      priority: "high"
     },
     {
       id: 2,
       title: "New Study Material Available for Module 5",
       time: "5 hours ago",
       internship: "Smart Robotics",
-      type: "info"
+      priority: "medium"
     },
     {
       id: 3,
       title: "Guest Lecture Scheduled for Next Week",
       time: "1 day ago",
       internship: "Cloud Computing",
-      type: "event"
-    },
-    {
-      id: 4,
-      title: "Student Feedback Survey Released",
-      time: "2 days ago",
-      internship: "All Internships",
-      type: "info"
+      priority: "low"
     }
   ];
 
   return (
-    <div style={styles.dashboard}>
-      {/* 1️⃣ TOP HEADER */}
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div>
-            <h1 style={styles.welcomeText}>Welcome Back, {instructorName}</h1>
-            <p style={styles.dateText}>{formatDate(currentDate)}</p>
+    <div style={{ minHeight: '100vh', backgroundColor: BACKGROUND, fontFamily: 'Inter, sans-serif' }}>
+      {/* Header */}
+      <header style={{ backgroundColor: '#fff', borderBottom: '1px solid #e5e7eb' }}>
+        <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '20px 32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827', margin: '0 0 4px 0' }}>
+                Welcome back, {instructorName}
+              </h1>
+              <p style={{ fontSize: '14px', color: '#6b7280', margin: 0 }}>
+                {formatDate(currentDate)}
+              </p>
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <button 
+                style={{ 
+                  position: 'relative', 
+                  padding: '10px', 
+                  borderRadius: '8px', 
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+                onClick={() => setShowNotifications(!showNotifications)}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+               
+               
+              </button>
+              
+              {showNotifications && (
+                <div style={{ 
+                  position: 'absolute', 
+                  top: '64px', 
+                  right: '32px', 
+                  width: '320px', 
+                  backgroundColor: '#fff', 
+                  border: '1px solid #e5e7eb', 
+                  borderRadius: '12px', 
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                  zIndex: 50 
+                }}>
+                  <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb' }}>
+                    <h3 style={{ fontWeight: '600', color: '#111827', margin: 0 }}>Notifications</h3>
+                  </div>
+                  <div style={{ maxHeight: '384px', overflowY: 'auto' }}>
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <div key={i} style={{ 
+                        padding: '16px', 
+                        borderBottom: '1px solid #f3f4f6', 
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                      >
+                        <p style={{ fontSize: '14px', fontWeight: '500', color: '#111827', margin: '0 0 4px 0' }}>
+                          New assignment submitted
+                        </p>
+                        <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+                          {i} hours ago
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingLeft: '16px', borderLeft: '1px solid #e5e7eb' }}>
+                <div style={{ textAlign: 'right' }}>
+                
+                </div>
+                
+              </div>
+            </div>
           </div>
         </div>
-      
-    
-      </div>
+      </header>
 
-      <div style={styles.content}>
-        {/* 2️⃣ KEY STATS CARDS */}
-        <div style={styles.statsGrid}>
+      <main style={{ maxWidth: '1600px', margin: '0 auto', padding: '32px' }}>
+        {/* Stats Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginBottom: '32px' }}>
           {stats.map((stat, index) => (
-            <div key={index} style={styles.statCard}>
-              <div style={{...styles.statIconBox, backgroundColor: `${stat.color}15`}}>
-                <stat.icon size={28} color={stat.color} />
+            <div key={index} style={{ 
+              backgroundColor: '#fff', 
+              borderRadius: '12px', 
+              padding: '24px', 
+              border: '1px solid #e5e7eb',
+              transition: 'box-shadow 0.2s'
+            }}
+            onMouseEnter={(e) => e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
+            onMouseLeave={(e) => e.target.style.boxShadow = 'none'}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ 
+                  width: '48px', 
+                  height: '48px', 
+                  borderRadius: '8px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  backgroundColor: `${stat.color}15`
+                }}>
+                  <stat.icon size={24} color={stat.color} />
+                </div>
+                <span style={{ 
+                  fontSize: '12px', 
+                  fontWeight: '600', 
+                  color: '#059669', 
+                  backgroundColor: '#ecfdf5', 
+                  padding: '4px 8px', 
+                  borderRadius: '4px' 
+                }}>
+                  {stat.change}
+                </span>
               </div>
-              <div style={styles.statValue}>{stat.value}</div>
-              <div style={styles.statLabel}>{stat.label}</div>
+              <div style={{ fontSize: '30px', fontWeight: '700', color: '#111827', marginBottom: '4px' }}>{stat.value}</div>
+              <div style={{ fontSize: '14px', color: '#6b7280' }}>{stat.label}</div>
             </div>
           ))}
         </div>
 
-        {/* 3️⃣ CURRENT INTERNSHIPS */}
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Current Internships</h2>
-          <div style={styles.internshipsScroll}>
-            {internships.map((internship) => (
-              <div key={internship.id} style={styles.internshipCard}>
-                <div style={{
-                  ...styles.internshipHeader,
-                  background: `linear-gradient(135deg, ${PRIMARY} 0%, #0e30cc 100%)`
-                }}>
-                  <span style={styles.internshipStatus}>{internship.status}</span>
-                </div>
-                <div style={styles.internshipBody}>
-                  <h3 style={styles.internshipName}>{internship.name}</h3>
-                  <div style={styles.internshipMeta}>
-                    <div style={styles.metaItem}>
-                      <FiClock size={14} color="#666" />
-                      <span>{internship.todayClass}</span>
-                    </div>
-                    <div style={styles.metaItem}>
-                      <FiUsers size={14} color="#666" />
-                      <span>{internship.students} Students</span>
-                    </div>
-                  </div>
-                  <button style={styles.manageBtn}>
-                    Manage
-                    <FiChevronRight size={16} />
-                  </button>
-                </div>
+        {/* Live Class Banner */}
+        <div style={{ 
+          backgroundColor: PRIMARY, 
+          borderRadius: '12px', 
+          padding: '24px', 
+          marginBottom: '32px',
+          border: `1px solid ${PRIMARY}`
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                backgroundColor: '#ef4444', 
+                color: '#fff', 
+                padding: '6px 12px', 
+                borderRadius: '20px', 
+                fontSize: '12px', 
+                fontWeight: '700' 
+              }}>
+                <span style={{ 
+                  width: '8px', 
+                  height: '8px', 
+                  backgroundColor: '#fff', 
+                  borderRadius: '50%',
+                  animation: 'pulse 2s infinite'
+                }}></span>
+                LIVE NOW
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 4️⃣ TODAY'S LIVE CLASS */}
-        <div style={styles.liveClassBlock}>
-          <div style={styles.liveClassHeader}>
-            <div style={styles.liveIndicator}>
-              <span style={styles.livePulse}></span>
-              <FiVideo size={20} color="white" />
-              <span style={styles.liveText}>LIVE NOW</span>
+              <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px', fontWeight: '500' }}>
+                14:00 - 15:30
+              </span>
             </div>
-            <span style={styles.liveTime}>{liveClass.time}</span>
-          </div>
-          <h2 style={styles.liveClassTitle}>{liveClass.title}</h2>
-          <p style={styles.liveClassTopic}>{liveClass.topic}</p>
-          <div style={styles.liveClassFooter}>
-            <div style={styles.liveClassStudents}>
-              <FiUsers size={18} color="white" />
-              <span>{liveClass.students} Students Enrolled</span>
-            </div>
-            <button style={styles.startLiveBtn}>
-              <FiVideo size={18} />
-              Start Live Class
+            <button 
+              style={{ 
+                backgroundColor: '#fff', 
+                color: PRIMARY, 
+                padding: '10px 24px', 
+                borderRadius: '8px', 
+                fontWeight: '600', 
+                fontSize: '14px',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px',
+                transition: 'background-color 0.2s'
+              }}
+              onClick={() => alert('🎥 Starting live class...')}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#fff'}
+            >
+              <Video size={18} />
+              Join Live Class
             </button>
           </div>
+          <h3 style={{ color: '#fff', fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>
+            Smart Robotics & Industry 4.0 Automation - Advanced Motion Control
+          </h3>
+          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '16px' }}>
+            Module 5: Implementing PID Controllers in Robot Kinematics
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
+            <Users size={16} />
+            <span>145 Students Enrolled</span>
+          </div>
         </div>
 
-        <div style={styles.twoColumnLayout}>
-          {/* LEFT COLUMN */}
-          <div style={styles.leftColumn}>
-            {/* 5️⃣ RECENTLY UPLOADED MATERIALS */}
-            <div style={styles.section}>
-              <div style={styles.sectionHeader}>
-                <h2 style={styles.sectionTitle}>Recently Uploaded Study Materials</h2>
-                <button style={styles.viewAllBtn}>View All</button>
+        {/* Main Content Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
+          {/* Left Column - 2/3 width */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            {/* Current Internships */}
+            <section>
+              <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', marginBottom: '16px' }}>
+                Current Internships
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                {internships.map((internship) => (
+                  <div key={internship.id} style={{ 
+                    backgroundColor: '#fff', 
+                    borderRadius: '12px', 
+                    border: '1px solid #e5e7eb', 
+                    overflow: 'hidden',
+                    transition: 'box-shadow 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
+                  onMouseLeave={(e) => e.target.style.boxShadow = 'none'}
+                  >
+                    <div style={{ padding: '20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <span 
+                          style={{
+                            fontSize: '12px',
+                            fontWeight: '700',
+                            padding: '4px 12px',
+                            borderRadius: '20px',
+                            backgroundColor: `${internship.statusColor}15`,
+                            color: internship.statusColor
+                          }}
+                        >
+                          {internship.status}
+                        </span>
+                        <span style={{ fontSize: '12px', color: '#6b7280' }}>
+                          {internship.progress}% Complete
+                        </span>
+                      </div>
+                      
+                      <h3 style={{ 
+                        fontWeight: '600', 
+                        color: '#111827', 
+                        marginBottom: '16px', 
+                        fontSize: '14px', 
+                        lineHeight: '1.4' 
+                      }}>
+                        {internship.name}
+                      </h3>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#6b7280' }}>
+                          <Clock size={14} />
+                          <span>{internship.todayClass}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#6b7280' }}>
+                          <Users size={14} />
+                          <span>{internship.students} Students</span>
+                        </div>
+                      </div>
+                      
+                      <div style={{ 
+                        width: '100%', 
+                        backgroundColor: '#f3f4f6', 
+                        borderRadius: '4px', 
+                        height: '6px', 
+                        marginBottom: '16px' 
+                      }}>
+                        <div 
+                          style={{
+                            height: '6px',
+                            borderRadius: '4px',
+                            width: `${internship.progress}%`,
+                            backgroundColor: internship.statusColor,
+                            transition: 'width 0.5s ease'
+                          }}
+                        ></div>
+                      </div>
+                      
+                      <button 
+                        style={{
+                          width: '100%',
+                          backgroundColor: '#f9fafb',
+                          color: '#111827',
+                          padding: '10px',
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          border: 'none',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onClick={() => {
+                          setSelectedInternship(internship.name);
+                          setTimeout(() => setSelectedInternship(null), 2000);
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      >
+                        Manage
+                        <ChevronRight size={16} />
+                      </button>
+                      {selectedInternship === internship.name && (
+                        <div style={{ 
+                          marginTop: '8px', 
+                          padding: '8px', 
+                          backgroundColor: '#ecfdf5', 
+                          color: '#059669', 
+                          fontSize: '12px', 
+                          borderRadius: '6px', 
+                          textAlign: 'center', 
+                          fontWeight: '500' 
+                        }}>
+                          Opening {internship.name}...
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div style={styles.materialsTable}>
-                <table style={styles.table}>
-                  <thead>
+            </section>
+
+            {/* Study Materials */}
+            <section>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', margin: 0 }}>
+                  Recently Uploaded Materials
+                </h2>
+                <button 
+                  style={{ 
+                    fontSize: '14px', 
+                    fontWeight: '600', 
+                    color: PRIMARY, 
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                    padding: 0
+                  }}
+                  onClick={() => {
+                    setShowMaterials(true);
+                    setTimeout(() => setShowMaterials(false), 2000);
+                  }}
+                >
+                  View All
+                </button>
+              </div>
+              
+              {showMaterials && (
+                <div style={{ 
+                  marginBottom: '16px', 
+                  padding: '12px', 
+                  backgroundColor: '#eff6ff', 
+                  color: '#1d4ed8', 
+                  fontSize: '14px', 
+                  borderRadius: '8px', 
+                  fontWeight: '500' 
+                }}>
+                  📚 Loading all materials...
+                </div>
+              )}
+              
+              <div style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                     <tr>
-                      <th style={styles.th}>Material Name</th>
-                      <th style={styles.th}>Type</th>
-                      <th style={styles.th}>Date</th>
-                      <th style={styles.th}>Internship</th>
-                      <th style={styles.th}>Downloads</th>
-                      <th style={styles.th}>Actions</th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '600', 
+                        color: '#6b7280', 
+                        textTransform: 'uppercase' 
+                      }}>
+                        Material
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '600', 
+                        color: '#6b7280', 
+                        textTransform: 'uppercase' 
+                      }}>
+                        Type
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '600', 
+                        color: '#6b7280', 
+                        textTransform: 'uppercase' 
+                      }}>
+                        Date
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '600', 
+                        color: '#6b7280', 
+                        textTransform: 'uppercase' 
+                      }}>
+                        Downloads
+                      </th>
+                      <th style={{ 
+                        padding: '12px 24px', 
+                        textAlign: 'left', 
+                        fontSize: '12px', 
+                        fontWeight: '600', 
+                        color: '#6b7280', 
+                        textTransform: 'uppercase' 
+                      }}>
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {materials.map((material) => (
-                      <tr key={material.id} style={styles.tr}>
-                        <td style={styles.td}>
-                          <div style={styles.materialName}>
-                            {material.type === 'Video' ? <FiVideo size={16} color={PRIMARY} /> :
-                             <FiFileText size={16} color={PRIMARY} />}
-                            <span>{material.name}</span>
+                      <tr key={material.id} style={{ borderBottom: '1px solid #f3f4f6', transition: 'background-color 0.2s' }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                      >
+                        <td style={{ padding: '16px 24px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{ 
+                              width: '32px', 
+                              height: '32px', 
+                              borderRadius: '8px', 
+                              backgroundColor: `${PRIMARY}15`, 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center' 
+                            }}>
+                              <FileText size={16} color={PRIMARY} />
+                            </div>
+                            <div>
+                              <div style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>
+                                {material.name}
+                              </div>
+                              <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                                {material.internship}
+                              </div>
+                            </div>
                           </div>
                         </td>
-                        <td style={styles.td}>
+                        <td style={{ padding: '16px 24px' }}>
                           <span style={{
-                            ...styles.typeBadge,
-                            backgroundColor: material.type === 'PDF' ? '#fef3c7' : 
-                                           material.type === 'PPT' ? '#dbeafe' : '#fce7f3',
-                            color: material.type === 'PDF' ? '#92400e' : 
-                                   material.type === 'PPT' ? '#1e40af' : '#831843'
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            padding: '4px 10px',
+                            borderRadius: '4px',
+                            backgroundColor: material.type === 'PDF' ? '#dbeafe' :
+                                           material.type === 'PPT' ? '#fed7aa' :
+                                           '#f3e8ff',
+                            color: material.type === 'PDF' ? '#1d4ed8' :
+                                  material.type === 'PPT' ? '#c2410c' :
+                                  '#9333ea'
                           }}>
                             {material.type}
                           </span>
                         </td>
-                        <td style={styles.td}>{material.uploadDate}</td>
-                        <td style={styles.td}>{material.internship}</td>
-                        <td style={styles.td}>
-                          <div style={styles.downloadCount}>
-                            <FiDownload size={14} color="#666" />
+                        <td style={{ padding: '16px 24px', fontSize: '14px', color: '#6b7280' }}>
+                          {material.uploadDate}
+                        </td>
+                        <td style={{ padding: '16px 24px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#6b7280' }}>
+                            <Download size={14} />
                             {material.downloads}
                           </div>
                         </td>
-                        <td style={styles.td}>
-                          <div style={styles.actionButtons}>
-                            <button style={styles.iconBtn}>
-                              <FiEye size={14} />
+                        <td style={{ padding: '16px 24px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <button 
+                              style={{ 
+                                padding: '6px', 
+                                borderRadius: '6px', 
+                                border: 'none',
+                                backgroundColor: 'transparent',
+                                cursor: 'pointer',
+                                transition: 'background-color 0.2s'
+                              }}
+                              onClick={() => alert(`👁️ Viewing: ${material.name}`)}
+                              onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                            >
+                              <Eye size={16} color="#6b7280" />
                             </button>
-                            <button style={{...styles.iconBtn, backgroundColor: '#fee2e2'}}>
-                              <FiTrash2 size={14} color="#dc2626" />
+                            <button 
+                              style={{ 
+                                padding: '6px', 
+                                borderRadius: '6px', 
+                                border: 'none',
+                                backgroundColor: 'transparent',
+                                cursor: 'pointer',
+                                transition: 'background-color 0.2s'
+                              }}
+                              onClick={() => {
+                                if (confirm(`Delete "${material.name}"?`)) {
+                                  alert('🗑️ Material deleted successfully!');
+                                }
+                              }}
+                              onMouseEnter={(e) => e.target.style.backgroundColor = '#fef2f2'}
+                              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                            >
+                              <Trash2 size={16} color="#dc2626" />
                             </button>
                           </div>
                         </td>
@@ -329,669 +676,247 @@ const InstructorDashboard = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </section>
 
-            {/* 6️⃣ QUICK ACTIONS */}
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Quick Actions</h2>
-              <div style={styles.quickActionsGrid}>
+            {/* Quick Actions */}
+            <section>
+              <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', marginBottom: '16px' }}>
+                Quick Actions
+              </h2>
+              {actionMessage && (
+                <div style={{ 
+                  marginBottom: '16px', 
+                  padding: '12px', 
+                  backgroundColor: '#ecfdf5', 
+                  color: '#059669', 
+                  fontSize: '14px', 
+                  borderRadius: '8px', 
+                  fontWeight: '500' 
+                }}>
+                  {actionMessage}
+                </div>
+              )}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
                 {quickActions.map((action, index) => (
-                  <button key={index} style={styles.quickActionBtn}>
-                    <div style={{...styles.quickActionIcon, backgroundColor: `${action.color}15`}}>
+                  <button 
+                    key={index} 
+                    style={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '12px',
+                      padding: '20px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '12px',
+                      transition: 'all 0.2s'
+                    }}
+                    onClick={() => {
+                      setActionMessage(action.action);
+                      setTimeout(() => setActionMessage(''), 2000);
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+                      e.target.style.borderColor = '#d1d5db';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.boxShadow = 'none';
+                      e.target.style.borderColor = '#e5e7eb';
+                    }}
+                  >
+                    <div 
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: `${action.color}15`
+                      }}
+                    >
                       <action.icon size={24} color={action.color} />
                     </div>
-                    <span style={styles.quickActionLabel}>{action.label}</span>
+                    <span style={{ fontSize: '14px', fontWeight: '600', color: '#111827', textAlign: 'center' }}>
+                      {action.label}
+                    </span>
                   </button>
                 ))}
               </div>
-            </div>
+            </section>
           </div>
 
-          {/* RIGHT COLUMN */}
-          <div style={styles.rightColumn}>
-            {/* 7️⃣ ANNOUNCEMENTS */}
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Announcements & Notifications</h2>
-              <div style={styles.announcementsList}>
+          {/* Right Column - 1/3 width */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            {/* Announcements */}
+            <section>
+              <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', marginBottom: '16px' }}>
+                Announcements
+              </h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {announcements.map((announcement) => (
-                  <div key={announcement.id} style={styles.announcementCard}>
-                    <div style={styles.announcementIcon}>
-                      <FiVolume2 size={18} color={ACCENT} />
-                    </div>
-                    <div style={styles.announcementContent}>
-                      <h4 style={styles.announcementTitle}>{announcement.title}</h4>
-                      <div style={styles.announcementMeta}>
-                        <span style={styles.announcementTime}>{announcement.time}</span>
-                        <span style={styles.announcementTag}>{announcement.internship}</span>
+                  <div 
+                    key={announcement.id} 
+                    style={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '12px',
+                      padding: '16px',
+                      cursor: 'pointer',
+                      transition: 'box-shadow 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)'}
+                    onMouseLeave={(e) => e.target.style.boxShadow = 'none'}
+                  >
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <div style={{ 
+                        width: '40px', 
+                        height: '40px', 
+                        borderRadius: '8px', 
+                        backgroundColor: `${ACCENT}15`, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        <Volume2 size={18} color={ACCENT} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h4 style={{ 
+                          fontSize: '14px', 
+                          fontWeight: '600', 
+                          color: '#111827', 
+                          marginBottom: '4px', 
+                          lineHeight: '1.4' 
+                        }}>
+                          {announcement.title}
+                        </h4>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
+                          <span style={{ color: '#6b7280' }}>{announcement.time}</span>
+                          <span style={{ color: '#d1d5db' }}>•</span>
+                          <span style={{ color: ACCENT, fontWeight: '500' }}>{announcement.internship}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
-            {/* 8️⃣ PERFORMANCE INSIGHTS */}
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Performance Insights</h2>
-              <div style={styles.insightsCard}>
-                <div style={styles.insightItem}>
-                  <div style={styles.insightLabel}>
-                    <FiTrendingUp size={16} color={PRIMARY} />
-                    <span>Average Attendance</span>
+            {/* Performance Insights */}
+            <section>
+              <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', marginBottom: '16px' }}>
+                Performance Insights
+              </h2>
+              <div style={{ 
+                backgroundColor: '#fff', 
+                border: '1px solid #e5e7eb', 
+                borderRadius: '12px', 
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '24px'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <TrendingUp size={16} color={PRIMARY} />
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>
+                        Avg Attendance
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '20px', fontWeight: '700', color: '#111827' }}>
+                      87%
+                    </span>
                   </div>
-                  <div style={styles.insightValue}>87%</div>
-                  <div style={styles.insightBar}>
-                    <div style={{...styles.insightBarFill, width: '87%', backgroundColor: PRIMARY}}></div>
-                  </div>
-                </div>
-                
-                <div style={styles.insightItem}>
-                  <div style={styles.insightLabel}>
-                    <FiDownload size={16} color="#10b981" />
-                    <span>Material Downloads</span>
-                  </div>
-                  <div style={styles.insightValue}>1,248</div>
-                  <div style={styles.insightBar}>
-                    <div style={{...styles.insightBarFill, width: '92%', backgroundColor: '#10b981'}}></div>
-                  </div>
-                </div>
-                
-                <div style={styles.insightItem}>
-                  <div style={styles.insightLabel}>
-                    <FiCheckCircle size={16} color="#8b5cf6" />
-                    <span>Assignment Completion</span>
-                  </div>
-                  <div style={styles.insightValue}>76%</div>
-                  <div style={styles.insightBar}>
-                    <div style={{...styles.insightBarFill, width: '76%', backgroundColor: '#8b5cf6'}}></div>
+                  <div style={{ width: '100%', backgroundColor: '#f3f4f6', borderRadius: '4px', height: '8px' }}>
+                    <div style={{ 
+                      backgroundColor: PRIMARY, 
+                      height: '8px', 
+                      borderRadius: '4px', 
+                      width: '87%' 
+                    }}></div>
                   </div>
                 </div>
 
-                <div style={styles.chartPlaceholder}>
-                  <FiTrendingUp size={32} color="#cbd5e1" />
-                  <p style={styles.chartPlaceholderText}>Detailed analytics chart</p>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Download size={16} color="#10b981" />
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>
+                        Material Downloads
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '20px', fontWeight: '700', color: '#111827' }}>
+                      1,248
+                    </span>
+                  </div>
+                  <div style={{ width: '100%', backgroundColor: '#f3f4f6', borderRadius: '4px', height: '8px' }}>
+                    <div style={{ 
+                      backgroundColor: '#10b981', 
+                      height: '8px', 
+                      borderRadius: '4px', 
+                      width: '92%' 
+                    }}></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <CheckCircle size={16} color="#8b5cf6" />
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>
+                        Assignment Rate
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '20px', fontWeight: '700', color: '#111827' }}>
+                      76%
+                    </span>
+                  </div>
+                  <div style={{ width: '100%', backgroundColor: '#f3f4f6', borderRadius: '4px', height: '8px' }}>
+                    <div style={{ 
+                      backgroundColor: '#8b5cf6', 
+                      height: '8px', 
+                      borderRadius: '4px', 
+                      width: '76%' 
+                    }}></div>
+                  </div>
+                </div>
+
+                <div style={{ paddingTop: '16px', borderTop: '1px solid #e5e7eb' }}>
+                  <button 
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#f9fafb',
+                      color: '#111827',
+                      padding: '10px',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onClick={() => alert('📊 Loading detailed analytics dashboard...')}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  >
+                    <BarChart3 size={16} />
+                    View Detailed Analytics
+                  </button>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
-};
-
-const styles = {
-  dashboard: {
-    minHeight: '100vh',
-    backgroundColor: '#F8F9FF',
-    fontFamily: '"Inter", "Segoe UI", "Roboto", sans-serif',
-  },
-
-  // HEADER STYLES
-  header: {
-    background: 'linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%)',
-    padding: '24px 40px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottom: '1px solid #e5e7eb',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-  },
-
-  headerLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '20px',
-  },
-
-  welcomeText: {
-    fontSize: '28px',
-    fontWeight: '700',
-    color: '#1e293b',
-    margin: 0,
-    marginBottom: '4px',
-  },
-
-  dateText: {
-    fontSize: '14px',
-    color: '#64748b',
-    margin: 0,
-  },
-
-  headerRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '20px',
-  },
-
-  notificationBell: {
-    position: 'relative',
-    cursor: 'pointer',
-    padding: '10px',
-    borderRadius: '12px',
-    transition: 'background-color 0.2s',
-  },
-
-  notificationBadge: {
-    position: 'absolute',
-    top: '6px',
-    right: '6px',
-    backgroundColor: '#EF7C00',
-    color: 'white',
-    fontSize: '11px',
-    fontWeight: '700',
-    width: '18px',
-    height: '18px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  profileAvatar: {
-    width: '48px',
-    height: '48px',
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #1640ff 0%, #0e30cc 100%)',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '16px',
-    fontWeight: '700',
-    cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(22, 64, 255, 0.25)',
-  },
-
-  // CONTENT STYLES
-  content: {
-    padding: '32px 40px',
-    maxWidth: '1600px',
-    margin: '0 auto',
-  },
-
-  // STATS CARDS
-  statsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '24px',
-    marginBottom: '32px',
-  },
-
-  statCard: {
-    backgroundColor: 'white',
-    padding: '28px',
-    borderRadius: '20px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-    transition: 'all 0.3s ease',
-    cursor: 'pointer',
-  },
-
-  statIconBox: {
-    width: '56px',
-    height: '56px',
-    borderRadius: '16px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '16px',
-  },
-
-  statValue: {
-    fontSize: '36px',
-    fontWeight: '800',
-    color: '#1e293b',
-    marginBottom: '8px',
-  },
-
-  statLabel: {
-    fontSize: '14px',
-    color: '#64748b',
-    fontWeight: '500',
-  },
-
-  // SECTION STYLES
-  section: {
-    marginBottom: '32px',
-  },
-
-  sectionTitle: {
-    fontSize: '22px',
-    fontWeight: '700',
-    color: '#1e293b',
-    marginBottom: '20px',
-  },
-
-  sectionHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-  },
-
-  viewAllBtn: {
-    padding: '8px 16px',
-    backgroundColor: 'transparent',
-    border: `1px solid #e5e7eb`,
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#1640ff',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
-
-  // INTERNSHIPS SCROLL
-  internshipsScroll: {
-    display: 'flex',
-    gap: '20px',
-    overflowX: 'auto',
-    paddingBottom: '12px',
-  },
-
-  internshipCard: {
-    minWidth: '340px',
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    overflow: 'hidden',
-    boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-    transition: 'all 0.3s',
-  },
-
-  internshipHeader: {
-    padding: '16px 20px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  internshipStatus: {
-    color: 'white',
-    fontSize: '13px',
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-
-  internshipBody: {
-    padding: '20px',
-  },
-
-  internshipName: {
-    fontSize: '16px',
-    fontWeight: '600',
-    color: '#1e293b',
-    marginBottom: '16px',
-    lineHeight: '1.4',
-  },
-
-  internshipMeta: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    marginBottom: '16px',
-  },
-
-  metaItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontSize: '14px',
-    color: '#64748b',
-  },
-
-  manageBtn: {
-    width: '100%',
-    padding: '10px',
-    backgroundColor: '#f1f5f9',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#1640ff',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '6px',
-    transition: 'all 0.2s',
-  },
-
-  // LIVE CLASS BLOCK
-  liveClassBlock: {
-    background: 'linear-gradient(135deg, #1640ff 0%, #0e30cc 100%)',
-    padding: '32px',
-    borderRadius: '20px',
-    marginBottom: '32px',
-    boxShadow: '0 8px 24px rgba(22, 64, 255, 0.25)',
-    border: '2px solid rgba(255, 255, 255, 0.2)',
-  },
-
-  liveClassHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '16px',
-  },
-
-  liveIndicator: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    backgroundColor: '#ef4444',
-    padding: '8px 16px',
-    borderRadius: '24px',
-    position: 'relative',
-  },
-
-  livePulse: {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    backgroundColor: 'white',
-    animation: 'pulse 2s infinite',
-  },
-
-  liveText: {
-    color: 'white',
-    fontSize: '12px',
-    fontWeight: '700',
-    letterSpacing: '0.5px',
-  },
-
-  liveTime: {
-    color: 'white',
-    fontSize: '14px',
-    fontWeight: '600',
-  },
-
-  liveClassTitle: {
-    fontSize: '24px',
-    fontWeight: '700',
-    color: 'white',
-    marginBottom: '8px',
-  },
-
-  liveClassTopic: {
-    fontSize: '15px',
-    color: 'rgba(255, 255, 255, 0.9)',
-    marginBottom: '24px',
-  },
-
-  liveClassFooter: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  liveClassStudents: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    color: 'white',
-    fontSize: '14px',
-    fontWeight: '500',
-  },
-
-  startLiveBtn: {
-    padding: '12px 28px',
-    backgroundColor: 'white',
-    border: 'none',
-    borderRadius: '10px',
-    fontSize: '15px',
-    fontWeight: '700',
-    color: '#1640ff',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    transition: 'all 0.3s',
-  },
-
-  // TWO COLUMN LAYOUT
-  twoColumnLayout: {
-    display: 'grid',
-    gridTemplateColumns: '1.5fr 1fr',
-    gap: '32px',
-  },
-
-  leftColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
-  rightColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
-  // MATERIALS TABLE
-  materialsTable: {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    overflow: 'hidden',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-  },
-
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-  },
-
-  th: {
-    padding: '16px',
-    textAlign: 'left',
-    fontSize: '13px',
-    fontWeight: '700',
-    color: '#64748b',
-    backgroundColor: '#f8fafc',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-
-  tr: {
-    borderBottom: '1px solid #f1f5f9',
-    transition: 'background-color 0.2s',
-  },
-
-  td: {
-    padding: '16px',
-    fontSize: '14px',
-    color: '#334155',
-  },
-
-  materialName: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    fontWeight: '500',
-  },
-
-  typeBadge: {
-    padding: '4px 10px',
-    borderRadius: '6px',
-    fontSize: '12px',
-    fontWeight: '600',
-  },
-
-  downloadCount: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    color: '#64748b',
-  },
-
-  actionButtons: {
-    display: 'flex',
-    gap: '8px',
-  },
-
-  iconBtn: {
-    padding: '6px',
-    backgroundColor: '#f1f5f9',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.2s',
-  },
-
-  // QUICK ACTIONS
-  quickActionsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gap: '16px',
-  },
-
-  quickActionBtn: {
-    backgroundColor: 'white',
-    padding: '24px',
-    borderRadius: '16px',
-    border: 'none',
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '12px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-    transition: 'all 0.3s',
-  },
-
-  quickActionIcon: {
-    width: '56px',
-    height: '56px',
-    borderRadius: '14px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  quickActionLabel: {
-    fontSize: '13px',
-    fontWeight: '600',
-    color: '#334155',
-    textAlign: 'center',
-  },
-
-  // ANNOUNCEMENTS
-  announcementsList: {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    padding: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-  },
-
-  announcementCard: {
-    display: 'flex',
-    gap: '14px',
-    padding: '16px',
-    borderLeft: '4px solid #EF7C00',
-    borderRadius: '8px',
-    marginBottom: '8px',
-    transition: 'background-color 0.2s',
-    cursor: 'pointer',
-  },
-
-  announcementIcon: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '10px',
-    backgroundColor: '#fff4e6',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-
-  announcementContent: {
-    flex: 1,
-  },
-
-  announcementTitle: {
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#1e293b',
-    marginBottom: '6px',
-  },
-
-  announcementMeta: {
-    display: 'flex',
-    gap: '12px',
-    fontSize: '12px',
-  },
-
-  announcementTime: {
-    color: '#94a3b8',
-  },
-
-  announcementTag: {
-    color: '#EF7C00',
-    fontWeight: '600',
-  },
-
-  // PERFORMANCE INSIGHTS
-  insightsCard: {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    padding: '24px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-  },
-
-  insightItem: {
-    marginBottom: '24px',
-  },
-
-  insightLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontSize: '13px',
-    fontWeight: '600',
-    color: '#64748b',
-    marginBottom: '8px',
-  },
-
-  insightValue: {
-    fontSize: '24px',
-    fontWeight: '700',
-    color: '#1e293b',
-    marginBottom: '8px',
-  },
-
-  insightBar: {
-    width: '100%',
-    height: '8px',
-    backgroundColor: '#f1f5f9',
-    borderRadius: '4px',
-    overflow: 'hidden',
-  },
-
-  insightBarFill: {
-    height: '100%',
-    borderRadius: '4px',
-    transition: 'width 0.5s ease',
-  },
-
-  chartPlaceholder: {
-    marginTop: '24px',
-    padding: '40px',
-    backgroundColor: '#f8fafc',
-    borderRadius: '12px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '12px',
-  },
-
-  chartPlaceholderText: {
-    fontSize: '14px',
-    color: '#94a3b8',
-    margin: 0,
-  },
 };
 
 export default InstructorDashboard;

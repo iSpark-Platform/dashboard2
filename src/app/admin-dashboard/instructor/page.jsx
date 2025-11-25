@@ -69,78 +69,8 @@ const InstructorsPage = () => {
         rating: 4.6,
         experience: '8 years'
       },
-      {
-        id: 5,
-        name: 'Prof. James Wilson',
-        email: 'james.wilson@example.com',
-        phone: '+1234567894',
-        bio: 'Pioneer in 3D printing and digital fabrication techniques for engineering applications.',
-        skills: ['3D Printing', 'Digital Fabrication', 'CAD', 'Rapid Prototyping'],
-        assignedInternships: ['3D Printing & Digital Fabrication for Engineers'],
-        avatar: 'https://picsum.photos/seed/james/100/100.jpg',
-        rating: 4.5,
-        experience: '14 years'
-      },
-      {
-        id: 6,
-        name: 'Dr. Lisa Anderson',
-        email: 'lisa.anderson@example.com',
-        phone: '+1234567895',
-        bio: 'Expert in humanoid robotics applications for service industries. Developed several commercial humanoid robots.',
-        skills: ['Humanoid Robotics', 'Service Robotics', 'Human-Robot Interaction'],
-        assignedInternships: ['Professional Diploma in Humanoid Robotics for Service Industries'],
-        avatar: 'https://picsum.photos/seed/lisa/100/100.jpg',
-        rating: 4.9,
-        experience: '16 years'
-      },
-      {
-        id: 7,
-        name: 'Dr. David Thompson',
-        email: 'david.thompson@example.com',
-        phone: '+1234567896',
-        bio: 'AI applications specialist with focus on cross-industry implementations of artificial intelligence.',
-        skills: ['AI Applications', 'Industry AI', 'AI Strategy', 'ML Operations'],
-        assignedInternships: ['Diploma in Artificial Intelligence Applications Across Industries'],
-        avatar: 'https://picsum.photos/seed/david/100/100.jpg',
-        rating: 4.7,
-        experience: '11 years'
-      },
-      {
-        id: 8,
-        name: 'Prof. Jennifer Martinez',
-        email: 'jennifer.martinez@example.com',
-        phone: '+1234567897',
-        bio: 'Cloud and edge technologies expert with experience in large-scale distributed systems.',
-        skills: ['Cloud Technologies', 'Edge Computing', 'Distributed Systems', 'DevOps'],
-        assignedInternships: ['Industry-Ready Diploma in Cloud & Edge Technologies'],
-        avatar: 'https://picsum.photos/seed/jennifer/100/100.jpg',
-        rating: 4.8,
-        experience: '13 years'
-      },
-      {
-        id: 9,
-        name: 'Dr. Christopher Lee',
-        email: 'christopher.lee@example.com',
-        phone: '+1234567898',
-        bio: 'Cybersecurity specialist with expertise in digital forensics and enterprise security solutions.',
-        skills: ['Cybersecurity', 'Digital Forensics', 'Network Security', 'Ethical Hacking'],
-        assignedInternships: ['Career-Ready Diploma in Cybersecurity & Digital Forensics'],
-        avatar: 'https://picsum.photos/seed/christopher/100/100.jpg',
-        rating: 4.9,
-        experience: '15 years'
-      },
-      {
-        id: 10,
-        name: 'Dr. Amanda Taylor',
-        email: 'amanda.taylor@example.com',
-        phone: '+1234567899',
-        bio: 'STEM education specialist with focus on preparing undergraduate students for industry challenges.',
-        skills: ['STEM Education', 'Curriculum Development', 'Educational Technology'],
-        assignedInternships: ['Year-long STEM Readiness for UG Students'],
-        avatar: 'https://picsum.photos/seed/amanda/100/100.jpg',
-        rating: 4.8,
-        experience: '9 years'
-      }
+    
+   
     ];
     
     const mockInternships = [

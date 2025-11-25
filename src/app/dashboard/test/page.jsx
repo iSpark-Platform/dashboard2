@@ -528,13 +528,14 @@ export default function AssignmentManagement() {
    (Based on your screenshot: large fonts, bold labels, clean UI)
    ========================================================= */
 const styles = {
+  // Page Layout
   page: {
     padding: "40px",
     fontFamily: "Inter, sans-serif",
     background: "#f4f7fc",
     minHeight: "100vh",
   },
-
+  
   pageTitle: {
     fontSize: "34px",
     fontWeight: "800",
@@ -542,21 +543,21 @@ const styles = {
     color: "#1e293b",
     letterSpacing: "-0.5px",
   },
-
+  
   subtitle: {
     fontSize: "15px",
     color: "#64748b",
     marginBottom: "35px",
   },
-
-  /* ---------------- SUMMARY CARDS ---------------- */
+  
+  // Summary Cards
   summaryGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
     gap: "22px",
     marginBottom: "35px",
   },
-
+  
   summaryCard: {
     background: "#ffffff",
     padding: "22px",
@@ -565,31 +566,31 @@ const styles = {
     transition: "0.3s ease",
     cursor: "pointer",
   },
-
+  
   summaryCardHover: {
     transform: "translateY(-4px)",
     boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
   },
-
+  
   cardIcon: {
     fontSize: "26px",
     color: "#475569",
   },
-
+  
   cardValue: {
     fontSize: "30px",
     fontWeight: "800",
     marginTop: "10px",
     color: "#0f172a",
   },
-
+  
   cardLabel: {
     fontSize: "14px",
     color: "#64748b",
     marginTop: "4px",
   },
-
-  /* ---------------- ACTION BAR ---------------- */
+  
+  // Action Bar
   actionBar: {
     display: "flex",
     alignItems: "center",
@@ -597,7 +598,7 @@ const styles = {
     width: "100%",
     marginBottom: "28px",
   },
-
+  
   searchBox: {
     display: "flex",
     alignItems: "center",
@@ -609,7 +610,7 @@ const styles = {
     border: "1px solid #e2e8f0",
     boxShadow: "0 3px 10px rgba(0,0,0,0.04)",
   },
-
+  
   searchInput: {
     border: "none",
     outline: "none",
@@ -617,7 +618,7 @@ const styles = {
     width: "100%",
     color: "#334155",
   },
-
+  
   filterDropdown: {
     display: "flex",
     alignItems: "center",
@@ -628,7 +629,7 @@ const styles = {
     border: "1px solid #e2e8f0",
     boxShadow: "0 3px 10px rgba(0,0,0,0.04)",
   },
-
+  
   filterSelect: {
     border: "none",
     outline: "none",
@@ -637,7 +638,7 @@ const styles = {
     background: "transparent",
     cursor: "pointer",
   },
-
+  
   actionBtn: {
     display: "flex",
     alignItems: "center",
@@ -652,37 +653,37 @@ const styles = {
     cursor: "pointer",
     transition: "0.25s ease",
   },
-
+  
   actionBtnHover: {
     background: "#0f2fcc",
     transform: "translateY(-2px)",
     boxShadow: "0 4px 12px rgba(22, 64, 255, 0.3)",
   },
-
-  /* ---------------- TABLE ---------------- */
+  
+  // Table Styles
   tableBox: {
     background: "white",
     borderRadius: "16px",
     padding: "28px",
     boxShadow: "0 6px 20px rgba(0,0,0,0.05)",
   },
-
+  
   tableHeader: {
     marginBottom: "16px",
   },
-
+  
   tableTitle: {
     fontSize: "22px",
     fontWeight: "700",
     color: "#1640ff",
     letterSpacing: "-0.4px",
   },
-
+  
   table: {
     width: "100%",
     borderCollapse: "collapse",
   },
-
+  
   th: {
     textAlign: "left",
     padding: "14px",
@@ -691,23 +692,23 @@ const styles = {
     color: "#475569",
     background: "#f1f5f9",
   },
-
+  
   tr: {
     borderBottom: "1px solid #eef2f5",
     transition: "background-color 0.2s ease",
   },
-
+  
   trHover: {
     backgroundColor: "#f8fafc",
   },
-
+  
   td: {
     padding: "14px",
     fontSize: "14px",
     color: "#334155",
   },
-
-  /* ---------------- PROGRESS BAR ---------------- */
+  
+  // Progress Bar
   progressBar: {
     width: "100%",
     height: "8px",
@@ -715,19 +716,19 @@ const styles = {
     borderRadius: "6px",
     overflow: "hidden",
   },
-
+  
   progressFill: {
     height: "100%",
     borderRadius: "6px",
   },
-
+  
   progressText: {
     fontSize: "12px",
     marginLeft: "4px",
     color: "#475569",
   },
-
-  /* ---------------- STATUS CHIP ---------------- */
+  
+  // Status Chip
   statusChip: {
     padding: "6px 12px",
     color: "white",
@@ -737,13 +738,13 @@ const styles = {
     textTransform: "capitalize",
     boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
   },
-
-  /* ---------------- ACTION BUTTONS ---------------- */
+  
+  // Action Buttons
   actionButtons: {
     display: "flex",
     gap: "8px",
   },
-
+  
   actionIconButton: {
     background: "#1640ff",
     border: "none",
@@ -756,12 +757,12 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
   },
-
+  
   actionIconButtonHover: {
     transform: "scale(1.1)",
     boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
   },
-
+  
   viewBtn: {
     background: "#1640ff",
     border: "none",
@@ -771,26 +772,26 @@ const styles = {
     cursor: "pointer",
     transition: "0.2s ease",
   },
-
+  
   viewBtnHover: {
     background: "#0f2fcc",
   },
-
-  /* ---------------- CHART PLACEHOLDER ---------------- */
+  
+  // Chart Placeholders
   chartGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "25px",
     marginTop: "35px",
   },
-
+  
   chartBox: {
     background: "white",
     padding: "25px",
     borderRadius: "16px",
     boxShadow: "0 6px 20px rgba(0,0,0,0.05)",
   },
-
+  
   chartHeader: {
     display: "flex",
     alignItems: "center",
@@ -800,7 +801,7 @@ const styles = {
     fontWeight: "600",
     color: "#1e293b",
   },
-
+  
   chartPlaceholder: {
     height: "200px",
     background: "#f8fafc",
@@ -811,8 +812,8 @@ const styles = {
     color: "#64748b",
     fontSize: "14px",
   },
-
-  /* ---------------- MODALS ---------------- */
+  
+  // Modal Styles
   modalOverlay: {
     position: "fixed",
     inset: 0,
@@ -823,7 +824,7 @@ const styles = {
     zIndex: 999,
     marginTop:"50px",
   },
-
+  
   modal: {
     width: "450px",
     background: "white",
@@ -832,37 +833,36 @@ const styles = {
     boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
     overflow: "hidden",
   },
-
-modalLarge: {
-  width: "750px",
-  maxWidth: "90%",
-  maxHeight: "85vh", // Limit height to 85% of viewport
-  background: "white",
-  padding: "0",
-  borderRadius: "16px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-  overflow: "hidden",
-  display: "flex",
-  flexDirection: "column", // Important for proper scrolling
-},
-
-modalHeader: {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "20px 28px",
-  borderBottom: "1px solid #e2e8f0",
-  flexShrink: 0, // Prevent header from shrinking
-},
-
-modalTitle: {
-  fontSize: "20px",
-  fontWeight: "700",
-  color: "#1640ff",
-  margin: 0,
-},
-
-
+  
+  modalLarge: {
+    width: "750px",
+    maxWidth: "90%",
+    maxHeight: "85vh", // Limit height to 85% of viewport
+    background: "white",
+    padding: "0",
+    borderRadius: "16px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column", // Important for proper scrolling
+  },
+  
+  modalHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "20px 28px",
+    borderBottom: "1px solid #e2e8f0",
+    flexShrink: 0, // Prevent header from shrinking
+  },
+  
+  modalTitle: {
+    fontSize: "20px",
+    fontWeight: "700",
+    color: "#1640ff",
+    margin: 0,
+  },
+  
   closeButton: {
     background: "transparent",
     border: "none",
@@ -875,11 +875,11 @@ modalTitle: {
     justifyContent: "center",
     transition: "all 0.2s ease",
   },
-
+  
   formGroup: {
     padding: "0 32px 20px",
   },
-
+  
   formLabel: {
     display: "block",
     fontSize: "14px",
@@ -887,7 +887,7 @@ modalTitle: {
     color: "#374151",
     marginBottom: "8px",
   },
-
+  
   modalInput: {
     width: "100%",
     padding: "13px",
@@ -896,7 +896,7 @@ modalTitle: {
     fontSize: "14px",
     transition: "border-color 0.2s ease",
   },
-
+  
   modalTextarea: {
     width: "100%",
     padding: "13px",
@@ -906,7 +906,7 @@ modalTitle: {
     fontSize: "14px",
     resize: "vertical",
   },
-
+  
   fileUpload: {
     border: "2px dashed #d1d5db",
     borderRadius: "10px",
@@ -915,101 +915,101 @@ modalTitle: {
     cursor: "pointer",
     transition: "border-color 0.2s ease",
   },
-
+  
   fileUploadText: {
     display: "block",
     fontSize: "14px",
     color: "#374151",
     marginTop: "8px",
   },
-
+  
   fileUploadSubtext: {
     display: "block",
     fontSize: "12px",
     color: "#6b7280",
     marginTop: "4px",
   },
-
-modalActions: {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "12px",
-  padding: "16px 28px",
-  borderTop: "1px solid #e2e8f0",
-  flexShrink: 0, // Prevent actions from shrinking
-},
-
-saveBtn: {
-  padding: "10px 18px",
-  background: "#1640ff",
-  color: "white",
-  borderRadius: "10px",
-  border: "none",
-  fontSize: "13px",
-  fontWeight: "600",
-  cursor: "pointer",
-  transition: "all 0.2s ease",
-},
-
-cancelBtn: {
-  padding: "10px 18px",
-  background: "#ef4444",
-  color: "white",
-  borderRadius: "10px",
-  border: "none",
-  fontSize: "13px",
-  fontWeight: "600",
-  cursor: "pointer",
-  transition: "all 0.2s ease",
-},
-
-secondaryBtn: {
-  padding: "10px 18px",
-  background: "#10b981",
-  color: "white",
-  borderRadius: "10px",
-  border: "none",
-  fontSize: "13px",
-  fontWeight: "600",
-  cursor: "pointer",
-  transition: "all 0.2s ease",
-},
-  /* ---------------- SUBMISSION MODAL ---------------- */
-submissionStats: {
-  display: "flex",
-  padding: "16px 28px",
-  borderBottom: "1px solid #e2e8f0",
-  flexShrink: 0, // Prevent stats from shrinking
-},
-
-statItem: {
-  flex: 1,
-  textAlign: "center",
-},
-
- statValue: {
-  display: "block",
-  fontSize: "22px",
-  fontWeight: "700",
-  color: "#1640ff",
-},
-
-statLabel: {
-  display: "block",
-  fontSize: "11px",
-  color: "#64748b",
-  marginTop: "2px",
-},
-
-
-modalSearchBar: {
-  display: "flex",
-  gap: "12px",
-  padding: "16px 28px",
-  borderBottom: "1px solid #e2e8f0",
-  flexShrink: 0, // Prevent search bar from shrinking
-},
-
+  
+  modalActions: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "12px",
+    padding: "16px 28px",
+    borderTop: "1px solid #e2e8f0",
+    flexShrink: 0, // Prevent actions from shrinking
+  },
+  
+  saveBtn: {
+    padding: "10px 18px",
+    background: "#1640ff",
+    color: "white",
+    borderRadius: "10px",
+    border: "none",
+    fontSize: "13px",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
+  
+  cancelBtn: {
+    padding: "10px 18px",
+    background: "#ef4444",
+    color: "white",
+    borderRadius: "10px",
+    border: "none",
+    fontSize: "13px",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
+  
+  secondaryBtn: {
+    padding: "10px 18px",
+    background: "#10b981",
+    color: "white",
+    borderRadius: "10px",
+    border: "none",
+    fontSize: "13px",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
+  
+  // Submission Modal Specific Styles
+  submissionStats: {
+    display: "flex",
+    padding: "16px 28px",
+    borderBottom: "1px solid #e2e8f0",
+    flexShrink: 0, // Prevent stats from shrinking
+  },
+  
+  statItem: {
+    flex: 1,
+    textAlign: "center",
+  },
+  
+  statValue: {
+    display: "block",
+    fontSize: "22px",
+    fontWeight: "700",
+    color: "#1640ff",
+  },
+  
+  statLabel: {
+    display: "block",
+    fontSize: "11px",
+    color: "#64748b",
+    marginTop: "2px",
+  },
+  
+  modalSearchBar: {
+    display: "flex",
+    gap: "12px",
+    padding: "16px 28px",
+    borderBottom: "1px solid #e2e8f0",
+    flexShrink: 0, // Prevent search bar from shrinking
+  },
+  
   filterButton: {
     display: "flex",
     alignItems: "center",
@@ -1024,104 +1024,115 @@ modalSearchBar: {
     cursor: "pointer",
     transition: "all 0.2s ease",
   },
-
- submissionList: {
-  flex: 1, // Take remaining space
-  overflowY: "auto",
-  padding: "16px 28px",
-  minHeight: "200px",
-  maxHeight: "350px", // Limit the list height
-},
-
-submissionRow: {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  background: "#f8fafc",
-  padding: "14px",
-  borderRadius: "10px",
-  marginBottom: "10px",
-},
-
-studentAvatar: {
-  width: "36px",
-  height: "36px",
-  borderRadius: "50%",
-  background: "#1640ff",
-  color: "white",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontWeight: "600",
-  fontSize: "14px",
-},
-
-studentName: {
-  fontSize: "15px",
-  fontWeight: "600",
-  color: "#1e293b",
-},
-
-studentStatus: {
-  display: "flex",
-  alignItems: "center",
-  gap: "4px",
-  fontSize: "11px",
-  color: "#64748b",
-  marginTop: "2px",
-},
-
-grade: {
-  fontSize: "15px",
-  fontWeight: "700",
-  color: "#1640ff",
-  minWidth: "35px",
-},
-
+  
+  submissionList: {
+    flex: 1, // Take remaining space
+    overflowY: "auto",
+    padding: "16px 28px",
+    minHeight: "200px",
+    maxHeight: "350px", // Limit the list height
+  },
+  
+  submissionRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    background: "#f8fafc",
+    padding: "14px",
+    borderRadius: "10px",
+    marginBottom: "10px",
+  },
+  
+  studentInfo: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+  },
+  
+  studentAvatar: {
+    width: "36px",
+    height: "36px",
+    borderRadius: "50%",
+    background: "#1640ff",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "600",
+    fontSize: "14px",
+  },
+  
+  studentName: {
+    fontSize: "15px",
+    fontWeight: "600",
+    color: "#1e293b",
+  },
+  
+  studentStatus: {
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    fontSize: "11px",
+    color: "#64748b",
+    marginTop: "2px",
+  },
+  
+  submissionDetails: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  
+  grade: {
+    fontSize: "15px",
+    fontWeight: "700",
+    color: "#1640ff",
+    minWidth: "35px",
+  },
+  
   submissionActions: {
     display: "flex",
     gap: "8px",
   },
-
- // Update button sizes in submission actions:
-viewFileBtn: {
-  display: "flex",
-  alignItems: "center",
-  gap: "4px",
-  padding: "6px 12px",
-  background: "#1640ff",
-  color: "white",
-  fontSize: "12px",
-  borderRadius: "6px",
-  border: "none",
-  cursor: "pointer",
-  transition: "all 0.2s ease",
-},
-
-gradeBtn: {
-  display: "flex",
-  alignItems: "center",
-  gap: "4px",
-  padding: "6px 12px",
-  background: "#10b981",
-  color: "white",
-  fontSize: "12px",
-  borderRadius: "6px",
-  border: "none",
-  cursor: "pointer",
-  transition: "all 0.2s ease",
-},
-
-downloadBtn: {
-  display: "flex",
-  alignItems: "center",
-  padding: "6px 10px",
-  background: "#6b7280",
-  color: "white",
-  fontSize: "12px",
-  borderRadius: "6px",
-  border: "none",
-  cursor: "pointer",
-  transition: "all 0.2s ease",
-},
+  
+  viewFileBtn: {
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    padding: "6px 12px",
+    background: "#1640ff",
+    color: "white",
+    fontSize: "12px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
+  
+  gradeBtn: {
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    padding: "6px 12px",
+    background: "#10b981",
+    color: "white",
+    fontSize: "12px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
+  
+  downloadBtn: {
+    display: "flex",
+    alignItems: "center",
+    padding: "6px 10px",
+    background: "#6b7280",
+    color: "white",
+    fontSize: "12px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
 };

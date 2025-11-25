@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { FiBell, FiSend, FiClock, FiEdit2, FiTrash2, FiFilter, FiPlus, FiX, FiCheck, FiAlertCircle, FiInfo, FiTrendingUp, FiCalendar, FiUsers } from 'react-icons/fi';
+import { FiBell, FiSend, FiClock, FiEdit2, FiTrash2, FiFilter, FiPlus, FiX, FiCheck, FiAlertCircle, FiInfo, FiTrendingUp, FiCalendar, FiUsers, FiTarget, FiActivity, FiMessageSquare, FiEye, FiCheckCircle } from 'react-icons/fi';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -28,7 +28,20 @@ const NotificationsPage = () => {
     const generateNotifications = () => {
       const categories = ['info', 'alert', 'update'];
       const audiences = ['all_students', 'all_instructors', 'specific_internship'];
-      const internshipNames = ['Web Development', 'Data Science', 'UI/UX Design', 'Mobile Development'];
+      const internshipNames = ['Smart Robotics & Industry 4.0', 'Applied AI & Machine Learning', 'IoT & IIoT Systems', 'Cloud & Edge Computing'];
+      
+      const messages = [
+        'New assignment has been posted. Please review and submit before the deadline.',
+        'Important update regarding upcoming live class schedule changes.',
+        'Your course completion certificate is now available for download.',
+        'Reminder: Live class starting in 30 minutes. Join now to avoid missing out.',
+        'New learning materials have been added to your course dashboard.',
+        'System maintenance scheduled for this weekend. Services may be temporarily unavailable.',
+        'Congratulations! You have completed 75% of the course curriculum.',
+        'New peer review assignment available. Collaborate with your classmates.',
+        'Important announcement regarding final project submission guidelines.',
+        'Weekly progress report is now available in your dashboard.'
+      ];
       
       const data = [];
       
@@ -43,16 +56,19 @@ const NotificationsPage = () => {
           : '';
         
         const status = Math.random() > 0.2 ? 'delivered' : 'pending';
+        const message = messages[Math.floor(Math.random() * messages.length)];
         
         data.push({
           id: `notif_${i + 1}`,
-          message: `This is a notification message with ID ${i + 1}. It contains important information about upcoming events and deadlines.`,
+          message,
           category,
           link: Math.random() > 0.5 ? `https://example.com/resource/${i + 1}` : '',
           audience,
           internshipName,
           date: date.toISOString(),
-          status
+          status,
+          views: Math.floor(Math.random() * 500),
+          clicks: Math.floor(Math.random() * 100)
         });
       }
       
@@ -68,6 +84,10 @@ const NotificationsPage = () => {
     const notifDate = new Date(n.date);
     return notifDate.toDateString() === today.toDateString();
   }).length;
+  
+  const totalDelivered = notifications.filter(n => n.status === 'delivered').length;
+  const totalViews = notifications.reduce((sum, n) => sum + n.views, 0);
+  const avgEngagement = notifications.length > 0 ? Math.round(totalViews / notifications.length) : 0;
   
   // Filter notifications based on current filters
   const filteredNotifications = notifications.filter(notif => {
@@ -105,6 +125,11 @@ const NotificationsPage = () => {
   
   // Handle creating a new notification
   const handleCreateNotification = () => {
+    if (!formData.message.trim()) {
+      alert('Please enter a message');
+      return;
+    }
+    
     const newNotification = {
       id: `notif_${Date.now()}`,
       message: formData.message,
@@ -113,7 +138,9 @@ const NotificationsPage = () => {
       audience: formData.audience,
       internshipName: formData.audience === 'specific_internship' ? formData.specificInternship : '',
       date: new Date().toISOString(),
-      status: 'pending'
+      status: 'pending',
+      views: 0,
+      clicks: 0
     };
     
     setNotifications(prev => [newNotification, ...prev]);
@@ -123,6 +150,11 @@ const NotificationsPage = () => {
   
   // Handle updating an existing notification
   const handleUpdateNotification = () => {
+    if (!formData.message.trim()) {
+      alert('Please enter a message');
+      return;
+    }
+    
     setNotifications(prev => prev.map(notif => 
       notif.id === editingNotification.id 
         ? {
@@ -143,7 +175,9 @@ const NotificationsPage = () => {
   
   // Handle deleting a notification
   const handleDeleteNotification = (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
+    if (window.confirm('Are you sure you want to delete this notification?')) {
+      setNotifications(prev => prev.filter(notif => notif.id !== id));
+    }
   };
   
   // Reset form data
@@ -195,15 +229,24 @@ const NotificationsPage = () => {
     }
   };
   
-  // Get category color
-  const getCategoryColor = (category) => {
+  // Get category config
+  const getCategoryConfig = (category) => {
     switch (category) {
       case 'alert':
-        return '#FF5E5E';
+        return {
+          color: '#EF7C00',
+          bg: '#FFF4ED'
+        };
       case 'update':
-        return '#F59E0B';
+        return {
+          color: '#1640FF',
+          bg: '#F0F4FF'
+        };
       default:
-        return '#1640FF';
+        return {
+          color: '#6B7280',
+          bg: '#F9FAFB'
+        };
     }
   };
   
@@ -221,81 +264,119 @@ const NotificationsPage = () => {
     }
   };
   
-  // Get status indicator
-  const getStatusIndicator = (status) => {
-    return (
-      <div style={{
-        ...styles.statusIndicator,
-        backgroundColor: status === 'delivered' ? '#1EC787' : '#F59E0B'
-      }}></div>
-    );
-  };
-  
   return (
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
         <div style={styles.headerContent}>
-          <div>
-            <h1 style={styles.pageTitle}>Notifications</h1>
-            <p style={styles.pageSubtitle}>Manage alerts for users</p>
+          <h1 style={styles.pageTitle}>Notifications</h1>
+          <p style={styles.pageSubtitle}>Manage and send notifications to users</p>
+        </div>
+        <button style={styles.createButton} onClick={openCreateModal}>
+          <FiPlus style={styles.buttonIcon} />
+          Create Notification
+        </button>
+      </div>
+      
+      {/* Stats Cards */}
+      <div style={styles.statsGrid}>
+        <div style={styles.statCard}>
+          <div style={styles.statHeader}>
+            <div style={{...styles.statIcon, backgroundColor: '#F0F4FF'}}>
+              <FiSend style={{color: '#1640FF'}} />
+            </div>
+            <div style={styles.statInfo}>
+              <div style={styles.statValue}>{notificationsSentToday}</div>
+              <div style={styles.statLabel}>Sent Today</div>
+            </div>
           </div>
-          <button style={styles.createButton} onClick={openCreateModal}>
-            <FiPlus />
-            Create Notification
-          </button>
         </div>
         
-        {/* Analytics Card */}
-        <div style={styles.analyticsCard}>
-          <div style={styles.analyticsContent}>
-            <div style={styles.analyticsIcon}>
-              <FiSend />
+        <div style={styles.statCard}>
+          <div style={styles.statHeader}>
+            <div style={{...styles.statIcon, backgroundColor: '#E6F7F0'}}>
+              <FiCheckCircle style={{color: '#10B981'}} />
             </div>
-            <div>
-              <div style={styles.analyticsNumber}>{notificationsSentToday}</div>
-              <div style={styles.analyticsLabel}>Notifications Sent Today</div>
+            <div style={styles.statInfo}>
+              <div style={styles.statValue}>{totalDelivered}</div>
+              <div style={styles.statLabel}>Delivered</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style={styles.statCard}>
+          <div style={styles.statHeader}>
+            <div style={{...styles.statIcon, backgroundColor: '#FFF4ED'}}>
+              <FiEye style={{color: '#EF7C00'}} />
+            </div>
+            <div style={styles.statInfo}>
+              <div style={styles.statValue}>{totalViews}</div>
+              <div style={styles.statLabel}>Total Views</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style={styles.statCard}>
+          <div style={styles.statHeader}>
+            <div style={{...styles.statIcon, backgroundColor: '#F0F4FF'}}>
+              <FiActivity style={{color: '#1640FF'}} />
+            </div>
+            <div style={styles.statInfo}>
+              <div style={styles.statValue}>{avgEngagement}</div>
+              <div style={styles.statLabel}>Avg Engagement</div>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Filters */}
-      <div style={styles.filtersContainer}>
-        <div style={styles.filterGroup}>
-          <FiFilter style={styles.filterIcon} />
-          <select 
-            style={styles.filterSelect} 
-            value={filters.type} 
-            onChange={(e) => setFilters({...filters, type: e.target.value})}
-          >
-            <option value="all">All Types</option>
-            <option value="info">Info</option>
-            <option value="alert">Alert</option>
-            <option value="update">Update</option>
-          </select>
+      {/* Filters Section */}
+      <div style={styles.filtersSection}>
+        <div style={styles.filtersRow}>
+          <div style={styles.filterGroup}>
+            <label style={styles.filterLabel}>Category</label>
+            <select 
+              style={styles.filterSelect} 
+              value={filters.type} 
+              onChange={(e) => setFilters({...filters, type: e.target.value})}
+            >
+              <option value="all">All Categories</option>
+              <option value="info">Info</option>
+              <option value="alert">Alert</option>
+              <option value="update">Update</option>
+            </select>
+          </div>
           
-          <select 
-            style={styles.filterSelect} 
-            value={filters.date} 
-            onChange={(e) => setFilters({...filters, date: e.target.value})}
-          >
-            <option value="all">All Dates</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-          </select>
+          <div style={styles.filterGroup}>
+            <label style={styles.filterLabel}>Date Range</label>
+            <select 
+              style={styles.filterSelect} 
+              value={filters.date} 
+              onChange={(e) => setFilters({...filters, date: e.target.value})}
+            >
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+          </div>
           
-          <select 
-            style={styles.filterSelect} 
-            value={filters.audience} 
-            onChange={(e) => setFilters({...filters, audience: e.target.value})}
-          >
-            <option value="all">All Audiences</option>
-            <option value="all_students">All Students</option>
-            <option value="all_instructors">All Instructors</option>
-            <option value="specific_internship">Specific Internship</option>
-          </select>
+          <div style={styles.filterGroup}>
+            <label style={styles.filterLabel}>Audience</label>
+            <select 
+              style={styles.filterSelect} 
+              value={filters.audience} 
+              onChange={(e) => setFilters({...filters, audience: e.target.value})}
+            >
+              <option value="all">All Audiences</option>
+              <option value="all_students">All Students</option>
+              <option value="all_instructors">All Instructors</option>
+              <option value="specific_internship">Specific Internship</option>
+            </select>
+          </div>
+          
+          <div style={styles.resultsCount}>
+            {filteredNotifications.length} Results
+          </div>
         </div>
       </div>
       
@@ -303,68 +384,117 @@ const NotificationsPage = () => {
       <div style={styles.notificationsList}>
         {filteredNotifications.length === 0 ? (
           <div style={styles.emptyState}>
-            <FiBell style={styles.emptyStateIcon} />
-            <h3>No notifications found</h3>
-            <p>Try adjusting your filters or create a new notification</p>
+            <FiBell style={styles.emptyIcon} />
+            <h3 style={styles.emptyTitle}>No notifications found</h3>
+            <p style={styles.emptyText}>Try adjusting your filters or create a new notification</p>
+            <button style={styles.emptyButton} onClick={openCreateModal}>
+              <FiPlus />
+              Create Notification
+            </button>
           </div>
         ) : (
-          filteredNotifications.map(notification => (
-            <div key={notification.id} style={styles.notificationCard}>
-              <div style={styles.notificationHeader}>
-                <div style={styles.notificationMeta}>
-                  <div style={{
-                    ...styles.categoryLabel,
-                    color: getCategoryColor(notification.category)
-                  }}>
-                    {getCategoryIcon(notification.category)}
-                    {notification.category.charAt(0).toUpperCase() + notification.category.slice(1)}
+          filteredNotifications.map((notification) => {
+            const config = getCategoryConfig(notification.category);
+            return (
+              <div key={notification.id} style={styles.notificationCard}>
+                <div style={styles.cardHeader}>
+                  <div style={styles.cardMeta}>
+                    <span 
+                      style={{
+                        ...styles.categoryBadge,
+                        backgroundColor: config.bg,
+                        color: config.color
+                      }}
+                    >
+                      {getCategoryIcon(notification.category)}
+                      <span>{notification.category.toUpperCase()}</span>
+                    </span>
+                    
+                    <span style={styles.metaText}>
+                      <FiCalendar style={styles.metaIcon} />
+                      {new Date(notification.date).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </span>
+                    
+                    <span style={styles.metaText}>
+                      <FiUsers style={styles.metaIcon} />
+                      {getAudienceLabel(notification.audience, notification.internshipName)}
+                    </span>
                   </div>
-                  <div style={styles.notificationDate}>
-                    <FiClock />
-                    {new Date(notification.date).toLocaleDateString()}
-                  </div>
-                  <div style={styles.notificationAudience}>
-                    <FiUsers />
-                    {getAudienceLabel(notification.audience, notification.internshipName)}
+                  
+                  <div style={styles.cardActions}>
+                    <button 
+                      style={styles.iconButton}
+                      onClick={() => openPreviewModal(notification)}
+                      title="Preview"
+                    >
+                      <FiEye />
+                    </button>
+                    <button 
+                      style={styles.iconButton}
+                      onClick={() => openEditModal(notification)}
+                      title="Edit"
+                    >
+                      <FiEdit2 />
+                    </button>
+                    <button 
+                      style={{...styles.iconButton, color: '#EF4444'}}
+                      onClick={() => handleDeleteNotification(notification.id)}
+                      title="Delete"
+                    >
+                      <FiTrash2 />
+                    </button>
                   </div>
                 </div>
-                <div style={styles.notificationActions}>
-                  <button 
-                    style={styles.actionButton}
-                    onClick={() => openPreviewModal(notification)}
+                
+                <div style={styles.cardBody}>
+                  <p style={styles.cardMessage}>{notification.message}</p>
+                  {notification.link && (
+                    <a 
+                      href={notification.link} 
+                      style={styles.cardLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      View Link →
+                    </a>
+                  )}
+                </div>
+                
+                <div style={styles.cardFooter}>
+                  <div style={styles.statsRow}>
+                    <span style={styles.statItem}>
+                      <FiEye style={styles.statItemIcon} />
+                      {notification.views} views
+                    </span>
+                    <span style={styles.statItem}>
+                      <FiTarget style={styles.statItemIcon} />
+                      {notification.clicks} clicks
+                    </span>
+                  </div>
+                  
+                  <span 
+                    style={{
+                      ...styles.statusBadge,
+                      backgroundColor: notification.status === 'delivered' ? '#E6F7F0' : '#FFF4ED',
+                      color: notification.status === 'delivered' ? '#10B981' : '#EF7C00'
+                    }}
                   >
-                    View
-                  </button>
-                  <button 
-                    style={styles.actionButton}
-                    onClick={() => openEditModal(notification)}
-                  >
-                    <FiEdit2 />
-                  </button>
-                  <button 
-                    style={styles.actionButton}
-                    onClick={() => handleDeleteNotification(notification.id)}
-                  >
-                    <FiTrash2 />
-                  </button>
+                    <span 
+                      style={{
+                        ...styles.statusDot,
+                        backgroundColor: notification.status === 'delivered' ? '#10B981' : '#EF7C00'
+                      }}
+                    ></span>
+                    {notification.status === 'delivered' ? 'Delivered' : 'Pending'}
+                  </span>
                 </div>
               </div>
-              <div style={styles.notificationContent}>
-                <p>{notification.message.substring(0, 150)}{notification.message.length > 150 ? '...' : ''}</p>
-                {notification.link && (
-                  <a href={notification.link} style={styles.notificationLink} target="_blank" rel="noopener noreferrer">
-                    View Link
-                  </a>
-                )}
-              </div>
-              <div style={styles.notificationFooter}>
-                {getStatusIndicator(notification.status)}
-                <span style={styles.statusText}>
-                  {notification.status === 'delivered' ? 'Delivered' : 'Pending'}
-                </span>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
       
@@ -384,52 +514,41 @@ const NotificationsPage = () => {
               </button>
             </div>
             
-            <div style={styles.modalContent}>
+            <div style={styles.modalBody}>
               <div style={styles.formGroup}>
-                <label style={styles.formLabel}>Message</label>
+                <label style={styles.formLabel}>
+                  Message <span style={styles.required}>*</span>
+                </label>
                 <textarea 
                   style={styles.textarea}
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  placeholder="Enter your notification message here..."
+                  placeholder="Enter notification message..."
                   rows={4}
                 />
               </div>
               
               <div style={styles.formGroup}>
-                <label style={styles.formLabel}>Category</label>
+                <label style={styles.formLabel}>
+                  Category <span style={styles.required}>*</span>
+                </label>
                 <div style={styles.radioGroup}>
-                  <label style={styles.radioLabel}>
-                    <input 
-                      type="radio" 
-                      name="category" 
-                      value="info"
-                      checked={formData.category === 'info'}
-                      onChange={handleInputChange}
-                    />
-                    <span style={styles.radioText}>Info</span>
-                  </label>
-                  <label style={styles.radioLabel}>
-                    <input 
-                      type="radio" 
-                      name="category" 
-                      value="alert"
-                      checked={formData.category === 'alert'}
-                      onChange={handleInputChange}
-                    />
-                    <span style={styles.radioText}>Alert</span>
-                  </label>
-                  <label style={styles.radioLabel}>
-                    <input 
-                      type="radio" 
-                      name="category" 
-                      value="update"
-                      checked={formData.category === 'update'}
-                      onChange={handleInputChange}
-                    />
-                    <span style={styles.radioText}>Update</span>
-                  </label>
+                  {['info', 'alert', 'update'].map(cat => (
+                    <label key={cat} style={styles.radioLabel}>
+                      <input 
+                        type="radio" 
+                        name="category" 
+                        value={cat}
+                        checked={formData.category === cat}
+                        onChange={handleInputChange}
+                        style={styles.radioInput}
+                      />
+                      <span style={styles.radioText}>
+                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                      </span>
+                    </label>
+                  ))}
                 </div>
               </div>
               
@@ -445,48 +564,55 @@ const NotificationsPage = () => {
                 />
               </div>
               
-              <div style={styles.formGroup}>
-                <label style={styles.formLabel}>Audience</label>
-                <select 
-                  style={styles.select}
-                  name="audience"
-                  value={formData.audience}
-                  onChange={handleInputChange}
-                >
-                  <option value="all_students">All Students</option>
-                  <option value="all_instructors">All Instructors</option>
-                  <option value="specific_internship">Specific Internship</option>
-                </select>
-              </div>
-              
-              {formData.audience === 'specific_internship' && (
+              <div style={styles.formRow}>
                 <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>Internship Name</label>
-                  <input 
-                    type="text"
-                    style={styles.input}
-                    name="specificInternship"
-                    value={formData.specificInternship}
+                  <label style={styles.formLabel}>
+                    Audience <span style={styles.required}>*</span>
+                  </label>
+                  <select 
+                    style={styles.select}
+                    name="audience"
+                    value={formData.audience}
                     onChange={handleInputChange}
-                    placeholder="Enter internship name"
-                  />
+                  >
+                    <option value="all_students">All Students</option>
+                    <option value="all_instructors">All Instructors</option>
+                    <option value="specific_internship">Specific Internship</option>
+                  </select>
                 </div>
-              )}
-              
-              <div style={styles.formActions}>
-                <button 
-                  style={styles.cancelButton}
-                  onClick={() => setShowCreateModal(false)}
-                >
-                  Cancel
-                </button>
-                <button 
-                  style={styles.submitButton}
-                  onClick={editingNotification ? handleUpdateNotification : handleCreateNotification}
-                >
-                  {editingNotification ? 'Update' : 'Create'} Notification
-                </button>
+                
+                {formData.audience === 'specific_internship' && (
+                  <div style={styles.formGroup}>
+                    <label style={styles.formLabel}>
+                      Internship Name <span style={styles.required}>*</span>
+                    </label>
+                    <input 
+                      type="text"
+                      style={styles.input}
+                      name="specificInternship"
+                      value={formData.specificInternship}
+                      onChange={handleInputChange}
+                      placeholder="Enter internship name"
+                    />
+                  </div>
+                )}
               </div>
+            </div>
+            
+            <div style={styles.modalFooter}>
+              <button 
+                style={styles.cancelButton}
+                onClick={() => setShowCreateModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                style={styles.submitButton}
+                onClick={editingNotification ? handleUpdateNotification : handleCreateNotification}
+              >
+                <FiCheck />
+                {editingNotification ? 'Update' : 'Create'}
+              </button>
             </div>
           </div>
         </div>
@@ -506,42 +632,86 @@ const NotificationsPage = () => {
               </button>
             </div>
             
-            <div style={styles.modalContent}>
+            <div style={styles.modalBody}>
               <div style={styles.previewCard}>
                 <div style={styles.previewHeader}>
-                  <div style={{
-                    ...styles.categoryLabel,
-                    color: getCategoryColor(selectedNotification.category)
-                  }}>
+                  <span 
+                    style={{
+                      ...styles.categoryBadge,
+                      backgroundColor: getCategoryConfig(selectedNotification.category).bg,
+                      color: getCategoryConfig(selectedNotification.category).color
+                    }}
+                  >
                     {getCategoryIcon(selectedNotification.category)}
-                    {selectedNotification.category.charAt(0).toUpperCase() + selectedNotification.category.slice(1)}
-                  </div>
-                  <div style={styles.previewDate}>
-                    <FiCalendar />
-                    {new Date(selectedNotification.date).toLocaleDateString()}
-                  </div>
+                    <span>{selectedNotification.category.toUpperCase()}</span>
+                  </span>
+                  
+                  <span style={styles.previewDate}>
+                    {new Date(selectedNotification.date).toLocaleDateString('en-US', {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </span>
                 </div>
                 
-                <div style={styles.previewContent}>
-                  <p>{selectedNotification.message}</p>
+                <div style={styles.previewBody}>
+                  <p style={styles.previewMessage}>{selectedNotification.message}</p>
                   {selectedNotification.link && (
-                    <a href={selectedNotification.link} style={styles.previewLink} target="_blank" rel="noopener noreferrer">
-                      View Link
+                    <a 
+                      href={selectedNotification.link} 
+                      style={styles.previewLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Resource →
                     </a>
                   )}
                 </div>
                 
                 <div style={styles.previewFooter}>
-                  <div style={styles.previewAudience}>
+                  <span style={styles.previewAudience}>
                     <FiUsers />
                     {getAudienceLabel(selectedNotification.audience, selectedNotification.internshipName)}
+                  </span>
+                  
+                  <span 
+                    style={{
+                      ...styles.statusBadge,
+                      backgroundColor: selectedNotification.status === 'delivered' ? '#E6F7F0' : '#FFF4ED',
+                      color: selectedNotification.status === 'delivered' ? '#10B981' : '#EF7C00'
+                    }}
+                  >
+                    <span 
+                      style={{
+                        ...styles.statusDot,
+                        backgroundColor: selectedNotification.status === 'delivered' ? '#10B981' : '#EF7C00'
+                      }}
+                    ></span>
+                    {selectedNotification.status === 'delivered' ? 'Delivered' : 'Pending'}
+                  </span>
+                </div>
+              </div>
+              
+              <div style={styles.metricsGrid}>
+                <div style={styles.metricCard}>
+                  <FiEye style={styles.metricIcon} />
+                  <div style={styles.metricValue}>{selectedNotification.views}</div>
+                  <div style={styles.metricLabel}>Views</div>
+                </div>
+                <div style={styles.metricCard}>
+                  <FiTarget style={styles.metricIcon} />
+                  <div style={styles.metricValue}>{selectedNotification.clicks}</div>
+                  <div style={styles.metricLabel}>Clicks</div>
+                </div>
+                <div style={styles.metricCard}>
+                  <FiActivity style={styles.metricIcon} />
+                  <div style={styles.metricValue}>
+                    {selectedNotification.views > 0 
+                      ? Math.round((selectedNotification.clicks / selectedNotification.views) * 100)
+                      : 0}%
                   </div>
-                  <div style={styles.previewStatus}>
-                    {getStatusIndicator(selectedNotification.status)}
-                    <span style={styles.statusText}>
-                      {selectedNotification.status === 'delivered' ? 'Delivered' : 'Pending'}
-                    </span>
-                  </div>
+                  <div style={styles.metricLabel}>Click Rate</div>
                 </div>
               </div>
             </div>
@@ -555,209 +725,304 @@ const NotificationsPage = () => {
 // Styles
 const styles = {
   container: {
-    fontFamily: "'Inter', sans-serif",
-    backgroundColor: '#f8fafc',
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+    backgroundColor: '#F8F9FA',
     minHeight: '100vh',
-    padding: '20px',
-    maxWidth: '1200px',
+    padding: '32px',
+    maxWidth: '1400px',
     margin: '0 auto'
   },
+  
+  // Header
   header: {
-    marginBottom: '24px'
-  },
-  headerContent: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px'
+    marginBottom: '32px',
+    flexWrap: 'wrap',
+    gap: '20px'
+  },
+  headerContent: {
+    flex: 1
   },
   pageTitle: {
-    fontFamily: "'Poppins', sans-serif",
     fontSize: '32px',
     fontWeight: '700',
-    color: '#1a202c',
+    color: '#1F2937',
     margin: '0 0 8px 0'
   },
   pageSubtitle: {
     fontSize: '16px',
-    color: '#718096',
+    color: '#6B7280',
     margin: 0
   },
   createButton: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    padding: '12px 20px',
+    padding: '12px 24px',
     backgroundColor: '#1640FF',
     color: 'white',
     border: 'none',
     borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '500',
+    fontSize: '15px',
+    fontWeight: '600',
     cursor: 'pointer',
-    transition: 'all 0.2s ease'
+    transition: 'background-color 0.2s'
   },
-  analyticsCard: {
+  buttonIcon: {
+    fontSize: '18px'
+  },
+  
+  // Stats Grid
+  statsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+    gap: '20px',
+    marginBottom: '32px'
+  },
+  statCard: {
     backgroundColor: 'white',
     borderRadius: '12px',
-    padding: '20px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+    padding: '24px',
+    border: '1px solid #E5E7EB'
   },
-  analyticsContent: {
+  statHeader: {
     display: 'flex',
     alignItems: 'center',
     gap: '16px'
   },
-  analyticsIcon: {
+  statIcon: {
+    width: '48px',
+    height: '48px',
+    borderRadius: '10px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '48px',
-    height: '48px',
-    backgroundColor: '#1640FF',
-    color: 'white',
-    borderRadius: '8px',
-    fontSize: '20px'
+    fontSize: '22px'
   },
-  analyticsNumber: {
-    fontFamily: "'Poppins', sans-serif",
+  statInfo: {
+    flex: 1
+  },
+  statValue: {
     fontSize: '28px',
     fontWeight: '700',
-    color: '#1a202c'
+    color: '#1F2937',
+    lineHeight: '1',
+    marginBottom: '4px'
   },
-  analyticsLabel: {
+  statLabel: {
     fontSize: '14px',
-    color: '#718096'
+    color: '#6B7280',
+    fontWeight: '500'
   },
-  filtersContainer: {
+  
+  // Filters
+  filtersSection: {
     backgroundColor: 'white',
     borderRadius: '12px',
-    padding: '16px 20px',
+    padding: '20px',
     marginBottom: '24px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+    border: '1px solid #E5E7EB'
   },
-  filterGroup: {
+  filtersRow: {
     display: 'flex',
-    alignItems: 'center',
     gap: '16px',
+    alignItems: 'flex-end',
     flexWrap: 'wrap'
   },
-  filterIcon: {
-    color: '#718096',
-    fontSize: '18px'
+  filterGroup: {
+    flex: 1,
+    minWidth: '180px'
+  },
+  filterLabel: {
+    display: 'block',
+    marginBottom: '8px',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#374151'
   },
   filterSelect: {
-    padding: '8px 12px',
-    border: '1px solid #e2e8f0',
-    borderRadius: '6px',
-    backgroundColor: 'white',
+    width: '100%',
+    padding: '10px 12px',
+    border: '1px solid #D1D5DB',
+    borderRadius: '8px',
     fontSize: '14px',
-    color: '#4a5568',
+    color: '#374151',
+    backgroundColor: 'white',
     cursor: 'pointer'
   },
+  resultsCount: {
+    padding: '10px 16px',
+    backgroundColor: '#F3F4F6',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#6B7280',
+    whiteSpace: 'nowrap'
+  },
+  
+  // Notifications List
   notificationsList: {
     display: 'flex',
     flexDirection: 'column',
     gap: '16px'
   },
+  
+  // Empty State
   emptyState: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '60px 20px',
     backgroundColor: 'white',
     borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+    padding: '64px 32px',
+    textAlign: 'center',
+    border: '1px solid #E5E7EB'
   },
-  emptyStateIcon: {
+  emptyIcon: {
     fontSize: '48px',
-    color: '#cbd5e0',
+    color: '#D1D5DB',
     marginBottom: '16px'
   },
+  emptyTitle: {
+    fontSize: '20px',
+    fontWeight: '600',
+    color: '#1F2937',
+    margin: '0 0 8px 0'
+  },
+  emptyText: {
+    fontSize: '14px',
+    color: '#6B7280',
+    marginBottom: '24px'
+  },
+  emptyButton: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 20px',
+    backgroundColor: '#1640FF',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer'
+  },
+  
+  // Notification Card
   notificationCard: {
     backgroundColor: 'white',
     borderRadius: '12px',
     padding: '20px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-    transition: 'all 0.2s ease',
-    borderLeft: '4px solid transparent'
+    border: '1px solid #E5E7EB',
+    transition: 'box-shadow 0.2s'
   },
-  notificationHeader: {
+  cardHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: '12px'
+    marginBottom: '16px',
+    gap: '16px',
+    flexWrap: 'wrap'
   },
-  notificationMeta: {
+  cardMeta: {
     display: 'flex',
     flexWrap: 'wrap',
     gap: '12px',
     alignItems: 'center'
   },
-  categoryLabel: {
+  categoryBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '6px 12px',
+    borderRadius: '6px',
+    fontSize: '12px',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  },
+  metaText: {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
     fontSize: '14px',
-    fontWeight: '500'
+    color: '#6B7280'
   },
-  notificationDate: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    fontSize: '14px',
-    color: '#718096'
+  metaIcon: {
+    fontSize: '14px'
   },
-  notificationAudience: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    fontSize: '14px',
-    color: '#718096'
-  },
-  notificationActions: {
+  cardActions: {
     display: 'flex',
     gap: '8px'
   },
-  actionButton: {
+  iconButton: {
+    width: '36px',
+    height: '36px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '32px',
-    height: '32px',
-    backgroundColor: '#f7fafc',
-    border: 'none',
-    borderRadius: '6px',
-    color: '#4a5568',
+    backgroundColor: '#F9FAFB',
+    border: '1px solid #E5E7EB',
+    borderRadius: '8px',
+    color: '#6B7280',
     cursor: 'pointer',
-    transition: 'all 0.2s ease'
+    fontSize: '16px',
+    transition: 'all 0.2s'
   },
-  notificationContent: {
-    marginBottom: '12px'
+  cardBody: {
+    marginBottom: '16px'
   },
-  notificationLink: {
+  cardMessage: {
+    fontSize: '15px',
+    lineHeight: '1.6',
+    color: '#374151',
+    margin: '0 0 12px 0'
+  },
+  cardLink: {
     display: 'inline-block',
-    marginTop: '8px',
     color: '#1640FF',
     textDecoration: 'none',
     fontSize: '14px',
-    fontWeight: '500'
+    fontWeight: '600'
   },
-  notificationFooter: {
+  cardFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '16px',
+    borderTop: '1px solid #F3F4F6',
+    flexWrap: 'wrap',
+    gap: '12px'
+  },
+  statsRow: {
+    display: 'flex',
+    gap: '16px'
+  },
+  statItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px'
+    gap: '6px',
+    fontSize: '13px',
+    color: '#6B7280'
   },
-  statusIndicator: {
-    width: '8px',
-    height: '8px',
+  statItemIcon: {
+    fontSize: '14px'
+  },
+  statusBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '4px 12px',
+    borderRadius: '6px',
+    fontSize: '13px',
+    fontWeight: '600'
+  },
+  statusDot: {
+    width: '6px',
+    height: '6px',
     borderRadius: '50%'
   },
-  statusText: {
-    fontSize: '12px',
-    color: '#718096'
-  },
+  
+  // Modal
   modalOverlay: {
     position: 'fixed',
     top: 0,
@@ -768,82 +1033,100 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000
+    zIndex: 9999,
+    padding: '20px'
   },
   modal: {
     backgroundColor: 'white',
     borderRadius: '12px',
-    width: '90%',
+    width: '100%',
     maxWidth: '600px',
-    maxHeight: '80vh',
+    maxHeight: '90vh',
     overflow: 'auto'
   },
   modalHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '20px',
-    borderBottom: '1px solid #e2e8f0'
+    padding: '24px',
+    borderBottom: '1px solid #E5E7EB'
   },
   modalTitle: {
-    fontFamily: "'Poppins', sans-serif",
     fontSize: '20px',
-    fontWeight: '600',
-    color: '#1a202c',
+    fontWeight: '700',
+    color: '#1F2937',
     margin: 0
   },
   closeButton: {
+    width: '36px',
+    height: '36px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '32px',
-    height: '32px',
-    backgroundColor: 'transparent',
+    backgroundColor: '#F9FAFB',
     border: 'none',
-    borderRadius: '6px',
-    color: '#718096',
+    borderRadius: '8px',
+    color: '#6B7280',
     cursor: 'pointer',
     fontSize: '20px'
   },
-  modalContent: {
-    padding: '20px'
+  modalBody: {
+    padding: '24px'
   },
+  modalFooter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '12px',
+    padding: '20px 24px',
+    borderTop: '1px solid #E5E7EB'
+  },
+  
+  // Form
   formGroup: {
     marginBottom: '20px'
+  },
+  formRow: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '16px'
   },
   formLabel: {
     display: 'block',
     marginBottom: '8px',
     fontSize: '14px',
-    fontWeight: '500',
-    color: '#4a5568'
+    fontWeight: '600',
+    color: '#374151'
+  },
+  required: {
+    color: '#EF4444'
   },
   textarea: {
     width: '100%',
     padding: '12px',
-    border: '1px solid #e2e8f0',
-    borderRadius: '6px',
+    border: '1px solid #D1D5DB',
+    borderRadius: '8px',
     fontSize: '14px',
-    color: '#4a5568',
+    color: '#374151',
     resize: 'vertical',
     fontFamily: 'inherit'
   },
   input: {
     width: '100%',
     padding: '12px',
-    border: '1px solid #e2e8f0',
-    borderRadius: '6px',
+    border: '1px solid #D1D5DB',
+    borderRadius: '8px',
     fontSize: '14px',
-    color: '#4a5568'
+    color: '#374151'
   },
   select: {
     width: '100%',
     padding: '12px',
-    border: '1px solid #e2e8f0',
-    borderRadius: '6px',
+    border: '1px solid #D1D5DB',
+    borderRadius: '8px',
     fontSize: '14px',
-    color: '#4a5568',
-    backgroundColor: 'white'
+    color: '#374151',
+    backgroundColor: 'white',
+    cursor: 'pointer'
   },
   radioGroup: {
     display: 'flex',
@@ -855,81 +1138,112 @@ const styles = {
     gap: '8px',
     cursor: 'pointer'
   },
+  radioInput: {
+    width: '16px',
+    height: '16px',
+    cursor: 'pointer'
+  },
   radioText: {
     fontSize: '14px',
-    color: '#4a5568'
-  },
-  formActions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '12px',
-    marginTop: '24px'
+    color: '#374151'
   },
   cancelButton: {
-    padding: '10px 16px',
-    backgroundColor: 'transparent',
-    border: '1px solid #e2e8f0',
-    borderRadius: '6px',
+    padding: '10px 20px',
+    border: '1px solid #D1D5DB',
+    borderRadius: '8px',
+    backgroundColor: 'white',
+    color: '#374151',
     fontSize: '14px',
-    fontWeight: '500',
-    color: '#4a5568',
+    fontWeight: '600',
     cursor: 'pointer'
   },
   submitButton: {
-    padding: '10px 16px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 20px',
     backgroundColor: '#1640FF',
-    border: 'none',
-    borderRadius: '6px',
-    fontSize: '14px',
-    fontWeight: '500',
     color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: '600',
     cursor: 'pointer'
   },
+  
+  // Preview
   previewCard: {
-    border: '1px solid #e2e8f0',
-    borderRadius: '8px',
-    padding: '16px'
+    border: '1px solid #E5E7EB',
+    borderRadius: '10px',
+    padding: '20px',
+    marginBottom: '20px'
   },
   previewHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '12px'
+    marginBottom: '16px'
   },
   previewDate: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
     fontSize: '14px',
-    color: '#718096'
+    color: '#6B7280'
   },
-  previewContent: {
+  previewBody: {
+    marginBottom: '16px'
+  },
+  previewMessage: {
+    fontSize: '15px',
+    lineHeight: '1.6',
+    color: '#374151',
     marginBottom: '12px'
   },
   previewLink: {
     display: 'inline-block',
-    marginTop: '8px',
     color: '#1640FF',
     textDecoration: 'none',
     fontSize: '14px',
-    fontWeight: '500'
+    fontWeight: '600'
   },
   previewFooter: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: '16px',
+    borderTop: '1px solid #F3F4F6'
   },
   previewAudience: {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
     fontSize: '14px',
-    color: '#718096'
+    color: '#6B7280'
   },
-  previewStatus: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
+  metricsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '16px'
+  },
+  metricCard: {
+    textAlign: 'center',
+    padding: '16px',
+    backgroundColor: '#F9FAFB',
+    borderRadius: '10px'
+  },
+  metricIcon: {
+    fontSize: '24px',
+    color: '#1640FF',
+    marginBottom: '8px'
+  },
+  metricValue: {
+    fontSize: '24px',
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: '4px'
+  },
+  metricLabel: {
+    fontSize: '12px',
+    color: '#6B7280',
+    fontWeight: '500'
   }
 };
 

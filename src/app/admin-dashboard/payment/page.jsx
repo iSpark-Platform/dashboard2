@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiFilter, FiCheckCircle, FiXCircle, FiDollarSign, FiEye, FiCalendar, FiFileText, FiX, FiDownload } from 'react-icons/fi';
+import { FiSearch, FiFilter, FiCheckCircle, FiRupeeSign, FiXCircle, FiEye, FiCalendar, FiFileText, FiX, FiDownload } from 'react-icons/fi';
 
 const PaymentValidationPage = () => {
   const [payments, setPayments] = useState([]);
@@ -193,7 +193,9 @@ const PaymentValidationPage = () => {
       {/* Pending Payments Alert */}
       {filteredPayments.some(p => p.status === 'Pending') && (
         <div style={styles.alertCard}>
-          <FiDollarSign size={24} color="#EF7C00" style={styles.alertIcon} />
+        <span style={{ ...styles.alertIcon, fontSize: 24, color: "#EF7C00" }}>
+  ₹
+</span>
           <div style={styles.alertContent}>
             <h3 style={styles.alertTitle}>Pending Payment Validations</h3>
             <p style={styles.alertMessage}>

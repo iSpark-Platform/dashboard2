@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiFilter, FiEye, FiEdit, FiUser, FiMail, FiPhone, FiCalendar, FiX, FiCheck, FiChevronLeft, FiChevronRight, FiDownload, FiMail as FiEmailIcon } from 'react-icons/fi';
+import { FiSearch, FiFilter, FiEye, FiEdit, FiMail, FiX, FiChevronLeft, FiChevronRight, FiDownload, FiSend, FiCheckCircle } from 'react-icons/fi';
 
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
@@ -10,9 +10,14 @@ const StudentsPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showStudentModal, setShowStudentModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [notification, setNotification] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+  const [emailData, setEmailData] = useState({ subject: '', message: '' });
   
   // Internship programs
   const internshipPrograms = [
@@ -30,7 +35,6 @@ const StudentsPage = () => {
   
   // Simulate fetching data from API
   useEffect(() => {
-    // Mock data with the specified internship programs
     const mockStudents = [
       {
         id: 1,
@@ -43,7 +47,7 @@ const StudentsPage = () => {
         attendance: 85,
         assignmentsCompleted: 12,
         totalAssignments: 15,
-        avatar: 'https://picsum.photos/seed/alice/100/100.jpg'
+       
       },
       {
         id: 2,
@@ -56,7 +60,7 @@ const StudentsPage = () => {
         attendance: 92,
         assignmentsCompleted: 8,
         totalAssignments: 10,
-        avatar: 'https://picsum.photos/seed/bob/100/100.jpg'
+      
       },
       {
         id: 3,
@@ -69,7 +73,7 @@ const StudentsPage = () => {
         attendance: 0,
         assignmentsCompleted: 0,
         totalAssignments: 12,
-        avatar: 'https://picsum.photos/seed/charlie/100/100.jpg'
+       
       },
       {
         id: 4,
@@ -82,7 +86,7 @@ const StudentsPage = () => {
         attendance: 88,
         assignmentsCompleted: 10,
         totalAssignments: 12,
-        avatar: 'https://picsum.photos/seed/diana/100/100.jpg'
+      
       },
       {
         id: 5,
@@ -95,7 +99,7 @@ const StudentsPage = () => {
         attendance: 95,
         assignmentsCompleted: 15,
         totalAssignments: 15,
-        avatar: 'https://picsum.photos/seed/ethan/100/100.jpg'
+      
       },
       {
         id: 6,
@@ -108,7 +112,7 @@ const StudentsPage = () => {
         attendance: 78,
         assignmentsCompleted: 7,
         totalAssignments: 10,
-        avatar: 'https://picsum.photos/seed/fiona/100/100.jpg'
+      
       },
       {
         id: 7,
@@ -121,7 +125,7 @@ const StudentsPage = () => {
         attendance: 90,
         assignmentsCompleted: 9,
         totalAssignments: 12,
-        avatar: 'https://picsum.photos/seed/george/100/100.jpg'
+      
       },
       {
         id: 8,
@@ -134,7 +138,7 @@ const StudentsPage = () => {
         attendance: 82,
         assignmentsCompleted: 11,
         totalAssignments: 14,
-        avatar: 'https://picsum.photos/seed/hannah/100/100.jpg'
+       
       },
       {
         id: 9,
@@ -147,7 +151,7 @@ const StudentsPage = () => {
         attendance: 0,
         assignmentsCompleted: 0,
         totalAssignments: 10,
-        avatar: 'https://picsum.photos/seed/ian/100/100.jpg'
+       
       },
       {
         id: 10,
@@ -160,7 +164,7 @@ const StudentsPage = () => {
         attendance: 87,
         assignmentsCompleted: 6,
         totalAssignments: 8,
-        avatar: 'https://picsum.photos/seed/julia/100/100.jpg'
+        avatar: 'https://picsum.photos/seed/julia/100/100'
       },
       {
         id: 11,
@@ -173,7 +177,7 @@ const StudentsPage = () => {
         attendance: 93,
         assignmentsCompleted: 18,
         totalAssignments: 18,
-        avatar: 'https://picsum.photos/seed/kevin/100/100.jpg'
+        avatar: 'https://picsum.photos/seed/kevin/100/100'
       },
       {
         id: 12,
@@ -186,7 +190,7 @@ const StudentsPage = () => {
         attendance: 91,
         assignmentsCompleted: 14,
         totalAssignments: 16,
-        avatar: 'https://picsum.photos/seed/laura/100/100.jpg'
+        avatar: 'https://picsum.photos/seed/laura/100/100'
       }
     ];
     
@@ -194,11 +198,16 @@ const StudentsPage = () => {
     setFilteredStudents(mockStudents);
   }, []);
   
-  // Filter students based on search term and filters
+  // Show notification
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
+  
+  // Filter students
   useEffect(() => {
     let filtered = students;
     
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(student =>
         student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -206,33 +215,87 @@ const StudentsPage = () => {
       );
     }
     
-    // Filter by internship
     if (internshipFilter !== 'all') {
       filtered = filtered.filter(student => student.internship === internshipFilter);
     }
     
-    // Filter by status
     if (statusFilter !== 'all') {
       filtered = filtered.filter(student => student.status === statusFilter);
     }
     
     setFilteredStudents(filtered);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   }, [students, searchTerm, internshipFilter, statusFilter]);
   
-  // Calculate pagination
+  // Pagination
   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredStudents.slice(indexOfFirstItem, indexOfLastItem);
   
-  // Handle page change
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   
-  // Handle view student details
+  // View student details
   const viewStudentDetails = (student) => {
     setSelectedStudent(student);
     setShowStudentModal(true);
+  };
+  
+  // Edit student
+  const handleEditStudent = (student) => {
+    setSelectedStudent(student);
+    setEditFormData({ ...student });
+    setShowEditModal(true);
+  };
+  
+  const handleSaveEdit = () => {
+    setStudents(students.map(s => 
+      s.id === editFormData.id ? editFormData : s
+    ));
+    setShowEditModal(false);
+    showNotification('Student updated successfully!');
+  };
+  
+  // Email student
+  const handleEmailStudent = (student) => {
+    setSelectedStudent(student);
+    setEmailData({ subject: '', message: '' });
+    setShowEmailModal(true);
+  };
+  
+  const handleSendEmail = () => {
+    // Simulate sending email
+    console.log('Sending email to:', selectedStudent.email);
+    console.log('Subject:', emailData.subject);
+    console.log('Message:', emailData.message);
+    setShowEmailModal(false);
+    showNotification(`Email sent to ${selectedStudent.name}!`);
+  };
+  
+  // Download report
+  const handleDownloadReport = (student) => {
+    // Simulate downloading report
+    const reportData = {
+      name: student.name,
+      email: student.email,
+      internship: student.internship,
+      status: student.status,
+      attendance: student.attendance,
+      assignmentsCompleted: student.assignmentsCompleted,
+      totalAssignments: student.totalAssignments
+    };
+    
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${student.name.replace(/\s+/g, '_')}_report.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification(`Report downloaded for ${student.name}!`);
   };
   
   // Format date
@@ -244,14 +307,10 @@ const StudentsPage = () => {
   // Get status color
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Active':
-        return '#10B981';
-      case 'Pending':
-        return '#F59E0B';
-      case 'Completed':
-        return '#1640FF';
-      default:
-        return '#6B7280';
+      case 'Active': return '#10B981';
+      case 'Pending': return '#F59E0B';
+      case 'Completed': return '#1640FF';
+      default: return '#6B7280';
     }
   };
   
@@ -259,16 +318,31 @@ const StudentsPage = () => {
   const getAttendanceColor = (percentage) => {
     if (percentage >= 90) return '#10B981';
     if (percentage >= 75) return '#F59E0B';
-    return '#EF7C00';
+    return '#EF4444';
   };
   
   return (
     <div style={styles.container}>
+      {/* Notification */}
+      {notification && (
+        <div style={{
+          ...styles.notification,
+          backgroundColor: notification.type === 'success' ? '#10B981' : '#EF4444'
+        }}>
+          <FiCheckCircle style={styles.notificationIcon} />
+          <span>{notification.message}</span>
+        </div>
+      )}
+      
+      {/* Header */}
       <div style={styles.header}>
-        <h1 style={styles.title}>Students</h1>
-        <p style={styles.subtitle}>Manage and view all student information</p>
+        <div>
+          <h1 style={styles.title}>Students</h1>
+          <p style={styles.subtitle}>Manage and view all student information</p>
+        </div>
       </div>
       
+      {/* Controls */}
       <div style={styles.controls}>
         <div style={styles.searchContainer}>
           <FiSearch style={styles.searchIcon} />
@@ -286,20 +360,20 @@ const StudentsPage = () => {
             style={styles.filterButton}
             onClick={() => setShowFilterOptions(!showFilterOptions)}
           >
-            <FiFilter style={styles.filterIcon} />
-            Filters
+            <FiFilter />
+            <span>Filters</span>
           </button>
           
           {showFilterOptions && (
-            <div style={styles.filterOptions}>
+            <div style={styles.filterDropdown}>
               <div style={styles.filterGroup}>
-                <label style={styles.filterLabel}>Internship</label>
+                <label style={styles.filterLabel}>Internship Program</label>
                 <select
                   value={internshipFilter}
                   onChange={(e) => setInternshipFilter(e.target.value)}
                   style={styles.filterSelect}
                 >
-                  <option value="all">All Internships</option>
+                  <option value="all">All Programs</option>
                   {internshipPrograms.map(program => (
                     <option key={program} value={program}>{program}</option>
                   ))}
@@ -319,90 +393,106 @@ const StudentsPage = () => {
                   <option value="Completed">Completed</option>
                 </select>
               </div>
+              
+              <button
+                style={styles.clearButton}
+                onClick={() => {
+                  setInternshipFilter('all');
+                  setStatusFilter('all');
+                  setSearchTerm('');
+                }}
+              >
+                Clear Filters
+              </button>
             </div>
           )}
         </div>
       </div>
       
-      <div style={styles.tableContainer}>
+      {/* Table */}
+      <div style={styles.tableWrapper}>
         <table style={styles.table}>
           <thead>
-            <tr style={styles.tableHeader}>
-              <th style={styles.tableHeaderCell}>Student</th>
-              <th style={styles.tableHeaderCell}>Internship</th>
-              <th style={styles.tableHeaderCell}>Status</th>
-              <th style={styles.tableHeaderCell}>Attendance</th>
-              <th style={styles.tableHeaderCell}>Progress</th>
-              <th style={styles.tableHeaderCell}>Actions</th>
+            <tr>
+              <th style={styles.th}>Student</th>
+              <th style={styles.th}>Internship</th>
+              <th style={styles.th}>Status</th>
+              <th style={styles.th}>Attendance</th>
+              <th style={styles.th}>Progress</th>
+              <th style={styles.th}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentItems.map(student => (
-              <tr key={student.id} style={styles.tableRow}>
-                <td style={styles.tableCell}>
+              <tr key={student.id} style={styles.tr}>
+                <td style={styles.td}>
                   <div style={styles.studentInfo}>
-                    <img src={student.avatar} alt={student.name} style={styles.avatar} />
+                  
                     <div>
                       <div style={styles.studentName}>{student.name}</div>
                       <div style={styles.studentEmail}>{student.email}</div>
                     </div>
                   </div>
                 </td>
-                <td style={styles.tableCell}>
-                  <div style={styles.internshipName}>{student.internship}</div>
+                <td style={styles.td}>
+                  <div style={styles.internshipText}>{student.internship}</div>
                 </td>
-                <td style={styles.tableCell}>
-                  <span
-                    style={{
-                      ...styles.statusBadge,
-                      backgroundColor: getStatusColor(student.status)
-                    }}
-                  >
+                <td style={styles.td}>
+                  <span style={{
+                    ...styles.badge,
+                    backgroundColor: getStatusColor(student.status)
+                  }}>
                     {student.status}
                   </span>
                 </td>
-                <td style={styles.tableCell}>
-                  <div style={styles.attendanceContainer}>
-                    <div style={styles.attendanceBar}>
-                      <div
-                        style={{
-                          ...styles.attendanceFill,
-                          width: `${student.attendance}%`,
-                          backgroundColor: getAttendanceColor(student.attendance)
-                        }}
-                      ></div>
+                <td style={styles.td}>
+                  <div style={styles.metricContainer}>
+                    <div style={styles.progressBar}>
+                      <div style={{
+                        ...styles.progressFill,
+                        width: `${student.attendance}%`,
+                        backgroundColor: getAttendanceColor(student.attendance)
+                      }} />
                     </div>
-                    <span style={styles.attendanceText}>{student.attendance}%</span>
+                    <span style={styles.metricText}>{student.attendance}%</span>
                   </div>
                 </td>
-                <td style={styles.tableCell}>
-                  <div style={styles.progressContainer}>
+                <td style={styles.td}>
+                  <div style={styles.metricContainer}>
                     <div style={styles.progressBar}>
-                      <div
-                        style={{
-                          ...styles.progressFill,
-                          width: `${(student.assignmentsCompleted / student.totalAssignments) * 100}%`
-                        }}
-                      ></div>
+                      <div style={{
+                        ...styles.progressFill,
+                        width: `${(student.assignmentsCompleted / student.totalAssignments) * 100}%`,
+                        backgroundColor: '#1640FF'
+                      }} />
                     </div>
-                    <span style={styles.progressText}>
+                    <span style={styles.metricText}>
                       {student.assignmentsCompleted}/{student.totalAssignments}
                     </span>
                   </div>
                 </td>
-                <td style={styles.tableCell}>
+                <td style={styles.td}>
                   <div style={styles.actions}>
                     <button
-                      style={styles.actionButton}
+                      style={styles.iconButton}
                       onClick={() => viewStudentDetails(student)}
+                      title="View Details"
                     >
                       <FiEye />
                     </button>
-                    <button style={styles.actionButton}>
+                    <button
+                      style={styles.iconButton}
+                      onClick={() => handleEditStudent(student)}
+                      title="Edit Student"
+                    >
                       <FiEdit />
                     </button>
-                    <button style={styles.actionButton}>
-                      <FiEmailIcon />
+                    <button
+                      style={styles.iconButton}
+                      onClick={() => handleEmailStudent(student)}
+                      title="Send Email"
+                    >
+                      <FiMail />
                     </button>
                   </div>
                 </td>
@@ -412,134 +502,295 @@ const StudentsPage = () => {
         </table>
       </div>
       
-      <div style={styles.pagination}>
-        <button
-          style={styles.paginationButton}
-          onClick={() => paginate(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          <FiChevronLeft />
-        </button>
-        
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={styles.pagination}>
           <button
-            key={page}
             style={{
-              ...styles.paginationButton,
-              ...(currentPage === page && styles.activePaginationButton)
+              ...styles.pageButton,
+              opacity: currentPage === 1 ? 0.5 : 1,
+              cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
             }}
-            onClick={() => paginate(page)}
+            onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+            disabled={currentPage === 1}
           >
-            {page}
+            <FiChevronLeft />
           </button>
-        ))}
-        
-        <button
-          style={styles.paginationButton}
-          onClick={() => paginate(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          <FiChevronRight />
-        </button>
-      </div>
+          
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+            
+            return (
+              <button
+                key={pageNum}
+                style={{
+                  ...styles.pageButton,
+                  ...(currentPage === pageNum && styles.activePageButton)
+                }}
+                onClick={() => paginate(pageNum)}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+          
+          <button
+            style={{
+              ...styles.pageButton,
+              opacity: currentPage === totalPages ? 0.5 : 1,
+              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
+            }}
+            onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <FiChevronRight />
+          </button>
+        </div>
+      )}
       
-      {/* Student Details Modal */}
+      {/* View Student Modal */}
       {showStudentModal && selectedStudent && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
+        <div style={styles.modalOverlay} onClick={() => setShowStudentModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
               <h2 style={styles.modalTitle}>Student Details</h2>
-              <button
-                style={styles.closeButton}
-                onClick={() => setShowStudentModal(false)}
-              >
+              <button style={styles.closeButton} onClick={() => setShowStudentModal(false)}>
                 <FiX />
               </button>
             </div>
             
-            <div style={styles.modalContent}>
-              <div style={styles.studentDetails}>
-                <div style={styles.studentProfile}>
-                  <img
-                    src={selectedStudent.avatar}
-                    alt={selectedStudent.name}
-                    style={styles.profileAvatar}
-                  />
-                  <div style={styles.profileInfo}>
-                    <h3 style={styles.profileName}>{selectedStudent.name}</h3>
-                    <p style={styles.profileEmail}>{selectedStudent.email}</p>
-                    <p style={styles.profilePhone}>{selectedStudent.phone}</p>
+            <div style={styles.modalBody}>
+              <div style={styles.profileSection}>
+                <img src={selectedStudent.avatar} alt={selectedStudent.name} style={styles.profileAvatar} />
+                <div>
+                  <h3 style={styles.profileName}>{selectedStudent.name}</h3>
+                  <p style={styles.profileDetail}>{selectedStudent.email}</p>
+                  <p style={styles.profileDetail}>{selectedStudent.phone}</p>
+                </div>
+              </div>
+              
+              <div style={styles.detailsGrid}>
+                <div style={styles.detailItem}>
+                  <span style={styles.detailLabel}>Internship Program</span>
+                  <span style={styles.detailValue}>{selectedStudent.internship}</span>
+                </div>
+                
+                <div style={styles.detailItem}>
+                  <span style={styles.detailLabel}>Status</span>
+                  <span style={{
+                    ...styles.badge,
+                    backgroundColor: getStatusColor(selectedStudent.status)
+                  }}>
+                    {selectedStudent.status}
+                  </span>
+                </div>
+                
+                <div style={styles.detailItem}>
+                  <span style={styles.detailLabel}>Join Date</span>
+                  <span style={styles.detailValue}>{formatDate(selectedStudent.joinDate)}</span>
+                </div>
+                
+                <div style={styles.detailItem}>
+                  <span style={styles.detailLabel}>Attendance</span>
+                  <div style={styles.metricContainer}>
+                    <div style={styles.progressBar}>
+                      <div style={{
+                        ...styles.progressFill,
+                        width: `${selectedStudent.attendance}%`,
+                        backgroundColor: getAttendanceColor(selectedStudent.attendance)
+                      }} />
+                    </div>
+                    <span style={styles.metricText}>{selectedStudent.attendance}%</span>
                   </div>
                 </div>
                 
-                <div style={styles.detailsSection}>
-                  <h4 style={styles.sectionTitle}>Internship Information</h4>
-                  <div style={styles.detailRow}>
-                    <span style={styles.detailLabel}>Program:</span>
-                    <span style={styles.detailValue}>{selectedStudent.internship}</span>
-                  </div>
-                  <div style={styles.detailRow}>
-                    <span style={styles.detailLabel}>Status:</span>
-                    <span
-                      style={{
-                        ...styles.statusBadge,
-                        backgroundColor: getStatusColor(selectedStudent.status)
-                      }}
-                    >
-                      {selectedStudent.status}
+                <div style={styles.detailItem}>
+                  <span style={styles.detailLabel}>Assignments</span>
+                  <div style={styles.metricContainer}>
+                    <div style={styles.progressBar}>
+                      <div style={{
+                        ...styles.progressFill,
+                        width: `${(selectedStudent.assignmentsCompleted / selectedStudent.totalAssignments) * 100}%`,
+                        backgroundColor: '#1640FF'
+                      }} />
+                    </div>
+                    <span style={styles.metricText}>
+                      {selectedStudent.assignmentsCompleted}/{selectedStudent.totalAssignments}
                     </span>
-                  </div>
-                  <div style={styles.detailRow}>
-                    <span style={styles.detailLabel}>Join Date:</span>
-                    <span style={styles.detailValue}>{formatDate(selectedStudent.joinDate)}</span>
-                  </div>
-                </div>
-                
-                <div style={styles.detailsSection}>
-                  <h4 style={styles.sectionTitle}>Performance</h4>
-                  <div style={styles.detailRow}>
-                    <span style={styles.detailLabel}>Attendance:</span>
-                    <div style={styles.attendanceContainer}>
-                      <div style={styles.attendanceBar}>
-                        <div
-                          style={{
-                            ...styles.attendanceFill,
-                            width: `${selectedStudent.attendance}%`,
-                            backgroundColor: getAttendanceColor(selectedStudent.attendance)
-                          }}
-                        ></div>
-                      </div>
-                      <span style={styles.attendanceText}>{selectedStudent.attendance}%</span>
-                    </div>
-                  </div>
-                  <div style={styles.detailRow}>
-                    <span style={styles.detailLabel}>Assignments:</span>
-                    <div style={styles.progressContainer}>
-                      <div style={styles.progressBar}>
-                        <div
-                          style={{
-                            ...styles.progressFill,
-                            width: `${(selectedStudent.assignmentsCompleted / selectedStudent.totalAssignments) * 100}%`
-                          }}
-                        ></div>
-                      </div>
-                      <span style={styles.progressText}>
-                        {selectedStudent.assignmentsCompleted}/{selectedStudent.totalAssignments}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div style={styles.modalActions}>
-              <button style={styles.modalButton}>
-                <FiDownload style={styles.buttonIcon} />
-                Download Report
+            <div style={styles.modalFooter}>
+              <button
+                style={styles.primaryButton}
+                onClick={() => handleDownloadReport(selectedStudent)}
+              >
+                <FiDownload />
+                <span>Download Report</span>
               </button>
-              <button style={styles.modalButton}>
-                <FiMail style={styles.buttonIcon} />
-                Send Email
+              <button
+                style={styles.secondaryButton}
+                onClick={() => {
+                  setShowStudentModal(false);
+                  handleEmailStudent(selectedStudent);
+                }}
+              >
+                <FiMail />
+                <span>Send Email</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Edit Student Modal */}
+      {showEditModal && editFormData && (
+        <div style={styles.modalOverlay} onClick={() => setShowEditModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Edit Student</h2>
+              <button style={styles.closeButton} onClick={() => setShowEditModal(false)}>
+                <FiX />
+              </button>
+            </div>
+            
+            <div style={styles.modalBody}>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Name</label>
+                <input
+                  type="text"
+                  value={editFormData.name}
+                  onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                  style={styles.formInput}
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Email</label>
+                <input
+                  type="email"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  style={styles.formInput}
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Phone</label>
+                <input
+                  type="tel"
+                  value={editFormData.phone}
+                  onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                  style={styles.formInput}
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Internship Program</label>
+                <select
+                  value={editFormData.internship}
+                  onChange={(e) => setEditFormData({ ...editFormData, internship: e.target.value })}
+                  style={styles.formInput}
+                >
+                  {internshipPrograms.map(program => (
+                    <option key={program} value={program}>{program}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Status</label>
+                <select
+                  value={editFormData.status}
+                  onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
+                  style={styles.formInput}
+                >
+                  <option value="Active">Active</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+            </div>
+            
+            <div style={styles.modalFooter}>
+              <button style={styles.secondaryButton} onClick={() => setShowEditModal(false)}>
+                Cancel
+              </button>
+              <button style={styles.primaryButton} onClick={handleSaveEdit}>
+                <FiCheckCircle />
+                <span>Save Changes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Email Modal */}
+      {showEmailModal && selectedStudent && (
+        <div style={styles.modalOverlay} onClick={() => setShowEmailModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Send Email to {selectedStudent.name}</h2>
+              <button style={styles.closeButton} onClick={() => setShowEmailModal(false)}>
+                <FiX />
+              </button>
+            </div>
+            
+            <div style={styles.modalBody}>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>To</label>
+                <input
+                  type="email"
+                  value={selectedStudent.email}
+                  readOnly
+                  style={{ ...styles.formInput, backgroundColor: '#f8fafc' }}
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Subject</label>
+                <input
+                  type="text"
+                  value={emailData.subject}
+                  onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })}
+                  style={styles.formInput}
+                  placeholder="Enter email subject"
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Message</label>
+                <textarea
+                  value={emailData.message}
+                  onChange={(e) => setEmailData({ ...emailData, message: e.target.value })}
+                  style={{ ...styles.formInput, minHeight: '150px', resize: 'vertical' }}
+                  placeholder="Enter your message"
+                />
+              </div>
+            </div>
+            
+            <div style={styles.modalFooter}>
+              <button style={styles.secondaryButton} onClick={() => setShowEmailModal(false)}>
+                Cancel
+              </button>
+              <button
+                style={styles.primaryButton}
+                onClick={handleSendEmail}
+                disabled={!emailData.subject || !emailData.message}
+              >
+                <FiSend />
+                <span>Send Email</span>
               </button>
             </div>
           </div>
@@ -551,32 +802,52 @@ const StudentsPage = () => {
 
 const styles = {
   container: {
-    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     backgroundColor: '#f8fafc',
     minHeight: '100vh',
-    padding: '20px',
-    color: '#333'
+    padding: '24px',
+    maxWidth: '1400px',
+    margin: '0 auto'
+  },
+  notification: {
+    position: 'fixed',
+    top: '20px',
+    right: '20px',
+    padding: '16px 20px',
+    borderRadius: '8px',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    zIndex: 1000,
+    animation: 'slideIn 0.3s ease-out'
+  },
+  notificationIcon: {
+    fontSize: '20px'
   },
   header: {
-    marginBottom: '24px'
+    marginBottom: '32px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   title: {
-    fontSize: '28px',
+    fontSize: '32px',
     fontWeight: '700',
-    margin: '0 0 8px 0',
-    color: '#1a202c'
+    color: '#1a202c',
+    margin: '0 0 8px 0'
   },
   subtitle: {
     fontSize: '16px',
-    color: '#718096',
-    margin: '0'
+    color: '#64748b',
+    margin: 0
   },
   controls: {
     display: 'flex',
-    justifyContent: 'space-between',
+    gap: '16px',
     marginBottom: '24px',
-    flexWrap: 'wrap',
-    gap: '16px'
+    flexWrap: 'wrap'
   },
   searchContainer: {
     position: 'relative',
@@ -585,19 +856,21 @@ const styles = {
   },
   searchIcon: {
     position: 'absolute',
-    left: '12px',
+    left: '16px',
     top: '50%',
     transform: 'translateY(-50%)',
-    color: '#718096'
+    color: '#94a3b8',
+    fontSize: '18px'
   },
   searchInput: {
     width: '100%',
-    padding: '12px 12px 12px 40px',
+    padding: '12px 16px 12px 48px',
     borderRadius: '8px',
     border: '1px solid #e2e8f0',
-    fontSize: '14px',
+    fontSize: '15px',
+    backgroundColor: '#fff',
     outline: 'none',
-    transition: 'border-color 0.2s'
+    transition: 'border-color 0.2s, box-shadow 0.2s'
   },
   filterContainer: {
     position: 'relative'
@@ -606,30 +879,26 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    padding: '12px 16px',
+    padding: '12px 20px',
     borderRadius: '8px',
     border: '1px solid #e2e8f0',
     backgroundColor: '#fff',
-    color: '#4a5568',
-    fontSize: '14px',
+    color: '#475569',
+    fontSize: '15px',
     fontWeight: '500',
     cursor: 'pointer',
     transition: 'all 0.2s'
   },
-  filterIcon: {
-    fontSize: '16px'
-  },
-  filterOptions: {
+  filterDropdown: {
     position: 'absolute',
-    top: '100%',
+    top: 'calc(100% + 8px)',
     right: '0',
-    marginTop: '8px',
     backgroundColor: '#fff',
     borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    padding: '16px',
-    minWidth: '250px',
-    zIndex: '10'
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+    padding: '20px',
+    minWidth: '300px',
+    zIndex: 10
   },
   filterGroup: {
     marginBottom: '16px'
@@ -638,138 +907,130 @@ const styles = {
     display: 'block',
     fontSize: '14px',
     fontWeight: '500',
-    marginBottom: '8px',
-    color: '#4a5568'
+    color: '#475569',
+    marginBottom: '8px'
   },
   filterSelect: {
     width: '100%',
-    padding: '8px 12px',
+    padding: '10px 12px',
     borderRadius: '6px',
     border: '1px solid #e2e8f0',
     fontSize: '14px',
+    backgroundColor: '#fff',
     outline: 'none'
   },
-  tableContainer: {
+  clearButton: {
+    width: '100%',
+    padding: '10px',
+    borderRadius: '6px',
+    border: '1px solid #e2e8f0',
+    backgroundColor: '#fff',
+    color: '#64748b',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    marginTop: '8px'
+  },
+  tableWrapper: {
     backgroundColor: '#fff',
     borderRadius: '12px',
     overflow: 'hidden',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse'
   },
-  tableHeader: {
-    backgroundColor: '#f8fafc'
-  },
-  tableHeaderCell: {
+  th: {
     padding: '16px',
     textAlign: 'left',
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: '600',
-    color: '#4a5568',
-    borderBottom: '1px solid #e2e8f0'
-  },
-  tableRow: {
+    color: '#64748b',
+    backgroundColor: '#f8fafc',
     borderBottom: '1px solid #e2e8f0',
-    transition: 'background-color 0.2s'
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
   },
-  tableCell: {
+  tr: {
+    borderBottom: '1px solid #f1f5f9',
+    transition: 'background-color 0.15s'
+  },
+  td: {
     padding: '16px',
     fontSize: '14px',
-    color: '#4a5568'
+    color: '#334155'
   },
   studentInfo: {
     display: 'flex',
     alignItems: 'center',
     gap: '12px'
   },
-  avatar: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    objectFit: 'cover'
-  },
+
   studentName: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#1a202c'
+    color: '#1e293b',
+    marginBottom: '2px'
   },
   studentEmail: {
-    fontSize: '12px',
-    color: '#718096'
+    fontSize: '13px',
+    color: '#64748b'
   },
-  internshipName: {
-    maxWidth: '200px',
+  internshipText: {
+    maxWidth: '250px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    fontSize: '13px',
+    color: '#475569'
   },
-  statusBadge: {
+  badge: {
     display: 'inline-block',
-    padding: '4px 8px',
-    borderRadius: '4px',
+    padding: '4px 12px',
+    borderRadius: '12px',
     color: '#fff',
     fontSize: '12px',
-    fontWeight: '500'
+    fontWeight: '600'
   },
-  attendanceContainer: {
+  metricContainer: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px'
-  },
-  attendanceBar: {
-    width: '80px',
-    height: '8px',
-    backgroundColor: '#e2e8f0',
-    borderRadius: '4px',
-    overflow: 'hidden'
-  },
-  attendanceFill: {
-    height: '100%',
-    borderRadius: '4px'
-  },
-  attendanceText: {
-    fontSize: '12px',
-    fontWeight: '500',
-    color: '#4a5568'
-  },
-  progressContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
+    gap: '10px'
   },
   progressBar: {
-    width: '80px',
-    height: '8px',
+    width: '100px',
+    height: '6px',
     backgroundColor: '#e2e8f0',
-    borderRadius: '4px',
+    borderRadius: '3px',
     overflow: 'hidden'
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#1640FF',
-    borderRadius: '4px'
+    borderRadius: '3px',
+    transition: 'width 0.3s ease'
   },
-  progressText: {
-    fontSize: '12px',
-    fontWeight: '500',
-    color: '#4a5568'
+  metricText: {
+    fontSize: '13px',
+    fontWeight: '600',
+    color: '#475569',
+    minWidth: '45px'
   },
   actions: {
     display: 'flex',
     gap: '8px'
   },
-  actionButton: {
+  iconButton: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '32px',
-    height: '32px',
+    width: '36px',
+    height: '36px',
     borderRadius: '6px',
     border: 'none',
     backgroundColor: '#f8fafc',
-    color: '#4a5568',
+    color: '#64748b',
+    fontSize: '16px',
     cursor: 'pointer',
     transition: 'all 0.2s'
   },
@@ -780,83 +1041,82 @@ const styles = {
     gap: '8px',
     marginTop: '24px'
   },
-  paginationButton: {
+  pageButton: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '36px',
+    minWidth: '36px',
     height: '36px',
+    padding: '0 12px',
     borderRadius: '6px',
     border: '1px solid #e2e8f0',
     backgroundColor: '#fff',
-    color: '#4a5568',
+    color: '#475569',
     fontSize: '14px',
     fontWeight: '500',
     cursor: 'pointer',
     transition: 'all 0.2s'
   },
-  activePaginationButton: {
+  activePageButton: {
     backgroundColor: '#1640FF',
     color: '#fff',
     borderColor: '#1640FF'
   },
   modalOverlay: {
     position: 'fixed',
-    top: '0',
-    left: '0',
-    right: '0',
-    bottom: '0',
+    inset: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: '100'
+    zIndex: 100,
+    padding: '20px'
   },
   modal: {
     backgroundColor: '#fff',
     borderRadius: '12px',
-    width: '90%',
+    width: '100%',
     maxWidth: '600px',
-    maxHeight: '80vh',
-    overflow: 'auto'
+    maxHeight: '90vh',
+    overflow: 'auto',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)'
   },
   modalHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '20px',
+    padding: '24px',
     borderBottom: '1px solid #e2e8f0'
   },
   modalTitle: {
     fontSize: '20px',
     fontWeight: '600',
-    color: '#1a202c',
-    margin: '0'
+    color: '#1e293b',
+    margin: 0
   },
   closeButton: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '32px',
-    height: '32px',
+    width: '36px',
+    height: '36px',
     borderRadius: '6px',
     border: 'none',
     backgroundColor: '#f8fafc',
-    color: '#4a5568',
+    color: '#64748b',
+    fontSize: '20px',
     cursor: 'pointer'
   },
-  modalContent: {
-    padding: '20px'
+  modalBody: {
+    padding: '24px'
   },
-  studentDetails: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '24px'
-  },
-  studentProfile: {
+  profileSection: {
     display: 'flex',
     alignItems: 'center',
-    gap: '16px'
+    gap: '20px',
+    marginBottom: '32px',
+    paddingBottom: '24px',
+    borderBottom: '1px solid #e2e8f0'
   },
   profileAvatar: {
     width: '80px',
@@ -864,72 +1124,94 @@ const styles = {
     borderRadius: '50%',
     objectFit: 'cover'
   },
-  profileInfo: {
-    flex: '1'
-  },
   profileName: {
-    fontSize: '20px',
+    fontSize: '24px',
     fontWeight: '600',
-    color: '#1a202c',
-    margin: '0 0 4px 0'
-  },
-  profileEmail: {
-    fontSize: '14px',
-    color: '#4a5568',
-    margin: '0 0 4px 0'
-  },
-  profilePhone: {
-    fontSize: '14px',
-    color: '#4a5568',
-    margin: '0'
-  },
-  detailsSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px'
-  },
-  sectionTitle: {
-    fontSize: '16px',
-    fontWeight: '600',
-    color: '#1a202c',
+    color: '#1e293b',
     margin: '0 0 8px 0'
   },
-  detailRow: {
+  profileDetail: {
+    fontSize: '14px',
+    color: '#64748b',
+    margin: '4px 0'
+  },
+  detailsGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px'
+  },
+  detailItem: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    gap: '16px'
   },
   detailLabel: {
     fontSize: '14px',
-    color: '#718096'
+    fontWeight: '500',
+    color: '#64748b',
+    minWidth: '140px'
   },
   detailValue: {
     fontSize: '14px',
-    color: '#1a202c',
-    fontWeight: '500'
+    color: '#1e293b',
+    fontWeight: '500',
+    textAlign: 'right'
   },
-  modalActions: {
+  modalFooter: {
     display: 'flex',
     justifyContent: 'flex-end',
     gap: '12px',
-    padding: '20px',
+    padding: '20px 24px',
     borderTop: '1px solid #e2e8f0'
   },
-  modalButton: {
+  primaryButton: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    padding: '10px 16px',
+    padding: '10px 20px',
+    borderRadius: '6px',
+    border: 'none',
+    backgroundColor: '#1640FF',
+    color: '#fff',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
+  },
+  secondaryButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 20px',
     borderRadius: '6px',
     border: '1px solid #e2e8f0',
     backgroundColor: '#fff',
-    color: '#4a5568',
+    color: '#475569',
     fontSize: '14px',
     fontWeight: '500',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'all 0.2s'
   },
-  buttonIcon: {
-    fontSize: '16px'
+  formGroup: {
+    marginBottom: '20px'
+  },
+  formLabel: {
+    display: 'block',
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#475569',
+    marginBottom: '8px'
+  },
+  formInput: {
+    width: '100%',
+    padding: '10px 12px',
+    borderRadius: '6px',
+    border: '1px solid #e2e8f0',
+    fontSize: '14px',
+    backgroundColor: '#fff',
+    outline: 'none',
+    transition: 'border-color 0.2s, box-shadow 0.2s'
   }
 };
 

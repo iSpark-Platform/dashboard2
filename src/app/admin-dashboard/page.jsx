@@ -1,6 +1,6 @@
- "use client";
+"use client";
 import React, { useState, useEffect } from 'react';
-import { FiUsers, FiBookOpen, FiCalendar, FiActivity, FiPlus, FiDollarSign, FiEdit, FiBell, FiTrendingUp, FiClock, FiUserPlus, FiCheckCircle } from 'react-icons/fi';
+import { FiUsers, FiBookOpen, FiCalendar, FiActivity, FiPlus, FiDollarSign, FiEdit, FiBell, FiTrendingUp, FiClock, FiUserPlus, FiCheckCircle, FiX, FiCheck, FiTrash2 } from 'react-icons/fi';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -17,6 +17,59 @@ const AdminDashboard = () => {
   const [pendingPayments, setPendingPayments] = useState(0);
   const [platformUpdates, setPlatformUpdates] = useState([]);
   
+  // Modal states
+  const [showCreateInternshipModal, setShowCreateInternshipModal] = useState(false);
+  const [showApproveInstructorsModal, setShowApproveInstructorsModal] = useState(false);
+  const [showApproveStudentsModal, setShowApproveStudentsModal] = useState(false);
+  const [showCreateCourseModal, setShowCreateCourseModal] = useState(false);
+  const [showAnnouncementsModal, setShowAnnouncementsModal] = useState(false);
+  const [showEditInternshipModal, setShowEditInternshipModal] = useState(false);
+  const [selectedInternship, setSelectedInternship] = useState(null);
+  
+  // Form states
+  const [newInternship, setNewInternship] = useState({
+    title: '',
+    instructor: '',
+    description: '',
+    duration: ''
+  });
+  
+  const [newCourse, setNewCourse] = useState({
+    title: '',
+    instructor: '',
+    description: '',
+    duration: ''
+  });
+  
+  const [newAnnouncement, setNewAnnouncement] = useState({
+    title: '',
+    message: '',
+    targetAudience: 'all'
+  });
+  
+  const [paymentsToValidate, setPaymentsToValidate] = useState([
+    { id: 1, studentName: 'John Doe', amount: '$499', course: 'Smart Robotics', status: 'pending' },
+    { id: 2, studentName: 'Jane Smith', amount: '$599', course: 'Applied AI', status: 'pending' },
+    { id: 3, studentName: 'Mike Johnson', amount: '$449', course: 'IoT Systems', status: 'pending' },
+    { id: 4, studentName: 'Sarah Williams', amount: '$699', course: 'Cloud Computing', status: 'pending' },
+    { id: 5, studentName: 'David Brown', amount: '$549', course: '3D Printing', status: 'pending' }
+  ]);
+  
+  const [pendingInstructors, setPendingInstructors] = useState([
+    { id: 1, name: 'Dr. Rajesh Kumar', email: 'rajesh.kumar@example.com', specialization: 'Artificial Intelligence', experience: '8 years', status: 'pending' },
+    { id: 2, name: 'Prof. Priya Sharma', email: 'priya.sharma@example.com', specialization: 'Robotics Engineering', experience: '10 years', status: 'pending' },
+    { id: 3, name: 'Dr. Amit Patel', email: 'amit.patel@example.com', specialization: 'Cloud Computing', experience: '6 years', status: 'pending' },
+    { id: 4, name: 'Prof. Sneha Reddy', email: 'sneha.reddy@example.com', specialization: 'IoT & Embedded Systems', experience: '7 years', status: 'pending' }
+  ]);
+  
+  const [pendingStudents, setPendingStudents] = useState([
+    { id: 1, name: 'Arjun Verma', email: 'arjun.verma@student.com', course: 'Smart Robotics Internship', appliedDate: '2024-11-20', status: 'pending' },
+    { id: 2, name: 'Kavya Nair', email: 'kavya.nair@student.com', course: 'Applied AI & ML', appliedDate: '2024-11-19', status: 'pending' },
+    { id: 3, name: 'Rohan Gupta', email: 'rohan.gupta@student.com', course: 'IoT Systems', appliedDate: '2024-11-18', status: 'pending' },
+    { id: 4, name: 'Ananya Singh', email: 'ananya.singh@student.com', course: 'Cloud Computing', appliedDate: '2024-11-17', status: 'pending' },
+    { id: 5, name: 'Vikram Malhotra', email: 'vikram.m@student.com', course: '3D Printing', appliedDate: '2024-11-16', status: 'pending' }
+  ]);
+  
   // Simulate fetching data from API
   useEffect(() => {
     // Mock data
@@ -29,9 +82,9 @@ const AdminDashboard = () => {
     });
     
     setRecentInternships([
-      { id: 1, title: 'Smart Robotics & Industry 4.0 Automation Internship', instructor: 'John Doe', thumbnail: '	http://localhost:3000/assets/images/course/course-04/course-01.jpg' },
+      { id: 1, title: 'Smart Robotics & Industry 4.0 Automation Internship', instructor: 'John Doe', thumbnail: 'http://localhost:3000/assets/images/course/course-04/course-01.jpg' },
       { id: 2, title: 'Applied AI & Machine Learning: From Models to Real-World Applications', instructor: 'Jane Smith', thumbnail: 'http://localhost:3000/assets/images/course/course-04/course-02.jpg' },
-      { id: 3, title: 'IoT & IIoT for Smart Systems and Industry 4.0', instructor: 'Mike Johnson', thumbnail: '	http://localhost:3000/assets/images/course/course-04/course-03.jpg' }
+      { id: 3, title: 'IoT & IIoT for Smart Systems and Industry 4.0', instructor: 'Mike Johnson', thumbnail: 'http://localhost:3000/assets/images/course/course-04/course-03.jpg' }
     ]);
     
     setRecentSignups([
@@ -53,6 +106,112 @@ const AdminDashboard = () => {
       { id: 2, title: 'New features released', date: '2023-11-15' }
     ]);
   }, []);
+  
+  // Handler functions
+  const handleCreateInternship = () => {
+    if (newInternship.title && newInternship.instructor) {
+      const internship = {
+        id: recentInternships.length + 1,
+        title: newInternship.title,
+        instructor: newInternship.instructor,
+        thumbnail: 'http://localhost:3000/assets/images/course/course-04/course-01.jpg'
+      };
+      
+      setRecentInternships([internship, ...recentInternships]);
+      setStats({...stats, totalInternships: stats.totalInternships + 1});
+      setShowCreateInternshipModal(false);
+      setNewInternship({ title: '', instructor: '', description: '', duration: '' });
+      alert('Internship created successfully!');
+    } else {
+      alert('Please fill in all required fields');
+    }
+  };
+  
+  const handleCreateCourse = () => {
+    if (newCourse.title && newCourse.instructor) {
+      setShowCreateCourseModal(false);
+      setNewCourse({ title: '', instructor: '', description: '', duration: '' });
+      alert('Course created successfully!');
+    } else {
+      alert('Please fill in all required fields');
+    }
+  };
+  
+  const handlePostAnnouncement = () => {
+    if (newAnnouncement.title && newAnnouncement.message) {
+      setShowAnnouncementsModal(false);
+      setNewAnnouncement({ title: '', message: '', targetAudience: 'all' });
+      alert('Announcement posted successfully!');
+    } else {
+      alert('Please fill in all required fields');
+    }
+  };
+  
+  const handleValidatePayment = (paymentId) => {
+    setPaymentsToValidate(paymentsToValidate.map(payment => 
+      payment.id === paymentId ? {...payment, status: 'approved'} : payment
+    ));
+    setPendingPayments(pendingPayments - 1);
+  };
+  
+  const handleRejectPayment = (paymentId) => {
+    setPaymentsToValidate(paymentsToValidate.map(payment => 
+      payment.id === paymentId ? {...payment, status: 'rejected'} : payment
+    ));
+    setPendingPayments(pendingPayments - 1);
+  };
+  
+  const handleApproveInstructor = (instructorId) => {
+    setPendingInstructors(pendingInstructors.map(instructor => 
+      instructor.id === instructorId ? {...instructor, status: 'approved'} : instructor
+    ));
+    setStats({...stats, totalInstructors: stats.totalInstructors + 1});
+    alert('Instructor approved successfully!');
+  };
+  
+  const handleRejectInstructor = (instructorId) => {
+    setPendingInstructors(pendingInstructors.map(instructor => 
+      instructor.id === instructorId ? {...instructor, status: 'rejected'} : instructor
+    ));
+    alert('Instructor application rejected');
+  };
+  
+  const handleApproveStudent = (studentId) => {
+    setPendingStudents(pendingStudents.map(student => 
+      student.id === studentId ? {...student, status: 'approved'} : student
+    ));
+    setStats({...stats, totalStudents: stats.totalStudents + 1});
+    alert('Student approved successfully!');
+  };
+  
+  const handleRejectStudent = (studentId) => {
+    setPendingStudents(pendingStudents.map(student => 
+      student.id === studentId ? {...student, status: 'rejected'} : student
+    ));
+    alert('Student application rejected');
+  };
+  
+  const handleEditInternship = (internship) => {
+    setSelectedInternship(internship);
+    setShowEditInternshipModal(true);
+  };
+  
+  const handleUpdateInternship = () => {
+    setRecentInternships(recentInternships.map(internship => 
+      internship.id === selectedInternship.id ? selectedInternship : internship
+    ));
+    setShowEditInternshipModal(false);
+    setSelectedInternship(null);
+    alert('Internship updated successfully!');
+  };
+  
+  const handleDeleteInternship = (internshipId) => {
+    if (window.confirm('Are you sure you want to delete this internship?')) {
+      setRecentInternships(recentInternships.filter(i => i.id !== internshipId));
+      setStats({...stats, totalInternships: stats.totalInternships - 1});
+      alert('Internship deleted successfully!');
+    }
+  };
   
   return (
     <div style={styles.container}>
@@ -142,19 +301,32 @@ const AdminDashboard = () => {
           <div style={styles.card}>
             <h2 style={styles.cardTitle}>Quick Actions</h2>
             <div style={styles.quickActions}>
-              <button style={styles.quickActionButton}>
+              <button 
+                style={styles.quickActionButton}
+                onClick={() => setShowCreateInternshipModal(true)}
+              >
                 <FiPlus size={18} />
                 <span>Create Internship</span>
               </button>
-              <button style={styles.quickActionButton}>
-                <FiDollarSign size={18} />
-                <span>Validate Payments</span>
+              <button 
+                style={styles.quickActionButton}
+                onClick={() => setShowApproveInstructorsModal(true)}
+              >
+                <FiUserPlus size={18} />
+                <span>Approve Instructors</span>
               </button>
-              <button style={styles.quickActionButton}>
-                <FiBookOpen size={18} />
-                <span>Create Course</span>
+              <button 
+                style={styles.quickActionButton}
+                onClick={() => setShowApproveStudentsModal(true)}
+              >
+                <FiUsers size={18} />
+                <span>Approve Students</span>
               </button>
-              <button style={styles.quickActionButton}>
+           
+              <button 
+                style={styles.quickActionButton}
+                onClick={() => setShowAnnouncementsModal(true)}
+              >
                 <FiBell size={18} />
                 <span>Announcements</span>
               </button>
@@ -172,8 +344,17 @@ const AdminDashboard = () => {
                     <h3 style={styles.internshipTitle}>{internship.title}</h3>
                     <p style={styles.internshipInstructor}>{internship.instructor}</p>
                   </div>
-                  <button style={styles.editButton}>
+                  <button 
+                    style={styles.editButton}
+                    onClick={() => handleEditInternship(internship)}
+                  >
                     <FiEdit size={16} />
+                  </button>
+                  <button 
+                    style={{...styles.editButton, marginLeft: '8px', backgroundColor: '#fee2e2'}}
+                    onClick={() => handleDeleteInternship(internship.id)}
+                  >
+                    <FiTrash2 size={16} color="#dc2626" />
                   </button>
                 </div>
               ))}
@@ -192,7 +373,12 @@ const AdminDashboard = () => {
               <div style={styles.alertContent}>
                 <h3 style={styles.alertTitle}>Pending Payment Validations</h3>
                 <p style={styles.alertMessage}>{pendingPayments} payments require your attention</p>
-                <button style={styles.alertButton}>Review Now</button>
+                <button 
+                  style={styles.alertButton}
+                  onClick={() => setShowValidatePaymentsModal(true)}
+                >
+                  Review Now
+                </button>
               </div>
             </div>
           )}
@@ -241,6 +427,400 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+      
+      {/* MODALS */}
+      
+      {/* Create Internship Modal */}
+      {showCreateInternshipModal && (
+        <div style={styles.modalOverlay} onClick={() => setShowCreateInternshipModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Create New Internship</h2>
+              <button 
+                style={styles.closeButton}
+                onClick={() => setShowCreateInternshipModal(false)}
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <div style={styles.modalContent}>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Internship Title *</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={newInternship.title}
+                  onChange={(e) => setNewInternship({...newInternship, title: e.target.value})}
+                  placeholder="Enter internship title"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Instructor *</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={newInternship.instructor}
+                  onChange={(e) => setNewInternship({...newInternship, instructor: e.target.value})}
+                  placeholder="Enter instructor name"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Description</label>
+                <textarea 
+                  style={styles.formTextarea}
+                  value={newInternship.description}
+                  onChange={(e) => setNewInternship({...newInternship, description: e.target.value})}
+                  placeholder="Enter internship description"
+                  rows="4"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Duration</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={newInternship.duration}
+                  onChange={(e) => setNewInternship({...newInternship, duration: e.target.value})}
+                  placeholder="e.g., 6 months"
+                />
+              </div>
+              <div style={styles.modalActions}>
+                <button 
+                  style={styles.cancelButton}
+                  onClick={() => setShowCreateInternshipModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  style={styles.submitButton}
+                  onClick={handleCreateInternship}
+                >
+                  <FiCheck size={16} />
+                  Create Internship
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Approve Instructors Modal */}
+      {showApproveInstructorsModal && (
+        <div style={styles.modalOverlay} onClick={() => setShowApproveInstructorsModal(false)}>
+          <div style={{...styles.modal, maxWidth: '800px'}} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Approve Instructor Applications</h2>
+              <button 
+                style={styles.closeButton}
+                onClick={() => setShowApproveInstructorsModal(false)}
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <div style={styles.modalContent}>
+              <div style={styles.paymentsList}>
+                {pendingInstructors.filter(i => i.status === 'pending').length === 0 ? (
+                  <p style={styles.noPayments}>No pending instructor applications</p>
+                ) : (
+                  pendingInstructors.map(instructor => (
+                    instructor.status === 'pending' && (
+                      <div key={instructor.id} style={styles.approvalItem}>
+                        <div style={styles.approvalInfo}>
+                          <h4 style={styles.approvalName}>{instructor.name}</h4>
+                          <p style={styles.approvalEmail}>{instructor.email}</p>
+                          <p style={styles.approvalDetails}>
+                            <strong>Specialization:</strong> {instructor.specialization} | <strong>Experience:</strong> {instructor.experience}
+                          </p>
+                        </div>
+                        <div style={styles.paymentActions}>
+                          <button 
+                            style={styles.approveButton}
+                            onClick={() => handleApproveInstructor(instructor.id)}
+                          >
+                            <FiCheck size={16} />
+                            Approve
+                          </button>
+                          <button 
+                            style={styles.rejectButton}
+                            onClick={() => handleRejectInstructor(instructor.id)}
+                          >
+                            <FiX size={16} />
+                            Reject
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  ))
+                )}
+              </div>
+              <div style={styles.modalActions}>
+                <button 
+                  style={styles.cancelButton}
+                  onClick={() => setShowApproveInstructorsModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Approve Students Modal */}
+      {showApproveStudentsModal && (
+        <div style={styles.modalOverlay} onClick={() => setShowApproveStudentsModal(false)}>
+          <div style={{...styles.modal, maxWidth: '800px'}} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Approve Student Applications</h2>
+              <button 
+                style={styles.closeButton}
+                onClick={() => setShowApproveStudentsModal(false)}
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <div style={styles.modalContent}>
+              <div style={styles.paymentsList}>
+                {pendingStudents.filter(s => s.status === 'pending').length === 0 ? (
+                  <p style={styles.noPayments}>No pending student applications</p>
+                ) : (
+                  pendingStudents.map(student => (
+                    student.status === 'pending' && (
+                      <div key={student.id} style={styles.approvalItem}>
+                        <div style={styles.approvalInfo}>
+                          <h4 style={styles.approvalName}>{student.name}</h4>
+                          <p style={styles.approvalEmail}>{student.email}</p>
+                          <p style={styles.approvalDetails}>
+                            <strong>Applied For:</strong> {student.course} | <strong>Date:</strong> {student.appliedDate}
+                          </p>
+                        </div>
+                        <div style={styles.paymentActions}>
+                          <button 
+                            style={styles.approveButton}
+                            onClick={() => handleApproveStudent(student.id)}
+                          >
+                            <FiCheck size={16} />
+                            Approve
+                          </button>
+                          <button 
+                            style={styles.rejectButton}
+                            onClick={() => handleRejectStudent(student.id)}
+                          >
+                            <FiX size={16} />
+                            Reject
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  ))
+                )}
+              </div>
+              <div style={styles.modalActions}>
+                <button 
+                  style={styles.cancelButton}
+                  onClick={() => setShowApproveStudentsModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Create Course Modal */}
+      {showCreateCourseModal && (
+        <div style={styles.modalOverlay} onClick={() => setShowCreateCourseModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Create New Course</h2>
+              <button 
+                style={styles.closeButton}
+                onClick={() => setShowCreateCourseModal(false)}
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <div style={styles.modalContent}>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Course Title *</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={newCourse.title}
+                  onChange={(e) => setNewCourse({...newCourse, title: e.target.value})}
+                  placeholder="Enter course title"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Instructor *</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={newCourse.instructor}
+                  onChange={(e) => setNewCourse({...newCourse, instructor: e.target.value})}
+                  placeholder="Enter instructor name"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Description</label>
+                <textarea 
+                  style={styles.formTextarea}
+                  value={newCourse.description}
+                  onChange={(e) => setNewCourse({...newCourse, description: e.target.value})}
+                  placeholder="Enter course description"
+                  rows="4"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Duration</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={newCourse.duration}
+                  onChange={(e) => setNewCourse({...newCourse, duration: e.target.value})}
+                  placeholder="e.g., 8 weeks"
+                />
+              </div>
+              <div style={styles.modalActions}>
+                <button 
+                  style={styles.cancelButton}
+                  onClick={() => setShowCreateCourseModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  style={styles.submitButton}
+                  onClick={handleCreateCourse}
+                >
+                  <FiCheck size={16} />
+                  Create Course
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Announcements Modal */}
+      {showAnnouncementsModal && (
+        <div style={styles.modalOverlay} onClick={() => setShowAnnouncementsModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Post Announcement</h2>
+              <button 
+                style={styles.closeButton}
+                onClick={() => setShowAnnouncementsModal(false)}
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <div style={styles.modalContent}>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Announcement Title *</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={newAnnouncement.title}
+                  onChange={(e) => setNewAnnouncement({...newAnnouncement, title: e.target.value})}
+                  placeholder="Enter announcement title"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Message *</label>
+                <textarea 
+                  style={styles.formTextarea}
+                  value={newAnnouncement.message}
+                  onChange={(e) => setNewAnnouncement({...newAnnouncement, message: e.target.value})}
+                  placeholder="Enter announcement message"
+                  rows="5"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Target Audience</label>
+                <select 
+                  style={styles.formInput}
+                  value={newAnnouncement.targetAudience}
+                  onChange={(e) => setNewAnnouncement({...newAnnouncement, targetAudience: e.target.value})}
+                >
+                  <option value="all">All Users</option>
+                  <option value="students">Students Only</option>
+                  <option value="instructors">Instructors Only</option>
+                </select>
+              </div>
+              <div style={styles.modalActions}>
+                <button 
+                  style={styles.cancelButton}
+                  onClick={() => setShowAnnouncementsModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  style={styles.submitButton}
+                  onClick={handlePostAnnouncement}
+                >
+                  <FiBell size={16} />
+                  Post Announcement
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Edit Internship Modal */}
+      {showEditInternshipModal && selectedInternship && (
+        <div style={styles.modalOverlay} onClick={() => setShowEditInternshipModal(false)}>
+          <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>Edit Internship</h2>
+              <button 
+                style={styles.closeButton}
+                onClick={() => setShowEditInternshipModal(false)}
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <div style={styles.modalContent}>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Internship Title *</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={selectedInternship.title}
+                  onChange={(e) => setSelectedInternship({...selectedInternship, title: e.target.value})}
+                  placeholder="Enter internship title"
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Instructor *</label>
+                <input 
+                  type="text"
+                  style={styles.formInput}
+                  value={selectedInternship.instructor}
+                  onChange={(e) => setSelectedInternship({...selectedInternship, instructor: e.target.value})}
+                  placeholder="Enter instructor name"
+                />
+              </div>
+              <div style={styles.modalActions}>
+                <button 
+                  style={styles.cancelButton}
+                  onClick={() => setShowEditInternshipModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  style={styles.submitButton}
+                  onClick={handleUpdateInternship}
+                >
+                  <FiCheck size={16} />
+                  Update Internship
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -281,7 +861,9 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     flex: '1',
-    minWidth: '200px'
+    minWidth: '200px',
+    transition: 'transform 0.2s, box-shadow 0.2s',
+    cursor: 'pointer'
   },
   statIcon: {
     marginRight: '16px',
@@ -339,7 +921,8 @@ const styles = {
     alignItems: 'center',
     padding: '12px',
     borderRadius: '8px',
-    backgroundColor: '#f7fafc'
+    backgroundColor: '#f7fafc',
+    transition: 'background-color 0.2s'
   },
   activityIcon: {
     marginRight: '12px',
@@ -391,7 +974,8 @@ const styles = {
     alignItems: 'center',
     padding: '12px',
     borderRadius: '8px',
-    backgroundColor: '#f7fafc'
+    backgroundColor: '#f7fafc',
+    transition: 'background-color 0.2s'
   },
   internshipThumbnail: {
     width: '60px',
@@ -422,7 +1006,8 @@ const styles = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    transition: 'all 0.2s'
   },
   alertCard: {
     backgroundColor: '#fff',
@@ -462,7 +1047,8 @@ const styles = {
     padding: '8px 16px',
     fontSize: '14px',
     fontWeight: '500',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
   },
   signupTable: {
     overflowX: 'auto'
@@ -475,7 +1061,8 @@ const styles = {
     borderBottom: '1px solid #e2e8f0'
   },
   tableRow: {
-    borderBottom: '1px solid #e2e8f0'
+    borderBottom: '1px solid #e2e8f0',
+    transition: 'background-color 0.2s'
   },
   tableCell: {
     padding: '12px 8px',
@@ -492,7 +1079,8 @@ const styles = {
     alignItems: 'center',
     padding: '12px',
     borderRadius: '8px',
-    backgroundColor: '#f7fafc'
+    backgroundColor: '#f7fafc',
+    transition: 'background-color 0.2s'
   },
   updateIcon: {
     marginRight: '12px',
@@ -513,6 +1101,228 @@ const styles = {
     fontSize: '12px',
     color: '#718096',
     margin: '0'
+  },
+  
+  // Modal Styles
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+    animation: 'fadeIn 0.2s ease-in-out'
+  },
+  modal: {
+    backgroundColor: 'white',
+    borderRadius: '16px',
+    width: '90%',
+    maxWidth: '550px',
+    maxHeight: '85vh',
+    overflow: 'hidden',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+    animation: 'slideIn 0.3s ease-out',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  modalHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '20px 24px',
+    borderBottom: '1px solid #e5e7eb',
+    backgroundColor: '#f8f9fa'
+  },
+  modalTitle: {
+    fontSize: '20px',
+    fontWeight: '700',
+    color: '#1a202c',
+    margin: 0
+  },
+  closeButton: {
+    background: 'white',
+    border: '1px solid #e5e7eb',
+    color: '#718096',
+    cursor: 'pointer',
+    padding: '8px',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s'
+  },
+  modalContent: {
+    padding: '24px',
+    overflowY: 'auto',
+    flex: 1
+  },
+  formGroup: {
+    marginBottom: '20px'
+  },
+  formLabel: {
+    display: 'block',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: '8px'
+  },
+  formInput: {
+    width: '100%',
+    padding: '12px',
+    border: '1px solid #e5e7eb',
+    borderRadius: '8px',
+    fontSize: '14px',
+    transition: 'border-color 0.2s',
+    outline: 'none'
+  },
+  formTextarea: {
+    width: '100%',
+    padding: '12px',
+    border: '1px solid #e5e7eb',
+    borderRadius: '8px',
+    fontSize: '14px',
+    transition: 'border-color 0.2s',
+    outline: 'none',
+    resize: 'vertical',
+    fontFamily: 'inherit'
+  },
+  modalActions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '12px',
+    marginTop: '24px',
+    paddingTop: '20px',
+    borderTop: '1px solid #e5e7eb'
+  },
+  cancelButton: {
+    padding: '10px 20px',
+    backgroundColor: '#f3f4f6',
+    border: '1px solid #e5e7eb',
+    borderRadius: '8px',
+    color: '#6b7280',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  submitButton: {
+    padding: '10px 20px',
+    backgroundColor: '#1640FF',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px'
+  },
+  
+  // Payments validation styles
+  paymentsList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+    maxHeight: '400px',
+    overflowY: 'auto'
+  },
+  paymentItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '16px',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb'
+  },
+  paymentInfo: {
+    flex: 1
+  },
+  paymentStudent: {
+    fontSize: '15px',
+    fontWeight: '600',
+    color: '#1a202c',
+    margin: '0 0 4px 0'
+  },
+  paymentDetails: {
+    fontSize: '13px',
+    color: '#718096',
+    margin: 0
+  },
+  paymentActions: {
+    display: 'flex',
+    gap: '8px'
+  },
+  approveButton: {
+    padding: '8px 16px',
+    backgroundColor: '#10b981',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    fontSize: '13px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    transition: 'background-color 0.2s'
+  },
+  rejectButton: {
+    padding: '8px 16px',
+    backgroundColor: '#ef4444',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    fontSize: '13px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    transition: 'background-color 0.2s'
+  },
+  noPayments: {
+    textAlign: 'center',
+    color: '#718096',
+    padding: '40px 20px',
+    fontSize: '14px'
+  },
+  
+  // Approval item styles
+  approvalItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: '18px',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '10px',
+    border: '1px solid #e5e7eb'
+  },
+  approvalInfo: {
+    flex: 1
+  },
+  approvalName: {
+    fontSize: '16px',
+    fontWeight: '700',
+    color: '#1a202c',
+    margin: '0 0 6px 0'
+  },
+  approvalEmail: {
+    fontSize: '14px',
+    color: '#6b7280',
+    margin: '0 0 8px 0'
+  },
+  approvalDetails: {
+    fontSize: '13px',
+    color: '#4b5563',
+    margin: 0,
+    lineHeight: '1.5'
   }
 };
 
