@@ -44,7 +44,6 @@ const DashboardSidebar = ({ isOpen }) => {
 
   const bottomItems = [
     { name: 'Settings', icon: FiSettings, path: '/studashboard/settings' },
-    { name: 'Report History', icon: FiClock, path: '/studashboard/reports' },
     { name: 'Send Feedback', icon: FiMessageCircle, path: '/studashboard/feedback' },
     { name: 'Help', icon: FiHelpCircle, path: '/studashboard/help' }
   ];

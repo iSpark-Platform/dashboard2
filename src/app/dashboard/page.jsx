@@ -21,7 +21,10 @@ import {
   faCalendarAlt,
   faChartBar,
   faComments,
-  faTachometerAlt
+  faTachometerAlt,
+  faTimes,
+  faSave,
+  faCheck
 } from '@fortawesome/free-solid-svg-icons';
 
 // LiveClassSection Component
@@ -183,7 +186,7 @@ const InstructorDashboard = () => {
       title: "Professional Diploma in Humanoid Robotics for Service Industries",
       status: "ongoing",
       students: 42,
-      image: "images/course/course-01/course-01.jpg",
+      image: "http://localhost:3000/assets/images/course/course-04/course-01.jpg",
       description: "Advanced robotics program focusing on humanoid applications in service sectors",
       duration: "6 months",
       progress: 65
@@ -193,7 +196,7 @@ const InstructorDashboard = () => {
       title: "Diploma in Artificial Intelligence Applications Across Industries",
       status: "ongoing",
       students: 38,
-      image: "images/course/course-01/course-02.jpg",
+      image: "http://localhost:3000/assets/images/course/course-04/course-02.jpg",
       description: "Comprehensive AI program covering real-world applications across various sectors",
       duration: "8 months",
       progress: 45
@@ -203,7 +206,7 @@ const InstructorDashboard = () => {
       title: "Industry-Ready Diploma in Cloud & Edge Technologies",
       status: "upcoming",
       students: 28,
-      image: "images/course/course-01/course-03.jpg",
+      image: "http://localhost:3000/assets/images/course/course-04/course-03.jpg",
       description: "Master cloud computing and edge technologies for modern infrastructure",
       duration: "5 months",
       progress: 0
@@ -213,7 +216,7 @@ const InstructorDashboard = () => {
       title: "Career-Ready Diploma in Cybersecurity & Digital Forensics",
       status: "upcoming",
       students: 32,
-      image: "https://picsum.photos/seed/cybersecurity/400/200.jpg",
+      image: "	http://localhost:3000/assets/images/course/course-04/course-04.jpg",
       description: "Comprehensive cybersecurity program with digital forensics specialization",
       duration: "7 months",
       progress: 0
@@ -223,7 +226,7 @@ const InstructorDashboard = () => {
       title: "Year-long STEM Readiness for UG Students",
       status: "completed",
       students: 36,
-      image: "https://picsum.photos/seed/stem/400/200.jpg",
+      image: "http://localhost:3000/assets/images/course/course-04/course-05.jpg",
       description: "Foundational STEM program preparing undergraduate students for advanced studies",
       duration: "12 months",
       progress: 100
@@ -245,6 +248,27 @@ const InstructorDashboard = () => {
   // State for sidebar collapse
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
+  // State for modals
+  const [showCreateCourseModal, setShowCreateCourseModal] = useState(false);
+  const [showUploadMaterialModal, setShowUploadMaterialModal] = useState(false);
+  const [showCreateAssignmentModal, setShowCreateAssignmentModal] = useState(false);
+  
+  // State for new course form
+  const [newCourse, setNewCourse] = useState({
+    title: "",
+    description: "",
+    duration: "",
+    status: "upcoming"
+  });
+  
+  // State for new assignment form
+  const [newAssignment, setNewAssignment] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+    courseId: ""
+  });
+  
   // Update current date/time every minute
   useEffect(() => {
     const timer = setInterval(() => {
@@ -262,18 +286,19 @@ const InstructorDashboard = () => {
   
   // Handle action button clicks
   const handleActionClick = (action) => {
+    console.log(`Action clicked: ${action}`);
     switch(action) {
       case 'Create Course':
-        console.log('Opening create course form...');
-        alert('Create Course form would open here');
+        console.log('Opening Create Course Modal');
+        setShowCreateCourseModal(true);
         break;
       case 'Upload Material':
-        console.log('Opening file upload dialog...');
-        alert('File upload dialog would open here');
+        console.log('Opening Upload Material Modal');
+        setShowUploadMaterialModal(true);
         break;
       case 'Create Assignment':
-        console.log('Opening assignment creation form...');
-        alert('Assignment creation form would open here');
+        console.log('Opening Create Assignment Modal');
+        setShowCreateAssignmentModal(true);
         break;
       default:
         console.log(`Unknown action: ${action}`);
@@ -307,9 +332,57 @@ const InstructorDashboard = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
   
+  // Handle create course
+  const handleCreateCourse = () => {
+    const id = courses.length + 1;
+    const course = {
+      id,
+      title: newCourse.title,
+      description: newCourse.description,
+      duration: newCourse.duration,
+      status: newCourse.status,
+      students: 0,
+      image: `https://picsum.photos/seed/course${id}/400/200.jpg`,
+      progress: 0
+    };
+    
+    setCourses([...courses, course]);
+    setMetrics({
+      ...metrics,
+      totalCourses: metrics.totalCourses + 1
+    });
+    
+    setShowCreateCourseModal(false);
+    setNewCourse({
+      title: "",
+      description: "",
+      duration: "",
+      status: "upcoming"
+    });
+  };
+  
+  // Handle upload material
+  const handleUploadMaterial = () => {
+    console.log("Uploading material...");
+    setShowUploadMaterialModal(false);
+    alert("Material uploaded successfully!");
+  };
+  
+  // Handle create assignment
+  const handleCreateAssignment = () => {
+    console.log("Creating assignment...");
+    setShowCreateAssignmentModal(false);
+    setNewAssignment({
+      title: "",
+      description: "",
+      dueDate: "",
+      courseId: ""
+    });
+    alert("Assignment created successfully!");
+  };
+  
   return (
     <div className="instructor-dashboard">
-     
       {/* Main Content */}
       <div className="main-content">
         {/* Header Section */}
@@ -321,9 +394,6 @@ const InstructorDashboard = () => {
             </div>
           </div>
           <div className="header-right">
-           
-           
-          
           </div>
         </div>
         
@@ -364,25 +434,25 @@ const InstructorDashboard = () => {
               {/* Quick Action Buttons */}
               <div className="quick-actions">
                 <button 
-                  className="action-btn"
+                  className="action-btn action-btn-create"
                   onClick={() => handleActionClick('Create Course')}
                 >
-                  <FontAwesomeIcon icon={faPlus} />
-                  Create Course
+                  <FontAwesomeIcon icon={faPlus} className="action-icon" />
+                  <span>Create Course</span>
                 </button>
                 <button 
-                  className="action-btn"
+                  className="action-btn action-btn-upload"
                   onClick={() => handleActionClick('Upload Material')}
                 >
-                  <FontAwesomeIcon icon={faUpload} />
-                  Upload Material
+                  <FontAwesomeIcon icon={faUpload} className="action-icon" />
+                  <span>Upload Material</span>
                 </button>
                 <button 
-                  className="action-btn"
+                  className="action-btn action-btn-assignment"
                   onClick={() => handleActionClick('Create Assignment')}
                 >
-                  <FontAwesomeIcon icon={faTasks} />
-                  Create Assignment
+                  <FontAwesomeIcon icon={faTasks} className="action-icon" />
+                  <span>Create Assignment</span>
                 </button>
               </div>
               
@@ -434,7 +504,7 @@ const InstructorDashboard = () => {
           {activeTab === "courses" && (
             <div className="courses-section">
               <div className="section-header">
-                <h2 className="section-title">My Courses</h2>
+                <h2 className="section-title">Courses</h2>
                 <button 
                   className="create-btn"
                   onClick={() => handleActionClick('Create Course')}
@@ -685,7 +755,7 @@ const InstructorDashboard = () => {
                         <h4>John Smith</h4>
                         <span className="message-time">2 hours ago</span>
                       </div>
-                      <p>Hi Professor, I have a question about the robotics assignment...</p>
+                      <p>Hi Professor, I have a question about robotics assignment...</p>
                     </div>
                   </div>
                   <div className="message-item unread">
@@ -695,7 +765,7 @@ const InstructorDashboard = () => {
                         <h4>Emily Johnson</h4>
                         <span className="message-time">5 hours ago</span>
                       </div>
-                      <p>Thank you for the feedback on my AI project. I've made the changes...</p>
+                      <p>Thank you for feedback on my AI project. I've made changes...</p>
                     </div>
                   </div>
                   <div className="message-item">
@@ -705,7 +775,7 @@ const InstructorDashboard = () => {
                         <h4>Michael Chen</h4>
                         <span className="message-time">Yesterday</span>
                       </div>
-                      <p>Could you please clarify the requirements for the cloud computing project?</p>
+                      <p>Could you please clarify requirements for cloud computing project?</p>
                     </div>
                   </div>
                 </div>
@@ -716,7 +786,7 @@ const InstructorDashboard = () => {
                   </div>
                   <div className="message-detail-content">
                     <p>Hi Professor,</p>
-                    <p>I have a question about the robotics assignment. I'm having trouble with the programming part of the humanoid robot simulation. Could you please provide some guidance on how to approach the movement algorithms?</p>
+                    <p>I have a question about robotics assignment. I'm having trouble with the programming part of humanoid robot simulation. Could you please provide some guidance on how to approach the movement algorithms?</p>
                     <p>Thank you,<br/>John</p>
                   </div>
                   <div className="message-reply">
@@ -778,6 +848,199 @@ const InstructorDashboard = () => {
         </div>
       </div>
       
+      {/* Create Course Modal */}
+      {showCreateCourseModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>Create New Course</h2>
+              <button className="close-btn" onClick={() => setShowCreateCourseModal(false)}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+            <div className="modal-content">
+              <div className="form-group">
+                <label htmlFor="course-title">Course Title</label>
+                <input 
+                  type="text" 
+                  id="course-title" 
+                  value={newCourse.title}
+                  onChange={(e) => setNewCourse({...newCourse, title: e.target.value})}
+                  placeholder="Enter course title"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="course-description">Course Description</label>
+                <textarea 
+                  id="course-description" 
+                  rows="4" 
+                  value={newCourse.description}
+                  onChange={(e) => setNewCourse({...newCourse, description: e.target.value})}
+                  placeholder="Enter course description"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="course-duration">Course Duration</label>
+                <input 
+                  type="text" 
+                  id="course-duration" 
+                  value={newCourse.duration}
+                  onChange={(e) => setNewCourse({...newCourse, duration: e.target.value})}
+                  placeholder="e.g., 6 months"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="course-status">Course Status</label>
+                <select 
+                  id="course-status" 
+                  value={newCourse.status}
+                  onChange={(e) => setNewCourse({...newCourse, status: e.target.value})}
+                >
+                  <option value="upcoming">Upcoming</option>
+                  <option value="ongoing">Ongoing</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              <div className="modal-actions">
+                <button className="cancel-btn" onClick={() => setShowCreateCourseModal(false)}>
+                  Cancel
+                </button>
+                <button className="submit-btn" onClick={handleCreateCourse}>
+                  <FontAwesomeIcon icon={faCheck} />
+                  Create Course
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Upload Material Modal */}
+      {showUploadMaterialModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>Upload Course Material</h2>
+              <button className="close-btn" onClick={() => setShowUploadMaterialModal(false)}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+            <div className="modal-content">
+              <div className="form-group">
+                <label htmlFor="material-course">Select Course</label>
+                <select id="material-course">
+                  {courses.map(course => (
+                    <option key={course.id} value={course.id}>{course.title}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="material-title">Material Title</label>
+                <input 
+                  type="text" 
+                  id="material-title" 
+                  placeholder="Enter material title"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="material-description">Description</label>
+                <textarea 
+                  id="material-description" 
+                  rows="4" 
+                  placeholder="Enter material description"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="material-file">Upload File</label>
+                <div className="file-upload">
+                  <input type="file" id="material-file" />
+                  <div className="file-upload-label">
+                    <FontAwesomeIcon icon={faUpload} />
+                    <span>Choose file or drag and drop</span>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button className="cancel-btn" onClick={() => setShowUploadMaterialModal(false)}>
+                  Cancel
+                </button>
+                <button className="submit-btn" onClick={handleUploadMaterial}>
+                  <FontAwesomeIcon icon={faCheck} />
+                  Upload Material
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Create Assignment Modal */}
+      {showCreateAssignmentModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>Create Assignment</h2>
+              <button className="close-btn" onClick={() => setShowCreateAssignmentModal(false)}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+            <div className="modal-content">
+              <div className="form-group">
+                <label htmlFor="assignment-course">Select Course</label>
+                <select 
+                  id="assignment-course"
+                  value={newAssignment.courseId}
+                  onChange={(e) => setNewAssignment({...newAssignment, courseId: e.target.value})}
+                >
+                  <option value="">Select a course</option>
+                  {courses.map(course => (
+                    <option key={course.id} value={course.id}>{course.title}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="assignment-title">Assignment Title</label>
+                <input 
+                  type="text" 
+                  id="assignment-title" 
+                  value={newAssignment.title}
+                  onChange={(e) => setNewAssignment({...newAssignment, title: e.target.value})}
+                  placeholder="Enter assignment title"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="assignment-description">Assignment Description</label>
+                <textarea 
+                  id="assignment-description" 
+                  rows="4" 
+                  value={newAssignment.description}
+                  onChange={(e) => setNewAssignment({...newAssignment, description: e.target.value})}
+                  placeholder="Enter assignment description"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="assignment-due">Due Date</label>
+                <input 
+                  type="date" 
+                  id="assignment-due" 
+                  value={newAssignment.dueDate}
+                  onChange={(e) => setNewAssignment({...newAssignment, dueDate: e.target.value})}
+                />
+              </div>
+              <div className="modal-actions">
+                <button className="cancel-btn" onClick={() => setShowCreateAssignmentModal(false)}>
+                  Cancel
+                </button>
+                <button className="submit-btn" onClick={handleCreateAssignment}>
+                  <FontAwesomeIcon icon={faCheck} />
+                  Create Assignment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <style jsx>{`
         * {
           margin: 0;
@@ -791,126 +1054,6 @@ const InstructorDashboard = () => {
           min-height: 100vh;
           background-color: #f5f7fa;
           color: #333;
-        }
-        
-        /* Sidebar Styles */
-        .sidebar {
-          width: 260px;
-          background-color: #1640ff;
-          color: white;
-          display: flex;
-          flex-direction: column;
-          transition: width 0.3s ease;
-          box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-          z-index: 100;
-        }
-        
-        .sidebar.collapsed {
-          width: 70px;
-        }
-        
-        .sidebar-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 20px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-        
-        .logo-icon {
-          font-size: 24px;
-          color: white;
-        }
-        
-        .logo-text {
-          font-size: 20px;
-          font-weight: 700;
-          color: white;
-        }
-        
-        .toggle-btn {
-          background: none;
-          border: none;
-          color: white;
-          font-size: 18px;
-          cursor: pointer;
-          padding: 8px;
-          border-radius: 8px;
-          transition: background-color 0.3s;
-        }
-        
-        .toggle-btn:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar-nav {
-          flex: 1;
-          padding: 20px 0;
-        }
-        
-        .nav-list {
-          list-style: none;
-        }
-        
-        .nav-item {
-          margin-bottom: 5px;
-        }
-        
-        .nav-item button {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 15px 20px;
-          background: none;
-          border: none;
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 16px;
-          cursor: pointer;
-          transition: all 0.3s;
-          border-left: 3px solid transparent;
-        }
-        
-        .nav-item button:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: white;
-        }
-        
-        .nav-item.active button {
-          background-color: rgba(255, 255, 255, 0.15);
-          color: white;
-          border-left: 3px solid white;
-        }
-        
-        .sidebar-footer {
-          padding: 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .logout-btn {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 15px 20px;
-          background: none;
-          border: none;
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 16px;
-          cursor: pointer;
-          transition: all 0.3s;
-          border-radius: 8px;
-        }
-        
-        .logout-btn:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: white;
         }
         
         /* Main Content Styles */
@@ -1138,14 +1281,16 @@ const InstructorDashboard = () => {
         /* Quick Action Buttons */
         .quick-actions {
           display: flex;
-          gap: 16px;
+          gap: 20px;
           margin-bottom: 30px;
+          flex-wrap: wrap;
         }
         
         .action-btn {
           flex: 1;
-          padding: 16px 24px;
-          border-radius: 12px;
+          min-width: 200px;
+          padding: 18px 28px;
+          border-radius: 14px;
           background-color: #1640ff;
           color: white;
           border: none;
@@ -1155,15 +1300,66 @@ const InstructorDashboard = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 8px;
+          gap: 12px;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 12px rgba(22, 64, 255, 0.2);
+          box-shadow: 0 4px 12px rgba(22, 64, 255, 0.25);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .action-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transition: left 0.5s;
+        }
+        
+        .action-btn:hover::before {
+          left: 100%;
         }
         
         .action-btn:hover {
           background-color: #0e30cc;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(22, 64, 255, 0.3);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(22, 64, 255, 0.35);
+        }
+        
+        .action-btn:active {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(22, 64, 255, 0.3);
+        }
+        
+        .action-icon {
+          font-size: 18px;
+          flex-shrink: 0;
+        }
+        
+        .action-btn span {
+          white-space: nowrap;
+        }
+        
+        .action-btn-create {
+          background: linear-gradient(135deg, #1640ff 0%, #0e30cc 100%);
+        }
+        
+        .action-btn-upload {
+          background: linear-gradient(135deg, #00b894 0%, #00896a 100%);
+        }
+        
+        .action-btn-upload:hover {
+          background: linear-gradient(135deg, #00896a 0%, #006b52 100%);
+        }
+        
+        .action-btn-assignment {
+          background: linear-gradient(135deg, #EF7C00 0%, #d46b00 100%);
+        }
+        
+        .action-btn-assignment:hover {
+          background: linear-gradient(135deg, #d46b00 0%, #b85c00 100%);
         }
         
         /* Section Styles */
@@ -1559,7 +1755,7 @@ const InstructorDashboard = () => {
           font-size: 32px;
         }
         
-             /* Messages Section */
+        /* Messages Section */
         .messages-section {
           margin-bottom: 30px;
         }
@@ -1738,7 +1934,8 @@ const InstructorDashboard = () => {
         }
         
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
           width: 100%;
           padding: 12px;
           border: 1px solid #ddd;
@@ -1749,7 +1946,8 @@ const InstructorDashboard = () => {
         }
         
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
           outline: none;
           border-color: #1640ff;
           box-shadow: 0 0 0 3px rgba(22, 64, 255, 0.1);
@@ -1783,6 +1981,187 @@ const InstructorDashboard = () => {
           background-color: #0e30cc;
         }
         
+        /* Modal Styles - FIXED */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.6);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          animation: fadeIn 0.2s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        .modal {
+          background-color: white;
+          border-radius: 16px;
+          width: 90%;
+          max-width: 550px;
+          max-height: 85vh;
+          overflow-y: auto;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+          animation: slideIn 0.3s ease-out;
+          position: relative;
+        }
+        
+        @keyframes slideIn {
+          from {
+            transform: translateY(-50px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 24px;
+          border-bottom: 1px solid #eaeaea;
+          background-color: #f8f9fa;
+          border-radius: 16px 16px 0 0;
+        }
+        
+        .modal-header h2 {
+          font-size: 22px;
+          font-weight: 700;
+          color: #333;
+        }
+        
+        .close-btn {
+          background: white;
+          border: 1px solid #ddd;
+          color: #666;
+          font-size: 20px;
+          cursor: pointer;
+          padding: 8px 12px;
+          border-radius: 8px;
+          transition: all 0.3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+        }
+        
+        .close-btn:hover {
+          background-color: #fee;
+          border-color: #fcc;
+          color: #c00;
+        }
+        
+        .modal-content {
+          padding: 24px;
+          background-color: white;
+        }
+        
+        .modal-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+          margin-top: 24px;
+          padding-top: 20px;
+          border-top: 1px solid #eaeaea;
+        }
+        
+        .cancel-btn {
+          padding: 12px 24px;
+          background-color: #f8f9fa;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          color: #666;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+        
+        .cancel-btn:hover {
+          background-color: #e9ecef;
+          border-color: #ccc;
+        }
+        
+        .submit-btn {
+          padding: 12px 24px;
+          background-color: #1640ff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        .submit-btn:hover {
+          background-color: #0e30cc;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(22, 64, 255, 0.3);
+        }
+        
+        .file-upload {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 30px;
+          border: 2px dashed #ddd;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s;
+          background-color: #f8f9fa;
+        }
+        
+        .file-upload:hover {
+          border-color: #1640ff;
+          background-color: #f0f4ff;
+        }
+        
+        .file-upload input[type="file"] {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+        }
+        
+        .file-upload-label {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          color: #666;
+          font-size: 14px;
+          pointer-events: none;
+        }
+        
+        .file-upload-label svg {
+          font-size: 32px;
+          color: #1640ff;
+        }
+        
         /* Responsive Design */
         @media (max-width: 1200px) {
           .overview-cards {
@@ -1799,16 +2178,6 @@ const InstructorDashboard = () => {
         }
         
         @media (max-width: 992px) {
-          .sidebar {
-            width: 70px;
-          }
-          
-          .sidebar .logo-text,
-          .sidebar .nav-item span,
-          .sidebar .logout-btn span {
-            display: none;
-          }
-          
           .header {
             padding: 20px;
           }
@@ -1831,21 +2200,6 @@ const InstructorDashboard = () => {
         }
         
         @media (max-width: 768px) {
-          .sidebar {
-            position: fixed;
-            left: -260px;
-            height: 100vh;
-            z-index: 1000;
-          }
-          
-          .sidebar.active {
-            left: 0;
-          }
-          
-          .main-content {
-            margin-left: 0;
-          }
-          
           .header {
             flex-direction: column;
             gap: 16px;
@@ -1867,10 +2221,12 @@ const InstructorDashboard = () => {
           
           .quick-actions {
             flex-direction: column;
+            gap: 12px;
           }
           
           .action-btn {
             width: 100%;
+            min-width: unset;
           }
           
           .courses-grid {
@@ -1879,6 +2235,11 @@ const InstructorDashboard = () => {
           
           .calendar-grid {
             grid-template-columns: repeat(2, 1fr);
+          }
+          
+          .modal {
+            width: 95%;
+            max-height: 90vh;
           }
         }
       `}</style>

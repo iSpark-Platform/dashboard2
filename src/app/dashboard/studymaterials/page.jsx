@@ -51,7 +51,7 @@ export default function StudyMaterialsPage() {
         category: "internship",
         subcategory: "Smart Robotics & Industry 4.0 Automation Internship",
         size: "2.4 MB",
-        uploadDate: "2023-06-15",
+        uploadDate: "2025-06-15",
         url: "#",
       },
       {
@@ -62,7 +62,7 @@ export default function StudyMaterialsPage() {
         category: "internship",
         subcategory: "Applied AI & Machine Learning: From Models to Real-World Applications",
         size: "125 MB",
-        uploadDate: "2023-06-10",
+        uploadDate: "2025-06-10",
         url: "#",
       },
       {
@@ -73,7 +73,7 @@ export default function StudyMaterialsPage() {
         category: "internship",
         subcategory: "Cloud & Edge Computing for Connected Intelligence",
         size: "8.7 MB",
-        uploadDate: "2023-06-05",
+        uploadDate: "2025-06-05",
         url: "#",
       },
       {
@@ -84,7 +84,7 @@ export default function StudyMaterialsPage() {
         category: "internship",
         subcategory: "IoT & IIoT for Smart Systems and Industry 4.0",
         size: "4.2 MB",
-        uploadDate: "2023-05-28",
+        uploadDate: "2025-05-28",
         url: "#",
       },
       {
@@ -95,7 +95,7 @@ export default function StudyMaterialsPage() {
         category: "internship",
         subcategory: "3D Printing & Digital Fabrication for Engineers",
         size: "210 MB",
-        uploadDate: "2023-05-20",
+        uploadDate: "2025-05-20",
         url: "#",
       },
       {
@@ -106,7 +106,7 @@ export default function StudyMaterialsPage() {
         category: "course",
         subcategory: "Professional Diploma in Humanoid Robotics for Service Industries",
         size: "5.8 MB",
-        uploadDate: "2023-06-12",
+        uploadDate: "2025-06-12",
         url: "#",
       },
       {
@@ -117,7 +117,7 @@ export default function StudyMaterialsPage() {
         category: "course",
         subcategory: "Diploma in Artificial Intelligence Applications Across Industries",
         size: "180 MB",
-        uploadDate: "2023-06-08",
+        uploadDate: "2025-06-08",
         url: "#",
       },
       {
@@ -128,7 +128,7 @@ export default function StudyMaterialsPage() {
         category: "course",
         subcategory: "Industry-Ready Diploma in Cloud & Edge Technologies",
         size: "6.3 MB",
-        uploadDate: "2023-06-02",
+        uploadDate: "2025-06-02",
         url: "#",
       },
     ]);

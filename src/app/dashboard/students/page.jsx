@@ -603,16 +603,7 @@ const StudentsSection = () => {
           position: relative;
         }
         
-        .header-left h1::after {
-          content: '';
-          position: absolute;
-          bottom: -8px;
-          left: 0;
-          width: 60px;
-          height: 4px;
-          background: linear-gradient(90deg, #4f46e5, #7c3aed);
-          border-radius: 2px;
-        }
+    
         
         .header-left p {
           font-size: 16px;

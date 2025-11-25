@@ -12,7 +12,7 @@ const DashboardSidebar = ({ isOpen }) => {
 
   const navItems = [
     { name: "Dashboard", icon: FiHome, path: "/dashboard" },
-    { name: "My Internships", icon: FiBookOpen, path: "/dashboard/internship" },
+    { name: "Internships", icon: FiBookOpen, path: "/dashboard/internship" },
     { name: "Study Materials", icon: FiFolder, path: "/dashboard/studymaterials" },
     { name: "Students", icon: FiUsers, path: "/dashboard/students" },
     { name: "Assignment", icon: FiCheckSquare, path: "/dashboard/test" },

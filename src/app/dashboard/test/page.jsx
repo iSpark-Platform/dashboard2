@@ -747,7 +747,7 @@ const styles = {
   actionIconButton: {
     background: "#1640ff",
     border: "none",
-    padding: "8px",
+    padding: "4px",
     borderRadius: "8px",
     color: "white",
     cursor: "pointer",
@@ -821,6 +821,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     zIndex: 999,
+    marginTop:"50px",
   },
 
   modal: {
@@ -832,30 +833,35 @@ const styles = {
     overflow: "hidden",
   },
 
-  modalLarge: {
-    width: "800px",
-    maxWidth: "90%",
-    background: "white",
-    padding: "0",
-    borderRadius: "16px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-    overflow: "hidden",
-  },
+modalLarge: {
+  width: "750px",
+  maxWidth: "90%",
+  maxHeight: "85vh", // Limit height to 85% of viewport
+  background: "white",
+  padding: "0",
+  borderRadius: "16px",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+  overflow: "hidden",
+  display: "flex",
+  flexDirection: "column", // Important for proper scrolling
+},
 
-  modalHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "24px 32px",
-    borderBottom: "1px solid #e2e8f0",
-  },
+modalHeader: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: "20px 28px",
+  borderBottom: "1px solid #e2e8f0",
+  flexShrink: 0, // Prevent header from shrinking
+},
 
-  modalTitle: {
-    fontSize: "22px",
-    fontWeight: "700",
-    color: "#1640ff",
-    margin: 0,
-  },
+modalTitle: {
+  fontSize: "20px",
+  fontWeight: "700",
+  color: "#1640ff",
+  margin: 0,
+},
+
 
   closeButton: {
     background: "transparent",
@@ -924,81 +930,85 @@ const styles = {
     marginTop: "4px",
   },
 
-  modalActions: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
-    padding: "20px 32px 32px",
-  },
+modalActions: {
+  display: "flex",
+  justifyContent: "space-between",
+  gap: "12px",
+  padding: "16px 28px",
+  borderTop: "1px solid #e2e8f0",
+  flexShrink: 0, // Prevent actions from shrinking
+},
 
-  saveBtn: {
-    padding: "12px 20px",
-    background: "#1640ff",
-    color: "white",
-    borderRadius: "10px",
-    border: "none",
-    fontSize: "14px",
-    fontWeight: "600",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
+saveBtn: {
+  padding: "10px 18px",
+  background: "#1640ff",
+  color: "white",
+  borderRadius: "10px",
+  border: "none",
+  fontSize: "13px",
+  fontWeight: "600",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+},
 
-  cancelBtn: {
-    padding: "12px 20px",
-    background: "#ef4444",
-    color: "white",
-    borderRadius: "10px",
-    border: "none",
-    fontSize: "14px",
-    fontWeight: "600",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
+cancelBtn: {
+  padding: "10px 18px",
+  background: "#ef4444",
+  color: "white",
+  borderRadius: "10px",
+  border: "none",
+  fontSize: "13px",
+  fontWeight: "600",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+},
 
-  secondaryBtn: {
-    padding: "12px 20px",
-    background: "#f3f4f6",
-    color: "#374151",
-    borderRadius: "10px",
-    border: "none",
-    fontSize: "14px",
-    fontWeight: "600",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
-
+secondaryBtn: {
+  padding: "10px 18px",
+  background: "#10b981",
+  color: "white",
+  borderRadius: "10px",
+  border: "none",
+  fontSize: "13px",
+  fontWeight: "600",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+},
   /* ---------------- SUBMISSION MODAL ---------------- */
-  submissionStats: {
-    display: "flex",
-    padding: "20px 32px",
-    borderBottom: "1px solid #e2e8f0",
-  },
+submissionStats: {
+  display: "flex",
+  padding: "16px 28px",
+  borderBottom: "1px solid #e2e8f0",
+  flexShrink: 0, // Prevent stats from shrinking
+},
 
-  statItem: {
-    flex: 1,
-    textAlign: "center",
-  },
+statItem: {
+  flex: 1,
+  textAlign: "center",
+},
 
-  statValue: {
-    display: "block",
-    fontSize: "24px",
-    fontWeight: "700",
-    color: "#1640ff",
-  },
+ statValue: {
+  display: "block",
+  fontSize: "22px",
+  fontWeight: "700",
+  color: "#1640ff",
+},
 
-  statLabel: {
-    display: "block",
-    fontSize: "12px",
-    color: "#64748b",
-    marginTop: "4px",
-  },
+statLabel: {
+  display: "block",
+  fontSize: "11px",
+  color: "#64748b",
+  marginTop: "2px",
+},
 
-  modalSearchBar: {
-    display: "flex",
-    gap: "12px",
-    padding: "20px 32px",
-    borderBottom: "1px solid #e2e8f0",
-  },
+
+modalSearchBar: {
+  display: "flex",
+  gap: "12px",
+  padding: "16px 28px",
+  borderBottom: "1px solid #e2e8f0",
+  flexShrink: 0, // Prevent search bar from shrinking
+},
 
   filterButton: {
     display: "flex",
@@ -1015,110 +1025,103 @@ const styles = {
     transition: "all 0.2s ease",
   },
 
-  submissionList: {
-    maxHeight: "400px",
-    overflowY: "auto",
-    padding: "20px 32px",
-  },
+ submissionList: {
+  flex: 1, // Take remaining space
+  overflowY: "auto",
+  padding: "16px 28px",
+  minHeight: "200px",
+  maxHeight: "350px", // Limit the list height
+},
 
-  submissionRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    background: "#f8fafc",
-    padding: "16px",
-    borderRadius: "10px",
-    marginBottom: "12px",
-  },
+submissionRow: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  background: "#f8fafc",
+  padding: "14px",
+  borderRadius: "10px",
+  marginBottom: "10px",
+},
 
-  studentInfo: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  },
+studentAvatar: {
+  width: "36px",
+  height: "36px",
+  borderRadius: "50%",
+  background: "#1640ff",
+  color: "white",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: "600",
+  fontSize: "14px",
+},
 
-  studentAvatar: {
-    width: "40px",
-    height: "40px",
-    borderRadius: "50%",
-    background: "#1640ff",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: "600",
-  },
+studentName: {
+  fontSize: "15px",
+  fontWeight: "600",
+  color: "#1e293b",
+},
 
-  studentName: {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#1e293b",
-  },
+studentStatus: {
+  display: "flex",
+  alignItems: "center",
+  gap: "4px",
+  fontSize: "11px",
+  color: "#64748b",
+  marginTop: "2px",
+},
 
-  studentStatus: {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    fontSize: "12px",
-    color: "#64748b",
-    marginTop: "2px",
-  },
-
-  submissionDetails: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  },
-
-  grade: {
-    fontSize: "16px",
-    fontWeight: "700",
-    color: "#1640ff",
-  },
+grade: {
+  fontSize: "15px",
+  fontWeight: "700",
+  color: "#1640ff",
+  minWidth: "35px",
+},
 
   submissionActions: {
     display: "flex",
     gap: "8px",
   },
 
-  viewFileBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    padding: "6px 10px",
-    background: "#1640ff",
-    color: "white",
-    fontSize: "12px",
-    borderRadius: "6px",
-    border: "none",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
+ // Update button sizes in submission actions:
+viewFileBtn: {
+  display: "flex",
+  alignItems: "center",
+  gap: "4px",
+  padding: "6px 12px",
+  background: "#1640ff",
+  color: "white",
+  fontSize: "12px",
+  borderRadius: "6px",
+  border: "none",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+},
 
-  gradeBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    padding: "6px 10px",
-    background: "#10b981",
-    color: "white",
-    fontSize: "12px",
-    borderRadius: "6px",
-    border: "none",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
+gradeBtn: {
+  display: "flex",
+  alignItems: "center",
+  gap: "4px",
+  padding: "6px 12px",
+  background: "#10b981",
+  color: "white",
+  fontSize: "12px",
+  borderRadius: "6px",
+  border: "none",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+},
 
-  downloadBtn: {
-    display: "flex",
-    alignItems: "center",
-    padding: "6px 10px",
-    background: "#6b7280",
-    color: "white",
-    fontSize: "12px",
-    borderRadius: "6px",
-    border: "none",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
+downloadBtn: {
+  display: "flex",
+  alignItems: "center",
+  padding: "6px 10px",
+  background: "#6b7280",
+  color: "white",
+  fontSize: "12px",
+  borderRadius: "6px",
+  border: "none",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+},
 };
