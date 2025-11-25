@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { 
-  FiHome, FiBookOpen, FiFolder, FiUsers, FiCheckSquare, 
+  FiHome, FiBookOpen, FiFolder, FiUsers, FiCheckSquare, FiVideo,
   FiCalendar, FiUser, FiBell, FiMessageSquare, FiCpu,
   FiSettings, FiClock, FiMessageCircle, FiHelpCircle
 } from "react-icons/fi";
@@ -10,24 +10,31 @@ import Link from "next/link";
 const DashboardSidebar = ({ isOpen }) => {
   const [activeItem, setActiveItem] = useState("Dashboard");
 
-  const navItems = [
-    { name: "Dashboard", icon: FiHome, path: "/dashboard" },
-    { name: "My Internships", icon: FiBookOpen, path: "/dashboard/internship" },
-    { name: "Study Materials", icon: FiFolder, path: "/dashboard/studymaterials" },
-    { name: "Students", icon: FiUsers, path: "/dashboard/students" },
-    { name: "Assignment", icon: FiCheckSquare, path: "/dashboard/test" },
-    { name: "Attendance", icon: FiCalendar, path: "/dashboard/attendance" },
-    { name: "Profile", icon: FiUser, path: "/dashboard/profile" },
-    { name: "Notification", icon: FiBell, path: "/dashboard/notification" },
-    { name: "Message", icon: FiMessageSquare, path: "/dashboard/message" },
-    { name: "AI Assistant", icon: FiCpu, path: "/dashboard/ai-assisstant" },
-  ];
+const navItems = [
+  { name: "Dashboard", icon: FiHome, path: "/admin-dashboard" },
+
+  { name: "Internships", icon: FiBookOpen, path: "/admin-dashboard/internship" },
+
+  { name: "Students", icon: FiUsers, path: "/admin-dashboard/students" },
+
+  { name: "Instructor", icon: FiUser, path: "/admin-dashboard/instructor" },
+
+  { name: "Payment Validation", icon: FiFolder, path: "/admin-dashboard/payment" },
+
+  { name: "Study Materials", icon: FiCheckSquare, path: "/admin-dashboard/studymaterial" },
+
+  { name: "Zoom Management", icon: FiVideo, path: "/admin-dashboard/zoom" },
+
+  { name: "Profile", icon: FiUser, path: "/admin-dashboard/profile" },
+
+  { name: "Notification", icon: FiBell, path: "/admin-dashboard/notification" },
+];
 
   const bottomItems = [
-    { name: "Settings", icon: FiSettings, path: "/dashboard/settings" },
-    { name: "Report History", icon: FiClock, path: "/dashboard/reports" },
-    { name: "Send Feedback", icon: FiMessageCircle, path: "/dashboard/feedback" },
-    { name: "Help", icon: FiHelpCircle, path: "/dashboard/help" },
+    { name: "Settings", icon: FiSettings, path: "/admin-dashboard/settings" },
+   
+    { name: "Send Feedback", icon: FiMessageCircle, path: "/admin-dashboard/feedback" },
+   
   ];
 
   return (

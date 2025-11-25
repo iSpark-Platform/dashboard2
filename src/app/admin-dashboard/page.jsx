@@ -1,1889 +1,519 @@
-"use client";
+ "use client";
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faBriefcase, 
-  faUsers, 
-  faVideo, 
-  faClipboardCheck,
-  faPlus,faBars,
-  faUpload,
-  faTasks,
-  faArrowRight,
-  faUser,
-  faCog,
-  faChartLine,
-  faBell,
-  faSearch,
-  faSignOutAlt,
-  faGraduationCap,
-  faBook,
-  faCalendarAlt,
-  faChartBar,
-  faComments,
-  faTachometerAlt
-} from '@fortawesome/free-solid-svg-icons';
+import { FiUsers, FiBookOpen, FiCalendar, FiActivity, FiPlus, FiDollarSign, FiEdit, FiBell, FiTrendingUp, FiClock, FiUserPlus, FiCheckCircle } from 'react-icons/fi';
 
-// LiveClassSection Component
-const LiveClassSection = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [liveStatus, setLiveStatus] = useState("Checking...");
-
-  // Dummy live class schedule
-  const liveClass = {
-    title: "Smart Robotics & Industry 4.0 Automation Internship – Live Class",
-    startTime: "14:00", // 2 PM
-    endTime: "15:00",   // 3 PM
-    instructor: "Dr. Aravind Kumar",
-  };
-
-  // Update time every second
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      setCurrentTime(now);
-
-      const current = now.getHours() + now.getMinutes() / 60;
-      const start = parseInt(liveClass.startTime.split(":")[0]) + parseInt(liveClass.startTime.split(":")[1]) / 60;
-      const end = parseInt(liveClass.endTime.split(":")[0]) + parseInt(liveClass.endTime.split(":")[1]) / 60;
-
-      if (current >= start && current <= end) {
-        setLiveStatus("Live Now");
-      } else if (current < start) {
-        setLiveStatus("Upcoming");
-      } else {
-        setLiveStatus("Completed");
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div
-      style={{
-        background: "#fff",
-        padding: "20px",
-        borderRadius: "14px",
-        marginTop: "20px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.07)",
-        position: "relative",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "22px",
-          fontWeight: "700",
-          marginBottom: "12px",
-        }}
-      >
-        Live Class
-      </h2>
-
-      {/* LIVE STATUS BADGE */}
-      <span
-        style={{
-          position: "absolute",
-          top: "22px",
-          right: "22px",
-          background:
-            liveStatus === "Live Now"
-              ? "#ef4444"
-              : liveStatus === "Upcoming"
-              ? "#f59e0b"
-              : "#10b981",
-          color: "white",
-          fontSize: "12px",
-          padding: "6px 12px",
-          borderRadius: "8px",
-          fontWeight: "600",
-        }}
-      >
-        {liveStatus}
-      </span>
-
-      {/* CLASS CARD */}
-      <div
-        style={{
-          padding: "18px",
-          border: "1px solid #e5e7eb",
-          borderRadius: "12px",
-          background: "#f9fafb",
-        }}
-      >
-        <h3 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "6px" }}>
-          {liveClass.title}
-        </h3>
-
-        <p style={{ marginTop: "6px", color: "#555", fontSize: "14px" }}>
-          <strong>Instructor:</strong> {liveClass.instructor}
-        </p>
-
-        <p style={{ marginTop: "4px", color: "#555", fontSize: "14px" }}>
-          <strong>Time:</strong> {liveClass.startTime} – {liveClass.endTime}
-        </p>
-
-        <p
-          style={{
-            marginTop: "4px",
-            fontSize: "13px",
-            fontWeight: "500",
-            color: "#374151",
-          }}
-        >
-          Current Time:{" "}
-          {currentTime.toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          })}
-        </p>
-
-        {/* Join Button */}
-        <button
-          style={{
-            marginTop: "16px",
-            padding: "10px 16px",
-            fontSize: "14px",
-            fontWeight: "600",
-            background:
-              liveStatus === "Live Now" ? "#1640ff" : "#9ca3af",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: liveStatus === "Live Now" ? "pointer" : "not-allowed",
-            transition: "0.3s",
-          }}
-          disabled={liveStatus !== "Live Now"}
-        >
-          {liveStatus === "Live Now" ? "Join Live Class" : "Not Available"}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Main InstructorDashboard Component
-const InstructorDashboard = () => {
-  // State for real-time date/time
-  const [currentDate, setCurrentDate] = useState(new Date());
-  
-  // State for dashboard metrics
-  const [metrics, setMetrics] = useState({
-    totalCourses: 5,
-    totalStudents: 248,
-    upcomingClasses: 2,
-    pendingAssignments: 7
+const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    totalStudents: 0,
+    totalInstructors: 0,
+    totalInternships: 0,
+    activeInternships: 0,
+    liveSessionsToday: 0
   });
   
-  // State for courses
-  const [courses, setCourses] = useState([
-    {
-      id: 1,
-      title: "Professional Diploma in Humanoid Robotics for Service Industries",
-      status: "ongoing",
-      students: 42,
-      image: "images/course/course-01/course-01.jpg",
-      description: "Advanced robotics program focusing on humanoid applications in service sectors",
-      duration: "6 months",
-      progress: 65
-    },
-    {
-      id: 2,
-      title: "Diploma in Artificial Intelligence Applications Across Industries",
-      status: "ongoing",
-      students: 38,
-      image: "images/course/course-01/course-02.jpg",
-      description: "Comprehensive AI program covering real-world applications across various sectors",
-      duration: "8 months",
-      progress: 45
-    },
-    {
-      id: 3,
-      title: "Industry-Ready Diploma in Cloud & Edge Technologies",
-      status: "upcoming",
-      students: 28,
-      image: "images/course/course-01/course-03.jpg",
-      description: "Master cloud computing and edge technologies for modern infrastructure",
-      duration: "5 months",
-      progress: 0
-    },
-    {
-      id: 4,
-      title: "Career-Ready Diploma in Cybersecurity & Digital Forensics",
-      status: "upcoming",
-      students: 32,
-      image: "https://picsum.photos/seed/cybersecurity/400/200.jpg",
-      description: "Comprehensive cybersecurity program with digital forensics specialization",
-      duration: "7 months",
-      progress: 0
-    },
-    {
-      id: 5,
-      title: "Year-long STEM Readiness for UG Students",
-      status: "completed",
-      students: 36,
-      image: "https://picsum.photos/seed/stem/400/200.jpg",
-      description: "Foundational STEM program preparing undergraduate students for advanced studies",
-      duration: "12 months",
-      progress: 100
-    }
-  ]);
+  const [recentInternships, setRecentInternships] = useState([]);
+  const [recentSignups, setRecentSignups] = useState([]);
+  const [todayActivities, setTodayActivities] = useState([]);
+  const [pendingPayments, setPendingPayments] = useState(0);
+  const [platformUpdates, setPlatformUpdates] = useState([]);
   
-  // State for instructor name
-  const [instructorName] = useState("Dr. Johnson");
-  
-  // State for active tab
-  const [activeTab, setActiveTab] = useState("overview");
-  
-  // State for notifications
-  const [notifications, setNotifications] = useState(3);
-  
-  // State for search
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  // State for sidebar collapse
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
-  // Update current date/time every minute
+  // Simulate fetching data from API
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 60000);
+    // Mock data
+    setStats({
+      totalStudents: 1234,
+      totalInstructors: 45,
+      totalInternships: 78,
+      activeInternships: 23,
+      liveSessionsToday: 5
+    });
     
-    return () => clearInterval(timer);
+    setRecentInternships([
+      { id: 1, title: 'Smart Robotics & Industry 4.0 Automation Internship', instructor: 'John Doe', thumbnail: 'https://picsum.photos/seed/webdev/100/100.jpg' },
+      { id: 2, title: 'Applied AI & Machine Learning: From Models to Real-World Applications', instructor: 'Jane Smith', thumbnail: 'https://picsum.photos/seed/datascience/100/100.jpg' },
+      { id: 3, title: 'IoT & IIoT for Smart Systems and Industry 4.0', instructor: 'Mike Johnson', thumbnail: 'https://picsum.photos/seed/uidesign/100/100.jpg' }
+    ]);
+    
+    setRecentSignups([
+      { id: 1, name: 'Alice Brown', email: 'alice@example.com', date: '2023-11-15' },
+      { id: 2, name: 'Bob Wilson', email: 'bob@example.com', date: '2023-11-14' },
+      { id: 3, name: 'Charlie Davis', email: 'charlie@example.com', date: '2023-11-13' }
+    ]);
+    
+    setTodayActivities([
+      { id: 1, type: 'live_class', title: 'React Advanced Concepts', time: '10:00 AM' },
+      { id: 2, type: 'new_signup', title: '15 new students today', time: '9:00 AM' },
+      { id: 3, type: 'pending_validation', title: '5 payments pending', time: '8:30 AM' }
+    ]);
+    
+    setPendingPayments(5);
+    
+    setPlatformUpdates([
+      { id: 1, title: 'System maintenance scheduled', date: '2023-11-20' },
+      { id: 2, title: 'New features released', date: '2023-11-15' }
+    ]);
   }, []);
   
-  // Format date for display
-  const formatDate = (date) => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-  };
-  
-  // Handle action button clicks
-  const handleActionClick = (action) => {
-    switch(action) {
-      case 'Create Course':
-        console.log('Opening create course form...');
-        alert('Create Course form would open here');
-        break;
-      case 'Upload Material':
-        console.log('Opening file upload dialog...');
-        alert('File upload dialog would open here');
-        break;
-      case 'Create Assignment':
-        console.log('Opening assignment creation form...');
-        alert('Assignment creation form would open here');
-        break;
-      default:
-        console.log(`Unknown action: ${action}`);
-    }
-  };
-  
-  // Handle manage button clicks
-  const handleManageClick = (courseId) => {
-    const course = courses.find(item => item.id === courseId);
-    console.log(`Managing course: ${course.title}`);
-    alert(`Managing: ${course.title}`);
-  };
-  
-  // Handle tab change
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
-  
-  // Handle search
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-  
-  // Filter courses based on search term
-  const filteredCourses = courses.filter(course =>
-    course.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  // Toggle sidebar
-  const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
-  
   return (
-    <div className="instructor-dashboard">
-     
-      {/* Main Content */}
-      <div className="main-content">
-        {/* Header Section */}
-        <div className="header">
-          <div className="header-left">
-            <div className="welcome-message">
-              <h1>Welcome back, {instructorName}</h1>
-              <p>Today's Summary - {formatDate(currentDate)}</p>
-            </div>
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <h1 style={styles.title}>Admin Dashboard</h1>
+        <p style={styles.subtitle}>Platform Overview</p>
+      </div>
+      
+      {/* Stats Cards */}
+      <div style={styles.statsContainer}>
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>
+            <FiUsers size={24} color="#1640FF" />
           </div>
-          <div className="header-right">
-           
-           
-          
+          <div style={styles.statContent}>
+            <h3 style={styles.statValue}>{stats.totalStudents}</h3>
+            <p style={styles.statLabel}>Total Students</p>
           </div>
         </div>
         
-        <div className="content-container">
-          {/* Overview Tab Content */}
-          {activeTab === "overview" && (
-            <>
-              {/* Quick Overview Cards */}
-              <div className="overview-cards">
-                <div className="card card-blue">
-                  <FontAwesomeIcon icon={faBook} className="card-icon" />
-                  <div className="card-number">{metrics.totalCourses}</div>
-                  <div className="card-label">Total Courses Created</div>
-                </div>
-                
-                <div className="card card-yellow">
-                  <FontAwesomeIcon icon={faUsers} className="card-icon" />
-                  <div className="card-number">{metrics.totalStudents}</div>
-                  <div className="card-label">Total Students Enrolled</div>
-                </div>
-                
-                <div className="card card-green">
-                  <FontAwesomeIcon icon={faVideo} className="card-icon" />
-                  <div className="card-number">{metrics.upcomingClasses}</div>
-                  <div className="card-label">Upcoming Live Classes Today</div>
-                </div>
-                
-                <div className="card card-purple">
-                  <FontAwesomeIcon icon={faClipboardCheck} className="card-icon" />
-                  <div className="card-number">{metrics.pendingAssignments}</div>
-                  <div className="card-label">Pending Assignments</div>
-                </div>
-              </div>
-              
-              {/* Live Class Section */}
-              <LiveClassSection />
-              
-              {/* Quick Action Buttons */}
-              <div className="quick-actions">
-                <button 
-                  className="action-btn"
-                  onClick={() => handleActionClick('Create Course')}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                  Create Course
-                </button>
-                <button 
-                  className="action-btn"
-                  onClick={() => handleActionClick('Upload Material')}
-                >
-                  <FontAwesomeIcon icon={faUpload} />
-                  Upload Material
-                </button>
-                <button 
-                  className="action-btn"
-                  onClick={() => handleActionClick('Create Assignment')}
-                >
-                  <FontAwesomeIcon icon={faTasks} />
-                  Create Assignment
-                </button>
-              </div>
-              
-              {/* Recent Courses Preview */}
-              <div className="recent-courses">
-                <h2 className="section-title">Recent Courses</h2>
-                <div className="courses-grid">
-                  {filteredCourses.slice(0, 3).map(course => (
-                    <div key={course.id} className="course-card">
-                      <div className="course-header">
-                        <img src={course.image} alt={course.title} />
-                        <div className="course-progress">
-                          <div className="progress-bar">
-                            <div 
-                              className="progress-fill" 
-                              style={{ width: `${course.progress}%` }}
-                            ></div>
-                          </div>
-                          <span className="progress-text">{course.progress}% Complete</span>
-                        </div>
-                      </div>
-                      <div className="course-content">
-                        <h3 className="course-title">{course.title}</h3>
-                        <div className="course-meta">
-                          <span className={`status-badge status-${course.status}`}>
-                            {course.status.charAt(0).toUpperCase() + course.status.slice(1)}
-                          </span>
-                          <div className="students-count">
-                            <FontAwesomeIcon icon={faUser} />
-                            <span>{course.students} Students</span>
-                          </div>
-                        </div>
-                        <button 
-                          className="manage-btn"
-                          onClick={() => handleManageClick(course.id)}
-                        >
-                          Manage
-                          <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-          
-          {/* Courses Tab Content */}
-          {activeTab === "courses" && (
-            <div className="courses-section">
-              <div className="section-header">
-                <h2 className="section-title">My Courses</h2>
-                <button 
-                  className="create-btn"
-                  onClick={() => handleActionClick('Create Course')}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                  Create New Course
-                </button>
-              </div>
-              <div className="courses-grid">
-                {filteredCourses.map(course => (
-                  <div key={course.id} className="course-card">
-                    <div className="course-header">
-                      <img src={course.image} alt={course.title} />
-                      <div className="course-progress">
-                        <div className="progress-bar">
-                          <div 
-                            className="progress-fill" 
-                            style={{ width: `${course.progress}%` }}
-                          ></div>
-                        </div>
-                        <span className="progress-text">{course.progress}% Complete</span>
-                      </div>
-                    </div>
-                    <div className="course-content">
-                      <h3 className="course-title">{course.title}</h3>
-                      <p className="course-description">{course.description}</p>
-                      <div className="course-meta">
-                        <span className={`status-badge status-${course.status}`}>
-                          {course.status.charAt(0).toUpperCase() + course.status.slice(1)}
-                        </span>
-                        <div className="course-info">
-                          <div className="students-count">
-                            <FontAwesomeIcon icon={faUser} />
-                            <span>{course.students} Students</span>
-                          </div>
-                          <div className="course-duration">
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                            <span>{course.duration}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <button 
-                        className="manage-btn"
-                        onClick={() => handleManageClick(course.id)}
-                      >
-                        Manage
-                        <FontAwesomeIcon icon={faArrowRight} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {/* Students Tab Content */}
-          {activeTab === "students" && (
-            <div className="students-section">
-              <h2 className="section-title">Students Overview</h2>
-              <div className="students-table-container">
-                <table className="students-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Enrolled Course</th>
-                      <th>Progress</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>John Smith</td>
-                      <td>john.smith@example.com</td>
-                      <td>Humanoid Robotics</td>
-                      <td>75%</td>
-                      <td><span className="status-badge status-ongoing">Active</span></td>
-                    </tr>
-                    <tr>
-                      <td>Emily Johnson</td>
-                      <td>emily.j@example.com</td>
-                      <td>AI Applications</td>
-                      <td>60%</td>
-                      <td><span className="status-badge status-ongoing">Active</span></td>
-                    </tr>
-                    <tr>
-                      <td>Michael Chen</td>
-                      <td>m.chen@example.com</td>
-                      <td>Cloud & Edge Technologies</td>
-                      <td>90%</td>
-                      <td><span className="status-badge status-ongoing">Active</span></td>
-                    </tr>
-                    <tr>
-                      <td>Sarah Williams</td>
-                      <td>sarah.w@example.com</td>
-                      <td>Cybersecurity & Forensics</td>
-                      <td>45%</td>
-                      <td><span className="status-badge status-upcoming">Pending</span></td>
-                    </tr>
-                    <tr>
-                      <td>David Brown</td>
-                      <td>david.b@example.com</td>
-                      <td>STEM Readiness</td>
-                      <td>100%</td>
-                      <td><span className="status-badge status-completed">Completed</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-          
-          {/* Schedule Tab Content */}
-          {activeTab === "schedule" && (
-            <div className="schedule-section">
-              <h2 className="section-title">Teaching Schedule</h2>
-              <div className="schedule-container">
-                <div className="calendar-view">
-                  <div className="calendar-header">
-                    <h3>June 2024</h3>
-                    <div className="calendar-nav">
-                      <button className="calendar-btn">Previous</button>
-                      <button className="calendar-btn">Today</button>
-                      <button className="calendar-btn">Next</button>
-                    </div>
-                  </div>
-                  <div className="calendar-grid">
-                    <div className="calendar-day">
-                      <div className="day-header">Mon</div>
-                      <div className="day-content">
-                        <div className="day-number">24</div>
-                        <div className="event event-blue">10:00 AM - AI Class</div>
-                      </div>
-                    </div>
-                    <div className="calendar-day">
-                      <div className="day-header">Tue</div>
-                      <div className="day-content">
-                        <div className="day-number">25</div>
-                        <div className="event event-green">2:00 PM - Robotics Lab</div>
-                      </div>
-                    </div>
-                    <div className="calendar-day">
-                      <div className="day-header">Wed</div>
-                      <div className="day-content">
-                        <div className="day-number">26</div>
-                      </div>
-                    </div>
-                    <div className="calendar-day">
-                      <div className="day-header">Thu</div>
-                      <div className="day-content">
-                        <div className="day-number">27</div>
-                        <div className="event event-purple">11:00 AM - Cloud Computing</div>
-                      </div>
-                    </div>
-                    <div className="calendar-day">
-                      <div className="day-header">Fri</div>
-                      <div className="day-content">
-                        <div className="day-number">28</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="upcoming-classes">
-                  <h3>Upcoming Classes</h3>
-                  <div className="class-list">
-                    <div className="class-item">
-                      <div className="class-time">10:00 AM - 11:30 AM</div>
-                      <div className="class-details">
-                        <h4>AI Applications Across Industries</h4>
-                        <p>Module 3: Neural Networks and Deep Learning</p>
-                      </div>
-                    </div>
-                    <div className="class-item">
-                      <div className="class-time">2:00 PM - 4:00 PM</div>
-                      <div className="class-details">
-                        <h4>Humanoid Robotics Lab Session</h4>
-                        <p>Practical: Programming Humanoid Robots</p>
-                      </div>
-                    </div>
-                    <div className="class-item">
-                      <div className="class-time">11:00 AM - 12:30 PM</div>
-                      <div className="class-details">
-                        <h4>Cloud & Edge Technologies</h4>
-                        <p>Module 2: Edge Computing Frameworks</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Analytics Tab Content */}
-          {activeTab === "analytics" && (
-            <div className="analytics-section">
-              <h2 className="section-title">Course Analytics</h2>
-              <div className="analytics-grid">
-                <div className="analytics-card">
-                  <h3>Student Enrollment Trends</h3>
-                  <div className="chart-container">
-                    <div className="chart-placeholder">
-                      <FontAwesomeIcon icon={faChartBar} className="chart-icon" />
-                      <p>Enrollment chart would be displayed here</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="analytics-card">
-                  <h3>Course Completion Rates</h3>
-                  <div className="chart-container">
-                    <div className="chart-placeholder">
-                      <FontAwesomeIcon icon={faChartLine} className="chart-icon" />
-                      <p>Completion rate chart would be displayed here</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="analytics-card">
-                  <h3>Student Performance</h3>
-                  <div className="chart-container">
-                    <div className="chart-placeholder">
-                      <FontAwesomeIcon icon={faChartBar} className="chart-icon" />
-                      <p>Performance chart would be displayed here</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="analytics-card">
-                  <h3>Engagement Metrics</h3>
-                  <div className="chart-container">
-                    <div className="chart-placeholder">
-                      <FontAwesomeIcon icon={faChartLine} className="chart-icon" />
-                      <p>Engagement chart would be displayed here</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Messages Tab Content */}
-          {activeTab === "messages" && (
-            <div className="messages-section">
-              <h2 className="section-title">Messages</h2>
-              <div className="messages-container">
-                <div className="message-list">
-                  <div className="message-item unread">
-                    <div className="message-avatar">JS</div>
-                    <div className="message-content">
-                      <div className="message-header">
-                        <h4>John Smith</h4>
-                        <span className="message-time">2 hours ago</span>
-                      </div>
-                      <p>Hi Professor, I have a question about the robotics assignment...</p>
-                    </div>
-                  </div>
-                  <div className="message-item unread">
-                    <div className="message-avatar">EJ</div>
-                    <div className="message-content">
-                      <div className="message-header">
-                        <h4>Emily Johnson</h4>
-                        <span className="message-time">5 hours ago</span>
-                      </div>
-                      <p>Thank you for the feedback on my AI project. I've made the changes...</p>
-                    </div>
-                  </div>
-                  <div className="message-item">
-                    <div className="message-avatar">MC</div>
-                    <div className="message-content">
-                      <div className="message-header">
-                        <h4>Michael Chen</h4>
-                        <span className="message-time">Yesterday</span>
-                      </div>
-                      <p>Could you please clarify the requirements for the cloud computing project?</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="message-detail">
-                  <div className="message-detail-header">
-                    <h3>John Smith</h3>
-                    <span className="message-time">2 hours ago</span>
-                  </div>
-                  <div className="message-detail-content">
-                    <p>Hi Professor,</p>
-                    <p>I have a question about the robotics assignment. I'm having trouble with the programming part of the humanoid robot simulation. Could you please provide some guidance on how to approach the movement algorithms?</p>
-                    <p>Thank you,<br/>John</p>
-                  </div>
-                  <div className="message-reply">
-                    <textarea placeholder="Type your reply..."></textarea>
-                    <button className="send-btn">Send</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Settings Tab Content */}
-          {activeTab === "settings" && (
-            <div className="settings-section">
-              <h2 className="section-title">Settings</h2>
-              <div className="settings-container">
-                <div className="settings-card">
-                  <h3>Profile Information</h3>
-                  <div className="form-group">
-                    <label htmlFor="name">Full Name</label>
-                    <input type="text" id="name" defaultValue={instructorName} />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" defaultValue="dr.johnson@example.com" />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="bio">Bio</label>
-                    <textarea id="bio" rows="4" defaultValue="Expert in robotics, AI, and emerging technologies with 10+ years of experience in both academia and industry." />
-                  </div>
-                  <button className="save-btn">Save Changes</button>
-                </div>
-                
-                <div className="settings-card">
-                  <h3>Notification Preferences</h3>
-                  <div className="form-group">
-                    <label className="checkbox-label">
-                      <input type="checkbox" defaultChecked />
-                      Email notifications for new student enrollments
-                    </label>
-                  </div>
-                  <div className="form-group">
-                    <label className="checkbox-label">
-                      <input type="checkbox" defaultChecked />
-                      Email notifications for assignment submissions
-                    </label>
-                  </div>
-                  <div className="form-group">
-                    <label className="checkbox-label">
-                      <input type="checkbox" />
-                      Weekly progress reports
-                    </label>
-                  </div>
-                  <button className="save-btn">Update Preferences</button>
-                </div>
-              </div>
-            </div>
-          )}
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>
+            <FiBookOpen size={24} color="#1640FF" />
+          </div>
+          <div style={styles.statContent}>
+            <h3 style={styles.statValue}>{stats.totalInstructors}</h3>
+            <p style={styles.statLabel}>Total Instructors</p>
+          </div>
+        </div>
+        
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>
+            <FiCalendar size={24} color="#1640FF" />
+          </div>
+          <div style={styles.statContent}>
+            <h3 style={styles.statValue}>{stats.totalInternships}</h3>
+            <p style={styles.statLabel}>Total Internships</p>
+          </div>
+        </div>
+        
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>
+            <FiActivity size={24} color="#1640FF" />
+          </div>
+          <div style={styles.statContent}>
+            <h3 style={styles.statValue}>{stats.activeInternships}</h3>
+            <p style={styles.statLabel}>Active Internships</p>
+          </div>
+        </div>
+        
+        <div style={styles.statCard}>
+          <div style={styles.statIcon}>
+            <FiClock size={24} color="#1640FF" />
+          </div>
+          <div style={styles.statContent}>
+            <h3 style={styles.statValue}>{stats.liveSessionsToday}</h3>
+            <p style={styles.statLabel}>Live Sessions Today</p>
+          </div>
         </div>
       </div>
       
-      <style jsx>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          font-family: 'Inter', 'Poppins', sans-serif;
-        }
-        
-        .instructor-dashboard {
-          display: flex;
-          min-height: 100vh;
-          background-color: #f5f7fa;
-          color: #333;
-        }
-        
-        /* Sidebar Styles */
-        .sidebar {
-          width: 260px;
-          background-color: #1640ff;
-          color: white;
-          display: flex;
-          flex-direction: column;
-          transition: width 0.3s ease;
-          box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-          z-index: 100;
-        }
-        
-        .sidebar.collapsed {
-          width: 70px;
-        }
-        
-        .sidebar-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 20px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-        
-        .logo-icon {
-          font-size: 24px;
-          color: white;
-        }
-        
-        .logo-text {
-          font-size: 20px;
-          font-weight: 700;
-          color: white;
-        }
-        
-        .toggle-btn {
-          background: none;
-          border: none;
-          color: white;
-          font-size: 18px;
-          cursor: pointer;
-          padding: 8px;
-          border-radius: 8px;
-          transition: background-color 0.3s;
-        }
-        
-        .toggle-btn:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar-nav {
-          flex: 1;
-          padding: 20px 0;
-        }
-        
-        .nav-list {
-          list-style: none;
-        }
-        
-        .nav-item {
-          margin-bottom: 5px;
-        }
-        
-        .nav-item button {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 15px 20px;
-          background: none;
-          border: none;
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 16px;
-          cursor: pointer;
-          transition: all 0.3s;
-          border-left: 3px solid transparent;
-        }
-        
-        .nav-item button:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: white;
-        }
-        
-        .nav-item.active button {
-          background-color: rgba(255, 255, 255, 0.15);
-          color: white;
-          border-left: 3px solid white;
-        }
-        
-        .sidebar-footer {
-          padding: 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .logout-btn {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          padding: 15px 20px;
-          background: none;
-          border: none;
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 16px;
-          cursor: pointer;
-          transition: all 0.3s;
-          border-radius: 8px;
-        }
-        
-        .logout-btn:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: white;
-        }
-        
-        /* Main Content Styles */
-        .main-content {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow-x: hidden;
-        }
-        
-        /* Header Section */
-        .header {
-          background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
-          padding: 24px 30px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-          border-bottom: 1px solid #eaeaea;
-        }
-        
-        .header-left {
-          display: flex;
-          align-items: center;
-        }
-        
-        .header-right {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-        }
-        
-        .welcome-message h1 {
-          font-size: 28px;
-          font-weight: 700;
-          margin-bottom: 4px;
-          color: #333;
-        }
-        
-        .welcome-message p {
-          color: #666;
-          font-size: 16px;
-        }
-        
-        .search-container {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-        
-        .search-icon {
-          position: absolute;
-          left: 14px;
-          color: #666;
-        }
-        
-        .search-container input {
-          padding: 12px 16px 12px 40px;
-          border: 1px solid #ddd;
-          border-radius: 30px;
-          width: 280px;
-          font-size: 14px;
-          transition: all 0.3s;
-          background-color: #f8f9fa;
-        }
-        
-        .search-container input:focus {
-          outline: none;
-          border-color: #1640ff;
-          background-color: white;
-          box-shadow: 0 0 0 3px rgba(22, 64, 255, 0.1);
-        }
-        
-        .notification-container {
-          position: relative;
-          cursor: pointer;
-        }
-        
-        .notification-icon {
-          font-size: 20px;
-          color: #666;
-        }
-        
-        .notification-badge {
-          position: absolute;
-          top: -8px;
-          right: -8px;
-          background-color: #EF7C00;
-          color: white;
-          font-size: 12px;
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .profile-avatar {
-          width: 45px;
-          height: 45px;
-          border-radius: 50%;
-          background-color: #1640ff;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s;
-        }
-        
-        .profile-avatar:hover {
-          transform: scale(1.05);
-        }
-        
-        /* Content Container */
-        .content-container {
-          padding: 30px;
-          flex: 1;
-          overflow-y: auto;
-        }
-        
-        /* Quick Overview Cards */
-        .overview-cards {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 24px;
-          margin-bottom: 30px;
-        }
-        
-        .card {
-          border-radius: 16px;
-          padding: 24px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
-          background-color: white;
-        }
-        
-        .card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        .card-icon {
-          font-size: 24px;
-          margin-bottom: 16px;
-          opacity: 0.8;
-        }
-        
-        .card-number {
-          font-size: 36px;
-          font-weight: 700;
-          margin-bottom: 8px;
-        }
-        
-        .card-label {
-          font-size: 16px;
-          color: #555;
-        }
-        
-        .card::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 4px;
-        }
-        
-        .card-blue {
-          background-color: #e6f0ff;
-        }
-        
-        .card-blue::before {
-          background-color: #1640ff;
-        }
-        
-        .card-blue .card-icon {
-          color: #1640ff;
-        }
-        
-        .card-yellow {
-          background-color: #fff4e6;
-        }
-        
-        .card-yellow::before {
-          background-color: #EF7C00;
-        }
-        
-        .card-yellow .card-icon {
-          color: #EF7C00;
-        }
-        
-        .card-green {
-          background-color: #e6f9f0;
-        }
-        
-        .card-green::before {
-          background-color: #00b894;
-        }
-        
-        .card-green .card-icon {
-          color: #00b894;
-        }
-        
-        .card-purple {
-          background-color: #f3e6ff;
-        }
-        
-        .card-purple::before {
-          background-color: #9b59b6;
-        }
-        
-        .card-purple .card-icon {
-          color: #9b59b6;
-        }
-        
-        /* Quick Action Buttons */
-        .quick-actions {
-          display: flex;
-          gap: 16px;
-          margin-bottom: 30px;
-        }
-        
-        .action-btn {
-          flex: 1;
-          padding: 16px 24px;
-          border-radius: 12px;
-          background-color: #1640ff;
-          color: white;
-          border: none;
-          font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 12px rgba(22, 64, 255, 0.2);
-        }
-        
-        .action-btn:hover {
-          background-color: #0e30cc;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(22, 64, 255, 0.3);
-        }
-        
-        /* Section Styles */
-        .section-title {
-          font-size: 24px;
-          font-weight: 700;
-          margin-bottom: 20px;
-          color: #333;
-        }
-        
-        .section-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-        
-        .create-btn {
-          padding: 10px 20px;
-          border-radius: 8px;
-          background-color: #1640ff;
-          color: white;
-          border: none;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          transition: background-color 0.3s;
-        }
-        
-        .create-btn:hover {
-          background-color: #0e30cc;
-        }
-        
-        /* Courses Grid */
-        .courses-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
-        }
-        
-        .course-card {
-          background-color: white;
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-          transition: all 0.3s ease;
-        }
-        
-        .course-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        
-        .course-header {
-          position: relative;
-        }
-        
-        .course-header img {
-          width: 100%;
-          height: 160px;
-          object-fit: cover;
-        }
-        
-        .course-progress {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-          padding: 15px;
-        }
-        
-        .progress-bar {
-          height: 6px;
-          background-color: rgba(255, 255, 255, 0.3);
-          border-radius: 3px;
-          margin-bottom: 8px;
-          overflow: hidden;
-        }
-        
-        .progress-fill {
-          height: 100%;
-          background-color: #00b894;
-          border-radius: 3px;
-        }
-        
-        .progress-text {
-          color: white;
-          font-size: 12px;
-          font-weight: 600;
-        }
-        
-        .course-content {
-          padding: 20px;
-        }
-        
-        .course-title {
-          font-size: 18px;
-          font-weight: 600;
-          margin-bottom: 8px;
-          color: #333;
-          line-height: 1.4;
-        }
-        
-        .course-description {
-          font-size: 14px;
-          color: #666;
-          margin-bottom: 16px;
-          line-height: 1.4;
-        }
-        
-        .course-meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 16px;
-        }
-        
-        .course-info {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        
-        .status-badge {
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-size: 14px;
-          font-weight: 600;
-        }
-        
-        .status-ongoing {
-          background-color: #e6f9f0;
-          color: #00b894;
-        }
-        
-        .status-upcoming {
-          background-color: #fff4e6;
-          color: #EF7C00;
-        }
-        
-        .status-completed {
-          background-color: #f0f0f0;
-          color: #777;
-        }
-        
-        .students-count, .course-duration {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          color: #666;
-          font-size: 14px;
-        }
-        
-        .manage-btn {
-          width: 100%;
-          padding: 10px;
-          border-radius: 8px;
-          background-color: #1640ff;
-          color: white;
-          border: none;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          transition: background-color 0.3s;
-        }
-        
-        .manage-btn:hover {
-          background-color: #0e30cc;
-        }
-        
-        /* Recent Courses Section */
-        .recent-courses {
-          margin-top: 30px;
-        }
-        
-        /* Students Section */
-        .students-section {
-          margin-bottom: 30px;
-        }
-        
-        .students-table-container {
-          background-color: white;
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        
-        .students-table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-        
-        .students-table th {
-          background-color: #f8f9fa;
-          padding: 16px;
-          text-align: left;
-          font-weight: 600;
-          color: #333;
-          border-bottom: 1px solid #eaeaea;
-        }
-        
-        .students-table td {
-          padding: 16px;
-          border-bottom: 1px solid #eaeaea;
-        }
-        
-        .students-table tr:last-child td {
-          border-bottom: none;
-        }
-        
-        .students-table tr:hover {
-          background-color: #f8f9fa;
-        }
-        
-        /* Schedule Section */
-        .schedule-section {
-          margin-bottom: 30px;
-        }
-        
-        .schedule-container {
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 24px;
-        }
-        
-        .calendar-view {
-          background-color: white;
-          border-radius: 16px;
-          padding: 20px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        
-        .calendar-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-        
-        .calendar-nav {
-          display: flex;
-          gap: 10px;
-        }
-        
-        .calendar-btn {
-          padding: 8px 16px;
-          border: 1px solid #ddd;
-          background-color: white;
-          border-radius: 8px;
-          font-size: 14px;
-          cursor: pointer;
-          transition: all 0.3s;
-        }
-        
-        .calendar-btn:hover {
-          background-color: #f8f9fa;
-        }
-        
-        .calendar-grid {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 10px;
-        }
-        
-        .calendar-day {
-          border: 1px solid #eaeaea;
-          border-radius: 8px;
-          padding: 10px;
-          min-height: 120px;
-        }
-        
-        .day-header {
-          font-weight: 600;
-          margin-bottom: 10px;
-          color: #666;
-        }
-        
-        .day-number {
-          font-weight: 600;
-          margin-bottom: 10px;
-        }
-        
-        .event {
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-size: 12px;
-          margin-bottom: 4px;
-        }
-        
-        .event-blue {
-          background-color: #e6f0ff;
-          color: #1640ff;
-        }
-        
-        .event-green {
-          background-color: #e6f9f0;
-          color: #00b894;
-        }
-        
-        .event-purple {
-          background-color: #f3e6ff;
-          color: #9b59b6;
-        }
-        
-        .upcoming-classes {
-          background-color: white;
-          border-radius: 16px;
-          padding: 20px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        
-        .class-list {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-        
-        .class-item {
-          border-bottom: 1px solid #eaeaea;
-          padding-bottom: 16px;
-        }
-        
-        .class-item:last-child {
-          border-bottom: none;
-          padding-bottom: 0;
-        }
-        
-        .class-time {
-          font-weight: 600;
-          color: #1640ff;
-          margin-bottom: 8px;
-        }
-        
-        .class-details h4 {
-          font-size: 16px;
-          margin-bottom: 4px;
-        }
-        
-        .class-details p {
-          font-size: 14px;
-          color: #666;
-        }
-        
-        /* Analytics Section */
-        .analytics-section {
-          margin-bottom: 30px;
-        }
-        
-        .analytics-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
-        }
-        
-        .analytics-card {
-          background-color: white;
-          border-radius: 16px;
-          padding: 20px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        
-        .analytics-card h3 {
-          font-size: 18px;
-          font-weight: 600;
-          margin-bottom: 20px;
-          color: #333;
-        }
-        
-        .chart-container {
-          height: 200px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .chart-placeholder {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-          color: #999;
-        }
-        
-        .chart-icon {
-          font-size: 32px;
-        }
-        
-             /* Messages Section */
-        .messages-section {
-          margin-bottom: 30px;
-        }
-        
-        .messages-container {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 24px;
-        }
-        
-        .message-list {
-          background-color: white;
-          border-radius: 16px;
-          padding: 20px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-          max-height: 600px;
-          overflow-y: auto;
-        }
-        
-        .message-item {
-          display: flex;
-          gap: 16px;
-          padding: 16px 0;
-          border-bottom: 1px solid #eaeaea;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-        
-        .message-item:hover {
-          background-color: #f8f9fa;
-        }
-        
-        .message-item.unread {
-          font-weight: 600;
-        }
-        
-        .message-item:last-child {
-          border-bottom: none;
-        }
-        
-        .message-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #1640ff;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          font-weight: 600;
-          flex-shrink: 0;
-        }
-        
-        .message-content {
-          flex: 1;
-        }
-        
-        .message-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 4px;
-        }
-        
-        .message-header h4 {
-          font-size: 16px;
-        }
-        
-        .message-time {
-          font-size: 14px;
-          color: #999;
-        }
-        
-        .message-detail {
-          background-color: white;
-          border-radius: 16px;
-          padding: 20px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-          display: flex;
-          flex-direction: column;
-          height: 600px;
-        }
-        
-        .message-detail-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid #eaeaea;
-        }
-        
-        .message-detail-content {
-          flex: 1;
-          overflow-y: auto;
-          margin-bottom: 20px;
-        }
-        
-        .message-detail-content p {
-          margin-bottom: 16px;
-          line-height: 1.6;
-        }
-        
-        .message-reply {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-        
-        .message-reply textarea {
-          flex: 1;
-          padding: 12px;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          resize: none;
-          font-family: inherit;
-        }
-        
-        .message-reply textarea:focus {
-          outline: none;
-          border-color: #1640ff;
-        }
-        
-        .send-btn {
-          padding: 10px 20px;
-          border-radius: 8px;
-          background-color: #1640ff;
-          color: white;
-          border: none;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background-color 0.3s;
-          align-self: flex-end;
-        }
-        
-        .send-btn:hover {
-          background-color: #0e30cc;
-        }
-        
-        /* Settings Section */
-        .settings-section {
-          margin-bottom: 30px;
-        }
-        
-        .settings-container {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
-        }
-        
-        .settings-card {
-          background-color: white;
-          border-radius: 16px;
-          padding: 24px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        
-        .settings-card h3 {
-          font-size: 18px;
-          font-weight: 600;
-          margin-bottom: 20px;
-          color: #333;
-        }
-        
-        .form-group {
-          margin-bottom: 20px;
-        }
-        
-        .form-group label {
-          display: block;
-          margin-bottom: 8px;
-          font-weight: 500;
-          color: #333;
-        }
-        
-        .form-group input,
-        .form-group textarea {
-          width: 100%;
-          padding: 12px;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 14px;
-          transition: border-color 0.3s;
-          font-family: inherit;
-        }
-        
-        .form-group input:focus,
-        .form-group textarea:focus {
-          outline: none;
-          border-color: #1640ff;
-          box-shadow: 0 0 0 3px rgba(22, 64, 255, 0.1);
-        }
-        
-        .checkbox-label {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          cursor: pointer;
-          font-weight: normal;
-        }
-        
-        .checkbox-label input[type="checkbox"] {
-          width: auto;
-        }
-        
-        .save-btn {
-          padding: 12px 24px;
-          background-color: #1640ff;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-        
-        .save-btn:hover {
-          background-color: #0e30cc;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-          .overview-cards {
-            grid-template-columns: repeat(2, 1fr);
-          }
+      {/* Main Content */}
+      <div style={styles.mainContent}>
+        {/* Left Column */}
+        <div style={styles.leftColumn}>
+          {/* Today's Activity */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>Today's Activity</h2>
+            <div style={styles.activityList}>
+              {todayActivities.map(activity => (
+                <div key={activity.id} style={styles.activityItem}>
+                  <div style={styles.activityIcon}>
+                    {activity.type === 'live_class' && <FiClock color="#1640FF" />}
+                    {activity.type === 'new_signup' && <FiUserPlus color="#1640FF" />}
+                    {activity.type === 'pending_validation' && <FiDollarSign color="#1640FF" />}
+                  </div>
+                  <div style={styles.activityContent}>
+                    <p style={styles.activityTitle}>{activity.title}</p>
+                    <p style={styles.activityTime}>{activity.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
           
-          .courses-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
+          {/* Quick Actions */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>Quick Actions</h2>
+            <div style={styles.quickActions}>
+              <button style={styles.quickActionButton}>
+                <FiPlus size={18} />
+                <span>Create Internship</span>
+              </button>
+              <button style={styles.quickActionButton}>
+                <FiDollarSign size={18} />
+                <span>Validate Payments</span>
+              </button>
+              <button style={styles.quickActionButton}>
+                <FiBookOpen size={18} />
+                <span>Create Course</span>
+              </button>
+              <button style={styles.quickActionButton}>
+                <FiBell size={18} />
+                <span>Announcements</span>
+              </button>
+            </div>
+          </div>
           
-          .analytics-grid {
-            grid-template-columns: 1fr;
-          }
-        }
+          {/* Recent Internships */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>Recent Internships Created</h2>
+            <div style={styles.internshipList}>
+              {recentInternships.map(internship => (
+                <div key={internship.id} style={styles.internshipItem}>
+                  <img src={internship.thumbnail} alt={internship.title} style={styles.internshipThumbnail} />
+                  <div style={styles.internshipContent}>
+                    <h3 style={styles.internshipTitle}>{internship.title}</h3>
+                    <p style={styles.internshipInstructor}>{internship.instructor}</p>
+                  </div>
+                  <button style={styles.editButton}>
+                    <FiEdit size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         
-        @media (max-width: 992px) {
-          .sidebar {
-            width: 70px;
-          }
+        {/* Right Column */}
+        <div style={styles.rightColumn}>
+          {/* Alert Card */}
+          {pendingPayments > 0 && (
+            <div style={styles.alertCard}>
+              <div style={styles.alertIcon}>
+                <FiDollarSign size={24} color="#EF7C00" />
+              </div>
+              <div style={styles.alertContent}>
+                <h3 style={styles.alertTitle}>Pending Payment Validations</h3>
+                <p style={styles.alertMessage}>{pendingPayments} payments require your attention</p>
+                <button style={styles.alertButton}>Review Now</button>
+              </div>
+            </div>
+          )}
           
-          .sidebar .logo-text,
-          .sidebar .nav-item span,
-          .sidebar .logout-btn span {
-            display: none;
-          }
+          {/* Recent Student Signups */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>Recent Student Signups</h2>
+            <div style={styles.signupTable}>
+              <table style={styles.table}>
+                <thead>
+                  <tr style={styles.tableHeader}>
+                    <th style={styles.tableCell}>Name</th>
+                    <th style={styles.tableCell}>Email</th>
+                    <th style={styles.tableCell}>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentSignups.map(signup => (
+                    <tr key={signup.id} style={styles.tableRow}>
+                      <td style={styles.tableCell}>{signup.name}</td>
+                      <td style={styles.tableCell}>{signup.email}</td>
+                      <td style={styles.tableCell}>{signup.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
           
-          .header {
-            padding: 20px;
-          }
-          
-          .search-container input {
-            width: 200px;
-          }
-          
-          .schedule-container {
-            grid-template-columns: 1fr;
-          }
-          
-          .messages-container {
-            grid-template-columns: 1fr;
-          }
-          
-          .settings-container {
-            grid-template-columns: 1fr;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .sidebar {
-            position: fixed;
-            left: -260px;
-            height: 100vh;
-            z-index: 1000;
-          }
-          
-          .sidebar.active {
-            left: 0;
-          }
-          
-          .main-content {
-            margin-left: 0;
-          }
-          
-          .header {
-            flex-direction: column;
-            gap: 16px;
-            align-items: flex-start;
-          }
-          
-          .header-right {
-            width: 100%;
-            justify-content: space-between;
-          }
-          
-          .search-container input {
-            width: 180px;
-          }
-          
-          .overview-cards {
-            grid-template-columns: 1fr;
-          }
-          
-          .quick-actions {
-            flex-direction: column;
-          }
-          
-          .action-btn {
-            width: 100%;
-          }
-          
-          .courses-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .calendar-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-      `}</style>
+          {/* Platform Updates */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>Platform Updates</h2>
+            <div style={styles.updateList}>
+              {platformUpdates.map(update => (
+                <div key={update.id} style={styles.updateItem}>
+                  <div style={styles.updateIcon}>
+                    <FiTrendingUp color="#1640FF" />
+                  </div>
+                  <div style={styles.updateContent}>
+                    <h3 style={styles.updateTitle}>{update.title}</h3>
+                    <p style={styles.updateDate}>{update.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default InstructorDashboard;
+const styles = {
+  container: {
+    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+    backgroundColor: '#f5f7fa',
+    minHeight: '100vh',
+    padding: '20px',
+    color: '#333'
+  },
+  header: {
+    marginBottom: '24px'
+  },
+  title: {
+    fontSize: '28px',
+    fontWeight: '700',
+    margin: '0 0 8px 0',
+    color: '#1a202c'
+  },
+  subtitle: {
+    fontSize: '16px',
+    color: '#718096',
+    margin: '0'
+  },
+  statsContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '20px',
+    marginBottom: '24px'
+  },
+  statCard: {
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    padding: '20px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    display: 'flex',
+    alignItems: 'center',
+    flex: '1',
+    minWidth: '200px'
+  },
+  statIcon: {
+    marginRight: '16px',
+    padding: '10px',
+    borderRadius: '50%',
+    backgroundColor: '#f0f4ff'
+  },
+  statContent: {
+    flex: '1'
+  },
+  statValue: {
+    fontSize: '24px',
+    fontWeight: '700',
+    margin: '0 0 4px 0',
+    color: '#1a202c'
+  },
+  statLabel: {
+    fontSize: '14px',
+    color: '#718096',
+    margin: '0'
+  },
+  mainContent: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '20px'
+  },
+  leftColumn: {
+    flex: '2',
+    minWidth: '300px'
+  },
+  rightColumn: {
+    flex: '1',
+    minWidth: '300px'
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    padding: '20px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    marginBottom: '20px'
+  },
+  cardTitle: {
+    fontSize: '18px',
+    fontWeight: '600',
+    margin: '0 0 16px 0',
+    color: '#1a202c'
+  },
+  activityList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px'
+  },
+  activityItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '12px',
+    borderRadius: '8px',
+    backgroundColor: '#f7fafc'
+  },
+  activityIcon: {
+    marginRight: '12px',
+    padding: '8px',
+    borderRadius: '50%',
+    backgroundColor: '#fff'
+  },
+  activityContent: {
+    flex: '1'
+  },
+  activityTitle: {
+    fontSize: '14px',
+    fontWeight: '500',
+    margin: '0 0 4px 0',
+    color: '#1a202c'
+  },
+  activityTime: {
+    fontSize: '12px',
+    color: '#718096',
+    margin: '0'
+  },
+  quickActions: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+    gap: '12px'
+  },
+  quickActionButton: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '16px',
+    borderRadius: '8px',
+    backgroundColor: '#f7fafc',
+    border: '1px solid #e2e8f0',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    color: '#4a5568',
+    fontWeight: '500',
+    fontSize: '14px'
+  },
+  internshipList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px'
+  },
+  internshipItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '12px',
+    borderRadius: '8px',
+    backgroundColor: '#f7fafc'
+  },
+  internshipThumbnail: {
+    width: '60px',
+    height: '60px',
+    borderRadius: '8px',
+    objectFit: 'cover',
+    marginRight: '12px'
+  },
+  internshipContent: {
+    flex: '1'
+  },
+  internshipTitle: {
+    fontSize: '14px',
+    fontWeight: '500',
+    margin: '0 0 4px 0',
+    color: '#1a202c'
+  },
+  internshipInstructor: {
+    fontSize: '12px',
+    color: '#718096',
+    margin: '0'
+  },
+  editButton: {
+    padding: '8px',
+    borderRadius: '50%',
+    backgroundColor: '#fff',
+    border: '1px solid #e2e8f0',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  alertCard: {
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    padding: '20px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+    marginBottom: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    borderLeft: '4px solid #EF7C00'
+  },
+  alertIcon: {
+    marginRight: '16px',
+    padding: '10px',
+    borderRadius: '50%',
+    backgroundColor: '#fff8f0'
+  },
+  alertContent: {
+    flex: '1'
+  },
+  alertTitle: {
+    fontSize: '16px',
+    fontWeight: '600',
+    margin: '0 0 4px 0',
+    color: '#1a202c'
+  },
+  alertMessage: {
+    fontSize: '14px',
+    color: '#718096',
+    margin: '0 0 12px 0'
+  },
+  alertButton: {
+    backgroundColor: '#EF7C00',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '6px',
+    padding: '8px 16px',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer'
+  },
+  signupTable: {
+    overflowX: 'auto'
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse'
+  },
+  tableHeader: {
+    borderBottom: '1px solid #e2e8f0'
+  },
+  tableRow: {
+    borderBottom: '1px solid #e2e8f0'
+  },
+  tableCell: {
+    padding: '12px 8px',
+    textAlign: 'left',
+    fontSize: '14px'
+  },
+  updateList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px'
+  },
+  updateItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '12px',
+    borderRadius: '8px',
+    backgroundColor: '#f7fafc'
+  },
+  updateIcon: {
+    marginRight: '12px',
+    padding: '8px',
+    borderRadius: '50%',
+    backgroundColor: '#fff'
+  },
+  updateContent: {
+    flex: '1'
+  },
+  updateTitle: {
+    fontSize: '14px',
+    fontWeight: '500',
+    margin: '0 0 4px 0',
+    color: '#1a202c'
+  },
+  updateDate: {
+    fontSize: '12px',
+    color: '#718096',
+    margin: '0'
+  }
+};
+
+export default AdminDashboard;
