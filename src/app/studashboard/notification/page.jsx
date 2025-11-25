@@ -1,478 +1,472 @@
-"use client";
-// ADD THIS LINE to import the useState hook from React
-import { useState } from "react"; 
+"use client"
+import React, { useState, useEffect, useRef } from 'react';
+import { FiBell, FiInfo, FiAlertCircle, FiCheck } from 'react-icons/fi';
 
-import { FiMoreVertical, FiTrash2, FiStar, FiEdit3, FiTrendingUp, FiBookOpen, FiCheckCircle, FiRefreshCw, FiUser, FiFileText, FiMessageSquare, FiCalendar, FiInfo, FiBell, FiClock, FiFilter, FiChevronDown } from "react-icons/fi";
-
-const TeacherNotifications = () => {
-  const notifications = [
+const NotificationsPage = () => {
+  const [notifications, setNotifications] = useState([
     {
       id: 1,
-      type: "enrollment",
-      icon: <FiUser />,
-      title: "New Student Enrollment",
-      description: "Sarah Miller enrolled in your 'Complete Python Bootcamp' course.",
-      time: "5 minutes ago",
-      read: false,
-      action: "View Student Profile",
-      urgency: "high"
+      icon: <FiBell />,
+      title: "New Course Available",
+      description: "Advanced React Patterns has been added to your learning path.",
+      timestamp: "5 mins ago",
+      unread: true,
+      important: false,
+      category: "Update"
     },
     {
       id: 2,
-      type: "assignment",
-      icon: <FiFileText />,
-      title: "New Assignment Submission",
-      description: "You have 5 new submissions for 'Module 3: Advanced Functions'.",
-      time: "1 hour ago",
-      read: false,
-      action: "View Submissions",
-      urgency: "medium"
+      icon: <FiAlertCircle />,
+      title: "Exam Reminder",
+      description: "Your JavaScript Fundamentals exam is scheduled for tomorrow at 10:00 AM.",
+      timestamp: "1 hour ago",
+      unread: true,
+      important: true,
+      category: "Exam"
     },
     {
       id: 3,
-      type: "review",
-      icon: <FiMessageSquare />,
-      title: "New Course Review",
-      description: "John Doe left a 5-star review for 'The Complete JavaScript Course'.",
-      time: "2 hours ago",
-      read: true,
-      action: "View Review",
-      urgency: "low"
+      icon: <FiInfo />,
+      title: "Class Assignment Due",
+      description: "Complete the CSS Grid assignment by the end of this week.",
+      timestamp: "3 hours ago",
+      unread: true,
+      important: false,
+      category: "Class"
     },
     {
       id: 4,
-      type: "engagement",
-      icon: <FiTrendingUp />,
-      title: "AI-Driven Engagement Alert",
-      description: "Student engagement in 'Beginning C++ Programming' has dropped by 15% this week.",
-      time: "3 hours ago",
-      read: false,
-      action: "View Analytics",
-      urgency: "high"
+      icon: <FiBell />,
+      title: "Achievement Unlocked",
+      description: "Congratulations! You've completed the HTML & CSS Basics course.",
+      timestamp: "Yesterday",
+      unread: false,
+      important: false,
+      category: "Update"
     },
     {
       id: 5,
-      type: "live-class",
-      icon: <FiCalendar />,
-      title: "Upcoming Live Class",
-      description: "Your live Q&A session for 'Python Bootcamp' starts in 1 hour.",
-      time: "1 day ago",
-      read: true,
-      action: "Start Live Class",
-      urgency: "high"
+      icon: <FiInfo />,
+      title: "New Study Material",
+      description: "New resources have been added to your Node.js course.",
+      timestamp: "2 days ago",
+      unread: false,
+      important: false,
+      category: "Class"
     },
     {
       id: 6,
-      type: "announcement",
-      icon: <FiInfo />,
-      title: "Platform Update",
-      description: "System maintenance is scheduled for this Sunday from 2:00 AM to 4:00 AM EST.",
-      time: "2 days ago",
-      read: true,
-      action: "Read More",
-      urgency: "medium"
+      icon: <FiAlertCircle />,
+      title: "Important Deadline",
+      description: "Submit your final project for the React course by Friday.",
+      timestamp: "3 days ago",
+      unread: false,
+      important: true,
+      category: "Exam"
     }
-  ];
-
-  // These lines will now work correctly
-  const [filter, setFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("time");
-
-  const styles = {
-    page: {
-      padding: "24px",
-      background: "linear-gradient(to bottom right, #f8fafc, #e0e7ff)",
-      minHeight: "100vh",
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    },
-
-    header: {
-      marginBottom: "32px",
-    },
-
-    title: {
-      fontSize: "30px",
-      fontWeight: "700",
-      color: "#1e293b",
-      marginBottom: "8px",
-      letterSpacing: "-0.025em",
-    },
-
-    subtitle: {
-      fontSize: "18px",
-      color: "#64748b",
-      marginBottom: "24px",
-      fontWeight: "400",
-    },
-
-    notificationFeatures: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-      gap: "20px",
-      marginBottom: "32px",
-    },
-
-    featureCard: {
-      background: "#ffffff",
-      borderRadius: "12px",
-      border: "1px solid #f1f5f9",
-      padding: "24px",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px",
-      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-      transition: "transform 0.2s ease, box-shadow 0.2s ease",
-    },
-
-    featureTitle: {
-      display: "flex",
-      alignItems: "center",
-      gap: "10px",
-      fontSize: "20px",
-      fontWeight: "600",
-    },
-
-    featureDescription: {
-      fontSize: "14px",
-      color: "#64748b",
-      lineHeight: "1.6",
-    },
-
-    blueText: {
-      color: "#1640ff",
-    },
-
-    orangeText: {
-      color: "#f59e0b",
-    },
-
-    topBar: {
-      display: "flex",
-      justifyContent: "space-between",
-      marginBottom: "16px",
-      alignItems: "center",
-    },
-
-    leftTitle: { 
-      fontSize: "30px", 
-      fontWeight: "600",
-      color: "#1e293b"
-    },
-
-    rightActions: {
-      display: "flex",
-      gap: "12px",
-    },
-
-    actionButton: {
-      padding: "10px 16px",
-      borderRadius: "8px",
-      border: "none",
-      cursor: "pointer",
-      fontSize: "14px",
-      fontWeight: "500",
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-      transition: "all 0.2s ease",
-    },
-
-    primaryButton: {
-      background: "#1640ff",
-      color: "#fff",
-      boxShadow: "0 4px 6px -1px rgba(79, 70, 229, 0.3), 0 2px 4px -1px rgba(79, 70, 229, 0.2)",
-    },
-
-    secondaryButton: {
-      background: "#f1f5f9",
-      color: "#475569",
-    },
-
-    filterBar: {
-      display: "flex",
-      justifyContent: "space-between",
-      marginBottom: "20px",
-      padding: "16px 20px",
-      background: "#ffffff",
-      borderRadius: "12px",
-      border: "1px solid #f1f5f9",
-      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-    },
-
-    filterGroup: {
-      display: "flex",
-      gap: "12px",
-      alignItems: "center",
-    },
-
-    filterButton: {
-      padding: "8px 14px",
-      borderRadius: "6px",
-      border: "1px solid #e2e8f0",
-      background: "#ffffff",
-      cursor: "pointer",
-      fontSize: "14px",
-      fontWeight: "500",
-      display: "flex",
-      alignItems: "center",
-      gap: "6px",
-      transition: "all 0.2s ease",
-    },
-
-    activeFilter: {
-      background: "#1640ff",
-      color: "#fff",
-      borderColor: "#1640ff",
-      boxShadow: "0 2px 4px -1px rgba(79, 70, 229, 0.3)",
-    },
-
-    list: { 
-      marginTop: "20px", 
-      display: "flex", 
-      flexDirection: "column", 
-      gap: "16px" 
-    },
-
-    card: {
-      background: "#ffffff",
-      borderRadius: "12px",
-      border: "1px solid #f1f5f9",
-      padding: "20px",
-      display: "flex",
-      gap: "16px",
-      position: "relative",
-      alignItems: "flex-start",
-      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-      transition: "transform 0.2s ease, box-shadow 0.2s ease",
-    },
-
-    unreadCard: {
-      borderLeft: "4px solid ##1640ff",
-      background: "#f8faff",
-    },
-
-    notificationIconWrapper: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "48px",
-      height: "48px",
-      borderRadius: "50%",
-      flexShrink: 0,
-    },
-
-    content: { 
-      flex: 1, 
-      display: "flex", 
-      flexDirection: "column", 
-      gap: "6px" 
-    },
-
-    title: {
-      fontSize: "30px",
-      fontWeight: "600",
-      color: "#1e293b",
-    },
-
-    description: {
-      fontSize: "14px",
-      color: "#475569",
-      lineHeight: "1.6",
-    },
-
-    time: {
-      fontSize: "12px",
-      color: "#94a3b8",
-      display: "flex",
-      alignItems: "center",
-      gap: "4px",
-    },
-
-    actionLink: {
-      fontSize: "14px",
-      color: "#1640ff",
-      fontWeight: "500",
-      cursor: "pointer",
-      marginTop: "8px",
-      alignSelf: "flex-start",
-      transition: "color 0.2s ease",
-    },
-
-    urgencyBadge: {
-      padding: "4px 10px",
-      fontSize: "11px",
-      fontWeight: "700",
-      borderRadius: "6px",
-      marginLeft: "auto",
-      textTransform: "uppercase",
-    },
-
-    highUrgency: {
-      background: "#fee2e2",
-      color: "#dc2626",
-    },
-
-    mediumUrgency: {
-      background: "#fef3c7",
-      color: "#d97706",
-    },
-
-    lowUrgency: {
-      background: "#f1f5f9",
-      color: "#475569",
-    },
+  ]);
+  
+  const [filter, setFilter] = useState("All");
+  const [loading, setLoading] = useState(false);
+  const observerRef = useRef();
+  const lastNotificationRef = useRef();
+  
+  const handleMarkAllAsRead = () => {
+    setNotifications(prevNotifications => 
+      prevNotifications.map(notification => ({ ...notification, unread: false }))
+    );
   };
-
-  const getIconStyle = (type) => {
-    switch (type) {
-      case "enrollment":
-        return { background: "#dbeafe", color: "#1d4ed8" };
-      case "assignment":
-        return { background: "#fef3c7", color: "#d97706" };
-      case "review":
-        return { background: "#d1fae5", color: "#059669" };
-      case "engagement":
-        return { background: "#fee2e2", color: "#dc2626" };
-      case "live-class":
-        return { background: "#e9d5ff", color: "#7c3aed" };
-      case "announcement":
-        return { background: "#e2e8f0", color: "#475569" };
-      default:
-        return { background: "#e2e8f0", color: "#475569" };
-    }
+  
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
   };
-
-  const getUrgencyStyle = (urgency) => {
-    switch (urgency) {
-      case "high":
-        return styles.highUrgency;
-      case "medium":
-        return styles.mediumUrgency;
-      case "low":
-        return styles.lowUrgency;
-      default:
-        return styles.lowUrgency;
-    }
-  };
-
+  
   const filteredNotifications = notifications.filter(notification => {
-    if (filter === "all") return true;
-    if (filter === "unread") return !notification.read;
-    return notification.type === filter;
+    if (filter === "Unread") return notification.unread;
+    if (filter === "Important") return notification.important;
+    return true;
   });
-
-  const sortedNotifications = [...filteredNotifications].sort((a, b) => {
-    if (sortBy === "time") {
-      // In a real app, you would parse the time string and compare actual timestamps
-      return a.id - b.id;
-    } else if (sortBy === "urgency") {
-      const urgencyOrder = { high: 0, medium: 1, low: 2 };
-      return urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
+  
+  // Simulate loading more notifications on scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && !loading) {
+          setLoading(true);
+          // Simulate API call to load more notifications
+          setTimeout(() => {
+            const newNotifications = [
+              {
+                id: notifications.length + 1,
+                icon: <FiInfo />,
+                title: "New Webinar",
+                description: "Join our webinar on Advanced TypeScript techniques next week.",
+                timestamp: "4 days ago",
+                unread: false,
+                important: false,
+                category: "Class"
+              },
+              {
+                id: notifications.length + 2,
+                icon: <FiBell />,
+                title: "Course Update",
+                description: "The React Native course has been updated with new content.",
+                timestamp: "5 days ago",
+                unread: false,
+                important: false,
+                category: "Update"
+              }
+            ];
+            setNotifications(prev => [...prev, ...newNotifications]);
+            setLoading(false);
+          }, 1000);
+        }
+      },
+      { threshold: 1.0 }
+    );
+    
+    if (lastNotificationRef.current) {
+      observer.observe(lastNotificationRef.current);
     }
-    return 0;
-  });
-
+    
+    return () => {
+      if (lastNotificationRef.current) {
+        observer.unobserve(lastNotificationRef.current);
+      }
+    };
+  }, [loading, notifications.length]);
+  
+  // Simulate new notification push
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newNotification = {
+        id: notifications.length + 1,
+        icon: <FiInfo />,
+        title: "New Notification",
+        description: "This is a dynamically generated notification.",
+        timestamp: "Just now",
+        unread: true,
+        important: Math.random() > 0.5,
+        category: ["Exam", "Class", "Update"][Math.floor(Math.random() * 3)]
+      };
+      setNotifications(prev => [newNotification, ...prev]);
+    }, 30000); // Add a new notification every 30 seconds
+    
+    return () => clearInterval(interval);
+  }, [notifications.length]);
+  
   return (
-    <div style={styles.page}>
-     
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <div style={styles.headerContent}>
+          <FiBell style={styles.headerIcon} />
+         <h1
+  style={{
+    textAlign: "center",
+    marginBottom: "50px",
+    fontFamily: "'Playfair Display', serif",
+    fontSize: "42px",
+    fontWeight: "700",
+    color: "#1F2937",
+    margin: "0 0 16px 0"
+  }}
+>
+  Notifications
+</h1>
 
-      {/* Top Bar */}
-      <div style={styles.topBar}>
-        <div style={styles.leftTitle}>Notifications</div>
-        <div style={styles.rightActions}>
-          <button style={{...styles.actionButton, ...styles.secondaryButton}}>
-            Mark All as Read
-          </button>
-          <button style={{...styles.actionButton, ...styles.primaryButton}}>
-            <FiRefreshCw size={14} /> Refresh
-          </button>
         </div>
       </div>
-
-      {/* Filter Bar */}
-      <div style={styles.filterBar}>
-        <div style={styles.filterGroup}>
-          <FiFilter size={16} color="#64748b" />
+      
+      <div style={styles.content}>
+        <div style={styles.controls}>
           <button 
-            style={{...styles.filterButton, ...(filter === "all" ? styles.activeFilter : {})}}
-            onClick={() => setFilter("all")}
+            style={styles.markAllButton} 
+            onClick={handleMarkAllAsRead}
           >
-            All
+            <FiCheck style={styles.buttonIcon} />
+            Mark all as read
           </button>
-          <button 
-            style={{...styles.filterButton, ...(filter === "unread" ? styles.activeFilter : {})}}
-            onClick={() => setFilter("unread")}
-          >
-            Unread
-          </button>
-          <button 
-            style={{...styles.filterButton, ...(filter === "enrollment" ? styles.activeFilter : {})}}
-            onClick={() => setFilter("enrollment")}
-          >
-            Enrollments
-          </button>
-          <button 
-            style={{...styles.filterButton, ...(filter === "assignment" ? styles.activeFilter : {})}}
-            onClick={() => setFilter("assignment")}
-          >
-            Assignments
-          </button>
-          <button 
-            style={{...styles.filterButton, ...(filter === "engagement" ? styles.activeFilter : {})}}
-            onClick={() => setFilter("engagement")}
-          >
-            Engagement
-          </button>
+          
+          <div style={styles.filterChips}>
+            {["All", "Unread", "Important"].map(chip => (
+              <button
+                key={chip}
+                style={
+                  filter === chip 
+                    ? {...styles.filterChip, ...styles.activeFilterChip}
+                    : styles.filterChip
+                }
+                onClick={() => handleFilterChange(chip)}
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
         </div>
         
-       
-      </div>
-
-      <div style={{ 
-        fontSize: "18px", 
-        color: "#475569", 
-        marginBottom: "16px",
-        padding: "8px 12px",
-        background: "#f1f5f9",
-        borderRadius: "8px",
-        display: "inline-block"
-      }}>
-        {notifications.filter(n => !n.read).length} Unread
-      </div>
-
-      {/* Notifications List */}
-      <div style={styles.list}>
-        {sortedNotifications.map((notification) => (
-          <div key={notification.id} style={{ 
-            ...styles.card, 
-            ...(notification.read ? {} : styles.unreadCard),
-            ":hover": {
-              transform: "translateY(-2px)",
-              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
-            }
-          }}>
-            <div style={{ ...styles.notificationIconWrapper, ...getIconStyle(notification.type) }}>
-              {notification.icon}
-            </div>
-
-            <div style={styles.content}>
-              <div style={styles.title}>{notification.title}</div>
-              <div style={styles.description}>{notification.description}</div>
-              <div style={styles.time}>
-                <FiClock size={12} />
-                {notification.time}
+        <div style={styles.notificationsList}>
+          {filteredNotifications.map((notification, index) => (
+            <div
+              key={notification.id}
+              style={
+                notification.unread 
+                  ? {...styles.notificationItem, ...styles.unreadNotification}
+                  : styles.notificationItem
+              }
+              ref={index === filteredNotifications.length - 1 ? lastNotificationRef : null}
+            >
+              <div style={styles.notificationContent}>
+                <div style={styles.notificationIconContainer}>
+                  {notification.unread && <div style={styles.unreadDot}></div>}
+                  <div 
+                    style={
+                      notification.important 
+                        ? {...styles.iconWrapper, ...styles.importantIcon}
+                        : styles.iconWrapper
+                    }
+                  >
+                    {notification.icon}
+                  </div>
+                </div>
+                
+                <div style={styles.notificationText}>
+                  <div style={styles.notificationHeader}>
+                    <h3 style={styles.notificationTitle}>{notification.title}</h3>
+                    <span style={styles.timestamp}>{notification.timestamp}</span>
+                  </div>
+                  <p style={styles.notificationDescription}>{notification.description}</p>
+                  <span style={styles.categoryTag}>{notification.category}</span>
+                </div>
               </div>
-              <div style={styles.actionLink}>{notification.action} →</div>
             </div>
-            
-            <div style={{...styles.urgencyBadge, ...getUrgencyStyle(notification.urgency)}}>
-              {notification.urgency.toUpperCase()}
+          ))}
+          
+          {loading && (
+            <div style={styles.loadingIndicator}>
+              <div style={styles.spinner}></div>
+              <p>Loading more notifications...</p>
             </div>
-          </div>
-        ))}
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
-export default TeacherNotifications;
+const styles = {
+  container: {
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    backgroundColor: '#f9fafb',
+    minHeight: '100vh',
+    color: '#333',
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '100%',
+    margin: '0 auto'
+  },
+  header: {
+    backgroundColor: '#fff',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+    padding: '16px 24px',
+    position: 'sticky',
+    top: 0,
+    zIndex: 10
+  },
+  headerContent: {
+    display: 'flex',
+    alignItems: 'center',
+    maxWidth: '1200px',
+    margin: '0 auto'
+  },
+  headerIcon: {
+    fontSize: '24px',
+    marginRight: '12px',
+    color: '#4a5568'
+  },
+  headerTitle: {
+    margin: 0,
+    fontSize: '24px',
+    fontWeight: '600',
+    color: '#2d3748'
+  },
+  content: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '24px',
+    width: '100%'
+  },
+  controls: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '24px',
+    flexWrap: 'wrap',
+    gap: '16px'
+  },
+  markAllButton: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#4299e1',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '10px 16px',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
+  },
+  buttonIcon: {
+    marginRight: '8px'
+  },
+  filterChips: {
+    display: 'flex',
+    gap: '8px'
+  },
+  filterChip: {
+    padding: '8px 16px',
+    borderRadius: '20px',
+    backgroundColor: '#e2e8f0',
+    color: '#4a5568',
+    border: 'none',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  activeFilterChip: {
+    backgroundColor: '#4299e1',
+    color: 'white'
+  },
+  notificationsList: {
+    width: '100%'
+  },
+  notificationItem: {
+    backgroundColor: '#fff',
+    borderRadius: '8px',
+    padding: '16px',
+    marginBottom: '12px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+    transition: 'all 0.2s',
+    animation: 'fadeIn 0.3s ease-in-out',
+    position: 'relative',
+    borderLeft: '4px solid transparent'
+  },
+  unreadNotification: {
+    backgroundColor: '#ebf8ff',
+    borderLeft: '4px solid #4299e1'
+  },
+  notificationContent: {
+    display: 'flex',
+    alignItems: 'flex-start'
+  },
+  notificationIconContainer: {
+    position: 'relative',
+    marginRight: '16px'
+  },
+  unreadDot: {
+    position: 'absolute',
+    top: '0',
+    right: '0',
+    width: '10px',
+    height: '10px',
+    backgroundColor: '#4299e1',
+    borderRadius: '50%'
+  },
+  iconWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    backgroundColor: '#edf2f7',
+    color: '#4a5568',
+    fontSize: '18px'
+  },
+  importantIcon: {
+    backgroundColor: '#fff5ed',
+    color: '#EF7C00'
+  },
+  notificationText: {
+    flex: 1
+  },
+  notificationHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: '4px'
+  },
+  notificationTitle: {
+    margin: 0,
+    fontSize: '16px',
+    fontWeight: '600',
+    lineHeight: '1.5',
+    color: '#2d3748'
+  },
+  timestamp: {
+    fontSize: '12px',
+    color: '#718096',
+    whiteSpace: 'nowrap',
+    marginLeft: '8px'
+  },
+  notificationDescription: {
+    margin: '0 0 8px 0',
+    fontSize: '14px',
+    lineHeight: '1.6',
+    color: '#4a5568'
+  },
+  categoryTag: {
+    display: 'inline-block',
+    fontSize: '12px',
+    fontWeight: '500',
+    padding: '4px 8px',
+    borderRadius: '4px',
+    backgroundColor: '#edf2f7',
+    color: '#4a5568'
+  },
+  loadingIndicator: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px',
+    color: '#718096'
+  },
+  spinner: {
+    width: '30px',
+    height: '30px',
+    border: '3px solid #e2e8f0',
+    borderTop: '3px solid #4299e1',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+    marginBottom: '12px'
+  },
+  // Adding animations as a style string
+  '@keyframes fadeIn': {
+    '0%': { opacity: 0, transform: 'translateY(-10px)' },
+    '100%': { opacity: 1, transform: 'translateY(0)' }
+  },
+  '@keyframes spin': {
+    '0%': { transform: 'rotate(0deg)' },
+    '100%': { transform: 'rotate(360deg)' }
+  }
+};
+
+// Add the keyframe animations to the document
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = `
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(styleElement);
+}
+
+export default NotificationsPage;

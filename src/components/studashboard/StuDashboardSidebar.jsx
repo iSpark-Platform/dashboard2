@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   FiHome, 
   FiRadio, 
-  FiCompass, 
+  FiCompass, FiCalendar,FiBookOpen,FiAward,
   FiGrid, 
   FiCheckSquare, 
   FiUser, 
@@ -22,22 +22,29 @@ const DashboardSidebar = ({ isOpen }) => {
   const dropdownRefs = useRef({});
   const [maxHeights, setMaxHeights] = useState({});
 
-  const navItems = [
-    { name: 'Home', icon: FiHome, path: '/dashboard' },
-    { name: 'Teaching Resources', icon: FiRadio, path: '/dashboard/teacherresources' },
-    { name: 'Explore', icon: FiCompass, path: '/dashboard/explore' },
-    { name: 'Exams & Marks', icon: FiGrid, path: '/dashboard/exams' },
-    { name: 'Assignments', icon: FiCheckSquare, path: '/dashboard/test' },
-    { name: 'Attendance', icon: FiUser, path: '/dashboard/attendance' },
-    { name: 'Profile', icon: FiUser, path: '/dashboard/profile' },
-    { name: 'Notification', icon: FiBell, path: '/dashboard/notification' },
-  ];
+ const navItems = [
+  { name: "Dashboard", icon: FiHome, path: "/studashboard" },
+
+  { name: "Exams & Marks", icon: FiGrid, path: "/studashboard/exams" },
+
+  { name: "Assignments", icon: FiCheckSquare, path: "/studashboard/assignment" },
+
+  { name: "Attendance", icon: FiCalendar, path: "/studashboard/student-attendance" },
+
+  { name: "Profile", icon: FiUser, path: "/studashboard/profile" },
+
+  { name: "Study Materials", icon: FiBookOpen, path: "/studashboard/study" },
+
+  { name: "Certifications", icon: FiAward, path: "/studashboard/certification" },
+
+  { name: "Notifications", icon: FiBell, path: "/studashboard/notification" }
+];
 
   const bottomItems = [
-    { name: 'Settings', icon: FiSettings, path: '/dashboard/settings' },
-    { name: 'Report History', icon: FiClock, path: '/dashboard/reports' },
-    { name: 'Send Feedback', icon: FiMessageCircle, path: '/dashboard/feedback' },
-    { name: 'Help', icon: FiHelpCircle, path: '/dashboard/help' }
+    { name: 'Settings', icon: FiSettings, path: '/studashboard/settings' },
+    { name: 'Report History', icon: FiClock, path: '/studashboard/reports' },
+    { name: 'Send Feedback', icon: FiMessageCircle, path: '/studashboard/feedback' },
+    { name: 'Help', icon: FiHelpCircle, path: '/studashboard/help' }
   ];
 
   const toggleDropdown = (name) => {

@@ -1,919 +1,682 @@
 "use client";
+import React, { useState } from 'react';
+import { FiVideo, FiCalendar, FiFileText, FiPlayCircle, FiBookOpen, FiCheckCircle, FiAward, FiBell, FiChevronDown, FiUser, FiLogOut, FiHome, FiGrid, FiClock } from 'react-icons/fi';
 
-import React, { useState } from "react";
-
-const TeacherDashboard = () => {
-  const [hoveredCard, setHoveredCard] = useState(null);
-  const [hoveredButton, setHoveredButton] = useState(null);
-  const [hoveredActivity, setHoveredActivity] = useState(null);
-  const [hoveredTask, setHoveredTask] = useState(null);
-  const [hoveredEvent, setHoveredEvent] = useState(null);
-  const [hoveredStudent, setHoveredStudent] = useState(null);
-  const [hoveredResource, setHoveredResource] = useState(null);
-  const [hoveredAnnouncement, setHoveredAnnouncement] = useState(null);
-
-  const today = new Date().toLocaleDateString("en-US", { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
-
-  const containerStyle = {
-    fontFamily: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    maxWidth: "1400px",
-    margin: "0 auto",
-    padding: "24px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "24px",
-    backgroundColor: "#f8fafc",
-    minHeight: "100vh",
-    color: "#1e293b",
+const StudentDashboard = () => {
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  
+  // Sample data
+  const internship = {
+    title: "Smart Robotics & Industry 4.0 Automation Internship",
+    progress: 65,
+    startDate: "Jan 15, 2023",
+    endDate: "Jun 30, 2023",
+    nextClass: "Today, 3:00 PM"
   };
-
-  const headerStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingBottom: "16px",
-    borderBottom: "1px solid #e2e8f0",
-    marginBottom: "8px",
-  };
-
-  const welcomeStyle = {
-    fontSize: "28px",
-    fontWeight: "700",
-    color: "#1e293b",
-    margin: 0,
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  };
-
-  const dateStyle = {
-    fontSize: "14px",
-    color: "#64748b",
-    fontWeight: "500",
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-  };
-
-  const quickCardsStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-    gap: "20px",
-    marginBottom: "8px",
-  };
-
-  const cardStyle = (id) => ({
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "24px",
-    display: "flex",
-    flexDirection: "column",
-    boxShadow: hoveredCard === id ? "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-    transition: "all 0.3s ease",
-    border: "1px solid #f1f5f9",
-    position: "relative",
-    overflow: "hidden",
-    transform: hoveredCard === id ? "translateY(-4px)" : "translateY(0)",
-    cursor: "pointer",
-  });
-
-  const cardAccentStyle = {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "4px",
-    height: "100%",
-  };
-
-  const cardTitleStyle = {
-    fontSize: "14px",
-    color: "#64748b",
-    marginBottom: "8px",
-    fontWeight: "500",
-  };
-
-  const cardValueStyle = {
-    fontSize: "32px",
-    fontWeight: "700",
-    color: "#1e293b",
-    margin: 0,
-  };
-
-  const sectionStyle = {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "24px",
-    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-    border: "1px solid #f1f5f9",
-  };
-
-  const sectionTitleStyle = {
-    fontSize: "20px",
-    fontWeight: "600",
-    color: "#1e293b",
-    margin: "0 0 20px 0",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #e2e8f0",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  };
-
-  const tableStyle = {
-    width: "100%",
-    borderCollapse: "collapse",
-    marginTop: "8px",
-  };
-
-  const thStyle = {
-    textAlign: "left",
-    padding: "12px 16px",
-    backgroundColor: "#f8fafc",
-    fontWeight: "600",
-    color: "#475569",
-    borderBottom: "2px solid #e2e8f0",
-    fontSize: "14px",
-  };
-
-  const tdStyle = {
-    padding: "16px",
-    borderBottom: "1px solid #f1f5f9",
-    color: "#334155",
-    fontSize: "14px",
-  };
-
-  const actionButtonStyle = (id) => ({
-    backgroundColor: hoveredButton === id ? "#0e2fcc" : "#1640ff",
-    color: "#fff",
-    padding: "8px 16px",
-    borderRadius: "8px",
-    fontSize: "14px",
-    fontWeight: "500",
-    border: "none",
-    cursor: "pointer",
-    marginRight: "8px",
-    transition: "all 0.2s ease",
-    boxShadow: hoveredButton === id ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" : "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-    transform: hoveredButton === id ? "translateY(-2px)" : "translateY(0)",
-  });
-
-  const quickActionButton = (id) => ({
-    backgroundColor: hoveredButton === id ? "#0e2fcc" : "#1640ff",
-    color: "#fff",
-    padding: "12px 20px",
-    borderRadius: "10px",
-    fontWeight: "500",
-    border: "none",
-    cursor: "pointer",
-    marginRight: "12px",
-    marginBottom: "12px",
-    transition: "all 0.2s ease",
-    boxShadow: hoveredButton === id ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" : "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    transform: hoveredButton === id ? "translateY(-2px)" : "translateY(0)",
-  });
-
-  const activityItemStyle = (id) => ({
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "16px",
-    borderRadius: "8px",
-    backgroundColor: hoveredActivity === id ? "#f1f5f9" : "#f8fafc",
-    fontSize: "14px",
-    marginBottom: "12px",
-    borderLeft: "3px solid #1640ff",
-    transition: "all 0.2s ease",
-    transform: hoveredActivity === id ? "translateX(4px)" : "translateX(0)",
-    cursor: "pointer",
-  });
-
-  // Enhanced Pending Tasks Styles
-  const taskItemStyle = (id, priority) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: "16px",
-    borderRadius: "8px",
-    backgroundColor: hoveredTask === id ? "#f1f5f9" : "#fff",
-    fontSize: "14px",
-    marginBottom: "12px",
-    border: `1px solid ${hoveredTask === id ? "#e2e8f0" : "#f1f5f9"}`,
-    borderLeft: `4px solid ${
-      priority === "high" ? "#ef4444" : 
-      priority === "medium" ? "#EF7C00" : 
-      "#10b981"
-    }`,
-    transition: "all 0.2s ease",
-    transform: hoveredTask === id ? "translateX(4px)" : "translateX(0)",
-    cursor: "pointer",
-    boxShadow: hoveredTask === id ? "0 4px 6px -1px rgba(0, 0, 0, 0.05)" : "none",
-  });
-
-  const taskContentStyle = {
-    flex: 1,
-  };
-
-  const taskTitleStyle = {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#1e293b",
-    margin: "0 0 4px 0",
-  };
-
-  const taskMetaStyle = {
-    fontSize: "14px",
-    color: "#64748b",
-    margin: 0,
-  };
-
-  const taskDueDateStyle = {
-    fontSize: "13px",
-    padding: "4px 8px",
-    borderRadius: "4px",
-    fontWeight: "500",
-    marginLeft: "8px",
-  };
-
-  const taskPriorityStyle = {
-    fontSize: "12px",
-    padding: "2px 6px",
-    borderRadius: "4px",
-    fontWeight: "600",
-    textTransform: "uppercase",
-    marginLeft: "8px",
-  };
-
-  // Enhanced Upcoming Events Styles
-  const eventItemStyle = (id) => ({
-    display: "flex",
-    padding: "16px",
-    borderRadius: "8px",
-    backgroundColor: hoveredEvent === id ? "#f1f5f9" : "#fff",
-    fontSize: "14px",
-    marginBottom: "12px",
-    border: `1px solid ${hoveredEvent === id ? "#e2e8f0" : "#f1f5f9"}`,
-    transition: "all 0.2s ease",
-    transform: hoveredEvent === id ? "translateX(4px)" : "translateX(0)",
-    cursor: "pointer",
-    boxShadow: hoveredEvent === id ? "0 4px 6px -1px rgba(0, 0, 0, 0.05)" : "none",
-  });
-
-  const eventDateStyle = {
-    minWidth: "70px",
-    height: "70px",
-    backgroundColor: "#1640ff",
-    color: "#ffffffff",
-    borderRadius: "8px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: "16px",
-    flexShrink: 0,
-  };
-
-  const eventDayStyle = {
-    fontSize: "24px",
-    fontWeight: "700",
-    margin: 0,
-    lineHeight: 1,
-  };
-
-  const eventMonthStyle = {
-    fontSize: "12px",
-    fontWeight: "500",
-    margin: 0,
-    textTransform: "uppercase",
-  };
-
-  const eventContentStyle = {
-    flex: 1,
-  };
-
-  const eventTitleStyle = {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#1e293b",
-    margin: "0 0 4px 0",
-  };
-
-  const eventTypeStyle = {
-    display: "inline-block",
-    fontSize: "12px",
-    padding: "2px 8px",
-    borderRadius: "4px",
-    fontWeight: "600",
-    textTransform: "uppercase",
-  };
-
-  // Student Performance Card Styles
-  const studentCardStyle = (id) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: "16px",
-    borderRadius: "8px",
-    backgroundColor: hoveredStudent === id ? "#f1f5f9" : "#fff",
-    fontSize: "14px",
-    marginBottom: "12px",
-    border: `1px solid ${hoveredStudent === id ? "#e2e8f0" : "#f1f5f9"}`,
-    transition: "all 0.2s ease",
-    transform: hoveredStudent === id ? "translateX(4px)" : "translateX(0)",
-    cursor: "pointer",
-    boxShadow: hoveredStudent === id ? "0 4px 6px -1px rgba(0, 0, 0, 0.05)" : "none",
-  });
-
-  const studentAvatarStyle = {
-    width: "48px",
-    height: "48px",
-    borderRadius: "50%",
-    backgroundColor: "#e2e8f0",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: "16px",
-    flexShrink: 0,
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#64748b",
-  };
-
-  const studentInfoStyle = {
-    flex: 1,
-  };
-
-  const studentNameStyle = {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#1e293b",
-    margin: "0 0 4px 0",
-  };
-
-  const studentDetailsStyle = {
-    fontSize: "14px",
-    color: "#64748b",
-    margin: 0,
-  };
-
-  const performanceBadgeStyle = {
-    padding: "4px 8px",
-    borderRadius: "4px",
-    fontSize: "12px",
-    fontWeight: "600",
-    marginLeft: "8px",
-  };
-
-  // Resource Card Styles
-  const resourceCardStyle = (id) => ({
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "16px",
-    display: "flex",
-    flexDirection: "column",
-    boxShadow: hoveredResource === id ? "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-    transition: "all 0.3s ease",
-    border: "1px solid #f1f5f9",
-    position: "relative",
-    overflow: "hidden",
-    transform: hoveredResource === id ? "translateY(-4px)" : "translateY(0)",
-    cursor: "pointer",
-    minWidth: "220px",
-    maxWidth: "280px",
-  });
-
-  const resourceImageStyle = {
-    width: "100%",
-    height: "120px",
-    objectFit: "cover",
-    borderRadius: "8px",
-    marginBottom: "12px",
-  };
-
-  const resourceTitleStyle = {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#1e293b",
-    margin: "0 0 8px 0",
-  };
-
-  const resourceMetaStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    fontSize: "12px",
-    color: "#64748b",
-  };
-
-  // Announcement Styles
-  const announcementItemStyle = (id) => ({
-    padding: "16px",
-    borderRadius: "8px",
-    backgroundColor: hoveredAnnouncement === id ? "#f1f5f9" : "#fff",
-    fontSize: "14px",
-    marginBottom: "12px",
-    border: `1px solid ${hoveredAnnouncement === id ? "#e2e8f0" : "#f1f5f9"}`,
-    borderLeft: "4px solid #EF7C00",
-    transition: "all 0.2s ease",
-    transform: hoveredAnnouncement === id ? "translateX(4px)" : "translateX(0)",
-    cursor: "pointer",
-    boxShadow: hoveredAnnouncement === id ? "0 4px 6px -1px rgba(0, 0, 0, 0.05)" : "none",
-  });
-
-  const announcementTitleStyle = {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#1e293b",
-    margin: "0 0 8px 0",
-  };
-
-  const announcementContentStyle = {
-    fontSize: "14px",
-    color: "#475569",
-    margin: "0 0 8px 0",
-    lineHeight: 1.5,
-  };
-
-  const announcementMetaStyle = {
-    fontSize: "12px",
-    color: "#64748b",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  };
-
-  const chartPlaceholderStyle = {
-    height: "250px",
-    backgroundColor: "#f8fafc",
-    borderRadius: "8px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#64748b",
-    fontSize: "16px",
-    border: "1px dashed #cbd5e1",
-    position: "relative",
-    overflow: "hidden",
-  };
-
-  // Create icon components using SVG
-  const DashboardIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7"></rect>
-      <rect x="14" y="3" width="7" height="7"></rect>
-      <rect x="14" y="14" width="7" height="7"></rect>
-      <rect x="3" y="14" width="7" height="7"></rect>
-    </svg>
-  );
-
-  const CalendarIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-      <line x1="16" y1="2" x2="16" y2="6"></line>
-      <line x1="8" y1="2" x2="8" y2="6"></line>
-      <line x1="3" y1="10" x2="21" y2="10"></line>
-    </svg>
-  );
-
-  const BookIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-    </svg>
-  );
-
-  const ClipboardIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="9" y="2" width="6" height="4" rx="1" ry="1"></rect>
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-    </svg>
-  );
-
-  const ClockIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <polyline points="12 6 12 12 16 14"></polyline>
-    </svg>
-  );
-
-  const PlusIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
-  );
-
-  const UploadIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-      <polyline points="17 8 12 3 7 8"></polyline>
-      <line x1="12" y1="3" x2="12" y2="15"></line>
-    </svg>
-  );
-
-  const VideoIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="23 7 16 12 23 17 23 7"></polygon>
-      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-    </svg>
-  );
-
-  const BellIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-    </svg>
-  );
-
-  const DateIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <polyline points="12 6 12 12 16 14"></polyline>
-    </svg>
-  );
-
-  const UserIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1640ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-  );
-
-  const TrendingUpIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-      <polyline points="17 6 23 6 23 12"></polyline>
-    </svg>
-  );
-
-  const UsersIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-      <circle cx="9" cy="7" r="4"></circle>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-    </svg>
-  );
-
-  const AwardIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="7"></circle>
-      <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-    </svg>
-  );
-
-  const MegaphoneIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 12h18m-9-9v18"></path>
-      <path d="M5.71 5.71 12 12l6.29-6.29"></path>
-      <path d="M18.37 18.37 12 12l-6.37 6.37"></path>
-    </svg>
-  );
-
-  // Sample data with more comprehensive content
-  const tasks = [
-    { id: 1, title: "Smart Robotics & Industry 4.0 Automation Internship", class: "Mathematics - Grade 5", due: "Today, 5:00 PM", priority: "high" },
-    { id: 2, title: " Applied AI & Machine Learning: From Models to Real-World Applications ", class: "Science - Grade 5", due: "Tomorrow", priority: "medium" },
-    { id: 3, title: "IoT & IIoT for Smart Systems and Industry 4.0", class: "History - Grade 5", due: "Dec 15, 2023", priority: "low" },
-    { id: 4, title: "Cloud & Edge Computing for Connected Intelligence", class: "Physics - Grade 5", due: "Dec 18, 2023", priority: "medium" },
+  
+  const courses = [
+    {
+      id: 1,
+      title: "Applied AI & Machine Learning: From Models to Real-World Applications",
+      provider: "TechEdu Institute",
+      duration: "12 weeks",
+      description: "Master AI and ML techniques with hands-on projects"
+    },
+    {
+      id: 2,
+      title: "IoT & IIoT for Smart Systems and Industry 4.0",
+      provider: "IoT Academy",
+      duration: "10 weeks",
+      description: "Learn to build and deploy IoT solutions for industrial applications"
+    },
+    {
+      id: 3,
+      title: "Cloud & Edge Computing for Connected Intelligence",
+      provider: "CloudTech University",
+      duration: "8 weeks",
+      description: "Explore cloud infrastructure and edge computing paradigms"
+    },
+    {
+      id: 4,
+      title: "3D Printing & Digital Fabrication for Engineers",
+      provider: "MakerSpace Institute",
+      duration: "6 weeks",
+      description: "Hands-on training in additive manufacturing and digital design"
+    },
+    {
+      id: 5,
+      title: "Professional Diploma in Humanoid Robotics for Service Industries",
+      provider: "Robotics Academy",
+      duration: "16 weeks",
+      description: "Design and program humanoid robots for service applications"
+    },
+    {
+      id: 6,
+      title: "Diploma in Artificial Intelligence Applications Across Industries",
+      provider: "AI Institute",
+      duration: "14 weeks",
+      description: "Apply AI solutions to solve real-world industry challenges"
+    }
   ];
-
-  const events = [
-    { id: 1, title: "Smart Robotics & Industry 4.0 Automation Internship", date: "25", month: "Nov", type: "exam" },
-    { id: 2, title: "Applied AI & Machine Learning: From Models to Real-World Applications", date: "27", month: "Nov", type: "exam" },
-    { id: 3, title: "IoT & IIoT for Smart Systems and Industry 4.0", date: "30", month: "Nov", type: "exam" },
-    { id: 4, title: "Cloud & Edge Computing for Connected Intelligence", date: "5", month: "Dec", type: "exam" },
+  
+  const liveClasses = [
+    {
+      id: 1,
+      title: "Robotics Control Systems",
+      date: "Today",
+      time: "3:00 PM - 4:30 PM",
+      instructor: "Dr. Sarah Johnson",
+      status: "upcoming"
+    },
+    {
+      id: 2,
+      title: "Advanced Machine Learning Algorithms",
+      date: "Tomorrow",
+      time: "5:00 PM - 6:30 PM",
+      instructor: "Prof. Michael Chen",
+      status: "upcoming"
+    },
+    {
+      id: 3,
+      title: "Cloud Architecture Design",
+      date: "Jun 28",
+      time: "2:00 PM - 3:30 PM",
+      instructor: "Dr. Emily Rodriguez",
+      status: "upcoming"
+    }
   ];
-
-  const topStudents = [
-    { id: 1, name: "Emma Johnson", class: "5A", grade: "A+", attendance: "98%" },
-    { id: 2, name: "Michael Chen", class: "5B", grade: "A", attendance: "96%" },
-    { id: 3, name: "Sophia Williams", class: "5A", grade: "A", attendance: "95%" },
+  
+  const activities = [
+    {
+      id: 1,
+      type: "lesson",
+      title: "Introduction to Neural Networks",
+      course: "Applied AI & Machine Learning",
+      time: "2 hours ago",
+      completed: true
+    },
+    {
+      id: 2,
+      type: "video",
+      title: "Robotic Arm Control Mechanisms",
+      course: "Smart Robotics Internship",
+      time: "Yesterday",
+      completed: true
+    },
+    {
+      id: 3,
+      type: "assignment",
+      title: "IoT Security Implementation",
+      course: "IoT & IIoT for Smart Systems",
+      time: "2 days ago",
+      completed: true
+    }
   ];
-
-  const recentResources = [
-    { id: 1, title: "Interactive Math Worksheets", type: "Worksheet", downloads: 245, rating: 4.8 },
-    { id: 2, title: "Science Lab Safety Video", type: "Video", downloads: 189, rating: 4.9 },
-    { id: 3, title: "History Timeline Project", type: "Project", downloads: 156, rating: 4.7 },
-    { id: 4, title: "Physics Formula Sheet", type: "Reference", downloads: 203, rating: 4.6 },
+  
+  const stats = [
+    {
+      id: 1,
+      title: "Internship Progress",
+      value: "65%",
+      icon: <FiClock />,
+      color: "#1640FF"
+    },
+    {
+      id: 2,
+      title: "Live Classes Attended",
+      value: "24",
+      icon: <FiCalendar />,
+      color: "#1640FF"
+    },
+    {
+      id: 3,
+      title: "Courses Completed",
+      value: "3",
+      icon: <FiCheckCircle />,
+      color: "#1640FF"
+    },
+    {
+      id: 4,
+      title: "Certificates Earned",
+      value: "2",
+      icon: <FiAward />,
+      color: "#EF7C00"
+    }
   ];
-
-  const announcements = [
-    { id: 1, title: "Winter Break Schedule", content: "School will be closed from Dec 20 to Jan 5. Please ensure all assignments are submitted before the break.", date: "2 days ago", priority: "high" },
-    { id: 2, title: "New Library Resources", content: "The school library has added 50 new educational resources available for both teachers and students.", date: "5 days ago", priority: "medium" },
-  ];
-
+  
   return (
-    <div style={containerStyle}>
-      {/* Welcome Header */}
-      <div style={headerStyle}>
-        <h1 style={welcomeStyle}>
-          <UserIcon />
-          Welcome, Ms. Anbarasi
-        </h1>
-        <span style={dateStyle}>
-          <DateIcon />
-          {today}
-        </span>
-      </div>
+    <div style={styles.dashboard}>
+      {/* Header */}
+   <header style={styles.welcomeHeader}>
+  <h2
+  style={{
+    textAlign: "left",
+    fontFamily: "'Playfair Display', serif",
+    fontSize: "28px",
+    fontWeight: "600",
+    color: "#0e0e0eff",
+    margin: "0 0 10px 0"
+  }}
+>
+  Welcome back, John!
+</h2>
 
-      {/* Quick Overview Cards */}
-      <div style={quickCardsStyle}>
-        <div 
-          style={cardStyle(1)} 
-          onMouseEnter={() => setHoveredCard(1)} 
-          onMouseLeave={() => setHoveredCard(null)}
-        >
-          <div style={{ ...cardAccentStyle, backgroundColor: "#1640ff" }}></div>
-          <span style={cardTitleStyle}>Total Students</span>
-          <p style={cardValueStyle}>120</p>
-        </div>
-        <div 
-          style={cardStyle(2)} 
-          onMouseEnter={() => setHoveredCard(2)} 
-          onMouseLeave={() => setHoveredCard(null)}
-        >
-          <div style={{ ...cardAccentStyle, backgroundColor: "#EF7C00" }}></div>
-          <span style={cardTitleStyle}>Today's Classes</span>
-          <p style={cardValueStyle}>5</p>
-        </div>
-        <div 
-          style={cardStyle(3)} 
-          onMouseEnter={() => setHoveredCard(3)} 
-          onMouseLeave={() => setHoveredCard(null)}
-        >
-          <div style={{ ...cardAccentStyle, backgroundColor: "#1640ff" }}></div>
-          <span style={cardTitleStyle}>Assignments to Review</span>
-          <p style={cardValueStyle}>8</p>
-        </div>
-        <div 
-          style={cardStyle(4)} 
-          onMouseEnter={() => setHoveredCard(4)} 
-          onMouseLeave={() => setHoveredCard(null)}
-        >
-          <div style={{ ...cardAccentStyle, backgroundColor: "#EF7C00" }}></div>
-          <span style={cardTitleStyle}>Upcoming Exams</span>
-          <p style={cardValueStyle}>3</p>
-        </div>
-        <div 
-          style={cardStyle(5)} 
-          onMouseEnter={() => setHoveredCard(5)} 
-          onMouseLeave={() => setHoveredCard(null)}
-        >
-          <div style={{ ...cardAccentStyle, backgroundColor: "#10b981" }}></div>
-          <span style={cardTitleStyle}>Attendance Rate</span>
-          <p style={cardValueStyle}>94%</p>
-        </div>
-        <div 
-          style={cardStyle(6)} 
-          onMouseEnter={() => setHoveredCard(6)} 
-          onMouseLeave={() => setHoveredCard(null)}
-        >
-          <div style={{ ...cardAccentStyle, backgroundColor: "#8b5cf6" }}></div>
-          <span style={cardTitleStyle}>Pending Messages</span>
-          <p style={cardValueStyle}>12</p>
-        </div>
-      </div>
+  <p style={styles.welcomeSubtitle}>Here’s your learning overview for today.</p>
+</header>
 
-      {/* Today's Class Schedule */}
-      <div style={sectionStyle}>
-        <h2 style={sectionTitleStyle}>
-          <CalendarIcon />
-          Today's Classes
-        </h2>
-        <table style={tableStyle}>
-          <thead>
-            <tr>
-              <th style={thStyle}>Courses/Internships</th>
-              <th style={thStyle}>Time</th>
-              <th style={thStyle}>Room</th>
-              <th style={thStyle}>Students</th>
-              <th style={thStyle}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={tdStyle}>Smart Robotics & Industry 4.0 Automation Internship</td>
-              <td style={tdStyle}>09:00 AM - 10:00 AM</td>
-              <td style={tdStyle}>Room 201</td>
-              <td style={tdStyle}>32</td>
-              <td style={tdStyle}>
-                <button 
-                  style={actionButtonStyle(1)}
-                  onMouseEnter={() => setHoveredButton(1)}
-                  onMouseLeave={() => setHoveredButton(null)}
-                >
-                  Start Class
-                </button>
-                <button 
-                  style={actionButtonStyle(2)}
-                  onMouseEnter={() => setHoveredButton(2)}
-                  onMouseLeave={() => setHoveredButton(null)}
-                >
-                  Resources
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td style={tdStyle}>IoT & IIoT for Smart Systems and Industry 4.0</td>
-              <td style={tdStyle}>10:15 AM - 11:15 AM</td>
-              <td style={tdStyle}>Lab 3</td>
-              <td style={tdStyle}>28</td>
-              <td style={tdStyle}>
-                <button 
-                  style={actionButtonStyle(3)}
-                  onMouseEnter={() => setHoveredButton(3)}
-                  onMouseLeave={() => setHoveredButton(null)}
-                >
-                  Start Class
-                </button>
-                <button 
-                  style={actionButtonStyle(4)}
-                  onMouseEnter={() => setHoveredButton(4)}
-                  onMouseLeave={() => setHoveredButton(null)}
-                >
-                  Resources
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td style={tdStyle}>Cloud & Edge Computing for Connected Intelligence</td>
-              <td style={tdStyle}>12:00 PM - 1:00 PM</td>
-              <td style={tdStyle}>Lab 1</td>
-              <td style={tdStyle}>30</td>
-              <td style={tdStyle}>
-                <button 
-                  style={actionButtonStyle(5)}
-                  onMouseEnter={() => setHoveredButton(5)}
-                  onMouseLeave={() => setHoveredButton(null)}
-                >
-                  Start Class
-                </button>
-                <button 
-                  style={actionButtonStyle(6)}
-                  onMouseEnter={() => setHoveredButton(6)}
-                  onMouseLeave={() => setHoveredButton(null)}
-                >
-                  Resources
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Enhanced Pending Tasks */}
-      <div style={sectionStyle}>
-        <h2 style={sectionTitleStyle}>
-          <ClipboardIcon />
-          Pending Tasks
-        </h2>
-        {tasks.map((task) => (
-          <div 
-            key={task.id}
-            style={taskItemStyle(task.id, task.priority)}
-            onMouseEnter={() => setHoveredTask(task.id)}
-            onMouseLeave={() => setHoveredTask(null)}
-          >
-            <div style={taskContentStyle}>
-              <h3 style={taskTitleStyle}>{task.title}</h3>
-              <p style={taskMetaStyle}>{task.class}</p>
+      {/* Main Content */}
+      <main style={styles.mainContent}>
+        {/* Internship Status Card */}
+        <div style={styles.internshipCard}>
+          <h2 style={styles.cardTitle}>{internship.title}</h2>
+          
+          <div style={styles.progressContainer}>
+            <div style={styles.progressInfo}>
+              <span style={styles.progressLabel}>Progress</span>
+              <span style={styles.progressValue}>{internship.progress}%</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span 
-                style={{
-                  ...taskDueDateStyle,
-                  backgroundColor: 
-                    task.due === "Today, 5:00 PM" ? "#fee2e2" : 
-                    task.due === "Tomorrow" ? "#fed7aa" : 
-                    "#dcfce7",
-                  color: 
-                    task.due === "Today, 5:00 PM" ? "#dc2626" : 
-                    task.due === "Tomorrow" ? "#ea580c" : 
-                    "#16a34a",
-                }}
-              >
-                {task.due}
-              </span>
-              <span 
-                style={{
-                  ...taskPriorityStyle,
-                  backgroundColor: 
-                    task.priority === "high" ? "#fee2e2" : 
-                    task.priority === "medium" ? "#fed7aa" : 
-                    "#dcfce7",
-                  color: 
-                    task.priority === "high" ? "#dc2626" : 
-                    task.priority === "medium" ? "#ea580c" : 
-                    "#16a34a",
-                }}
-              >
-                {task.priority}
-              </span>
+            <div style={styles.progressBar}>
+              <div style={{...styles.progressFill, width: `${internship.progress}%`}}></div>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Class Performance Analytics */}
-      <div style={sectionStyle}>
-        <h2 style={sectionTitleStyle}>
-          <TrendingUpIcon />
-          Class Performance Analytics
-        </h2>
-        <div style={chartPlaceholderStyle}>
-          <div style={{ textAlign: "center" }}>
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: "16px" }}>
-              <line x1="18" y1="20" x2="18" y2="10"></line>
-              <line x1="12" y1="20" x2="12" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="14"></line>
-            </svg>
-            <p>Interactive performance charts showing class trends, subject-wise scores, and improvement metrics</p>
+          
+          <div style={styles.internshipDetails}>
+            <div style={styles.detailItem}>
+              <span style={styles.detailLabel}>Duration:</span>
+              <span style={styles.detailValue}>{internship.startDate} - {internship.endDate}</span>
+            </div>
+            <div style={styles.detailItem}>
+              <span style={styles.detailLabel}>Next Class:</span>
+              <span style={styles.detailValue}>{internship.nextClass}</span>
+            </div>
+          </div>
+          
+          <div style={styles.quickLinks}>
+            <button style={styles.quickLinkButton}>
+              <FiVideo size={18} />
+              Recordings
+            </button>
+            <button style={styles.quickLinkButton}>
+              <FiCalendar size={18} />
+              Schedule
+            </button>
+            <button style={styles.quickLinkButton}>
+              <FiFileText size={18} />
+              Materials
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* Enhanced Upcoming Events */}
-      <div style={sectionStyle}>
-        <h2 style={sectionTitleStyle}>
-          <CalendarIcon />
-          Upcoming Events
-        </h2>
-        {events.map((event) => (
-          <div 
-            key={event.id}
-            style={eventItemStyle(event.id)}
-            onMouseEnter={() => setHoveredEvent(event.id)}
-            onMouseLeave={() => setHoveredEvent(null)}
-          >
-            <div style={eventDateStyle}>
-              <p style={eventDayStyle}>{event.date}</p>
-              <p style={eventMonthStyle}>{event.month}</p>
-            </div>
-            <div style={eventContentStyle}>
-              <h3 style={eventTitleStyle}>{event.title}</h3>
-              <span 
-                style={{
-                  ...eventTypeStyle,
-                  backgroundColor: 
-                    event.type === "exam" ? "#dbeafe" : 
-                    event.type === "meeting" ? "#dcfce7" : 
-                    "#fef3c7",
-                  color: 
-                    event.type === "exam" ? "#1e40af" : 
-                    event.type === "meeting" ? "#166534" : 
-                    "#92400e",
-                }}
-              >
-                {event.type}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* School Announcements */}
-      <div style={sectionStyle}>
-        <h2 style={sectionTitleStyle}>
-          <MegaphoneIcon />
-          School Announcements
-        </h2>
-        {announcements.map((announcement) => (
-          <div 
-            key={announcement.id}
-            style={announcementItemStyle(announcement.id)}
-            onMouseEnter={() => setHoveredAnnouncement(announcement.id)}
-            onMouseLeave={() => setHoveredAnnouncement(null)}
-          >
-            <div>
-              <h3 style={announcementTitleStyle}>{announcement.title}</h3>
-              <p style={announcementContentStyle}>{announcement.content}</p>
-              <div style={announcementMetaStyle}>
-                <span>{announcement.date}</span>
-                <span 
-                  style={{
-                    padding: "2px 6px",
-                    borderRadius: "4px",
-                    fontSize: "11px",
-                    fontWeight: "600",
-                    backgroundColor: announcement.priority === "high" ? "#fee2e2" : "#fed7aa",
-                    color: announcement.priority === "high" ? "#dc2626" : "#ea580c",
-                  }}
-                >
-                  {announcement.priority}
-                </span>
+        
+        {/* Stats Section */}
+        <div style={styles.statsContainer}>
+          {stats.map(stat => (
+            <div key={stat.id} style={styles.statCard}>
+              <div style={{...styles.statIcon, color: stat.color}}>
+                {stat.icon}
               </div>
+              <div style={styles.statValue}>{stat.value}</div>
+              <div style={styles.statTitle}>{stat.title}</div>
             </div>
+          ))}
+        </div>
+        
+        {/* Live Classes Section */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionTitle}>Live Classes</h2>
+          <div style={styles.classesContainer}>
+            {liveClasses.map(cls => (
+              <div key={cls.id} style={styles.classCard}>
+                <div style={styles.classHeader}>
+                  <h3 style={styles.classTitle}>{cls.title}</h3>
+                  <button style={styles.joinButton}>
+                    <FiPlayCircle size={16} />
+                    Join
+                  </button>
+                </div>
+                <div style={styles.classDetails}>
+                  <div style={styles.classDetail}>
+                    <span style={styles.classLabel}>Date:</span>
+                    <span style={styles.classValue}>{cls.date}</span>
+                  </div>
+                  <div style={styles.classDetail}>
+                    <span style={styles.classLabel}>Time:</span>
+                    <span style={styles.classValue}>{cls.time}</span>
+                  </div>
+                  <div style={styles.classDetail}>
+                    <span style={styles.classLabel}>Instructor:</span>
+                    <span style={styles.classValue}>{cls.instructor}</span>
+                  </div>
+                </div>
+                <div style={styles.classTimeline}>
+                  <div style={styles.timelineDot}></div>
+                  <div style={styles.timelineDot}></div>
+                  <div style={styles.timelineDot}></div>
+                  <div style={styles.timelineDot}></div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+        
+        {/* Available Courses Section */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionTitle}>Available Courses & Internships</h2>
+          <div style={styles.coursesGrid}>
+            {courses.map(course => (
+              <div key={course.id} style={styles.courseCard}>
+                <h3 style={styles.courseTitle}>{course.title}</h3>
+                <p style={styles.courseProvider}>{course.provider}</p>
+                <p style={styles.courseDescription}>{course.description}</p>
+                <div style={styles.courseDuration}>
+                  <FiCalendar size={14} color="#6B7280" />
+                  <span>{course.duration}</span>
+                </div>
+                <div style={styles.courseActions}>
+                  <button style={styles.knowMoreButton}>Know More</button>
+                  <button style={styles.enrollButton}>Enroll</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Recent Activity Section */}
+        <div style={styles.section}>
+          <h2 style={styles.sectionTitle}>Recent Activity</h2>
+          <div style={styles.activitiesContainer}>
+            {activities.map(activity => (
+              <div key={activity.id} style={styles.activityCard}>
+                <div style={styles.activityIcon}>
+                  {activity.type === 'lesson' && <FiBookOpen size={20} color="#1640FF" />}
+                  {activity.type === 'video' && <FiVideo size={20} color="#1640FF" />}
+                  {activity.type === 'assignment' && <FiFileText size={20} color="#1640FF" />}
+                </div>
+                <div style={styles.activityContent}>
+                  <h4 style={styles.activityTitle}>{activity.title}</h4>
+                  <p style={styles.activityCourse}>{activity.course}</p>
+                  <p style={styles.activityTime}>{activity.time}</p>
+                </div>
+                <div style={styles.activityStatus}>
+                  {activity.completed && <FiCheckCircle size={20} color="#10B981" />}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
 
-export default TeacherDashboard;
+// Styles
+const styles = {
+  dashboard: {
+    fontFamily: "'Inter', sans-serif",
+    backgroundColor: '#F8F9FC',
+    minHeight: '100vh',
+    color: '#1F2937'
+  },
+welcomeHeader: {
+  width: "100%",
+  padding: "20px 0",
+  marginBottom: "0",
+  paddingBottom: "0",   
+},
+
+welcomeTitle: {
+  fontSize: "24px",
+  fontWeight: "600",
+  color: "#1F2937",
+  margin: 0,
+},
+
+welcomeSubtitle: {
+  textAlign: "left",
+  fontFamily: "'Inter', sans-serif",
+  fontSize: "18px",
+  fontWeight: "400",
+  color: "#6B7280",
+  marginTop: "6px",
+  marginBottom: "30px"
+},
+
+
+  userAvatar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    backgroundColor: '#1640FF',
+    color: '#ffffff',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    position: 'relative'
+  },
+  userMenu: {
+    position: 'absolute',
+    top: '48px',
+    right: '0',
+    backgroundColor: '#ffffff',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    padding: '8px 0',
+    minWidth: '150px',
+    zIndex: 10
+  },
+  userMenuItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '8px 16px',
+    textDecoration: 'none',
+    color: '#4B5563',
+    transition: 'background-color 0.2s'
+  },
+  mainContent: {
+    padding: '24px',
+    maxWidth: '1400px',
+    margin: '0 auto'
+  },
+  internshipCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '24px',
+    padding: '32px',
+    marginBottom: '32px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+  },
+  cardTitle: {
+    fontFamily: "'Poppins', sans-serif",
+    fontSize: '24px',
+    fontWeight: '600',
+    color: '#1F2937',
+    margin: '0 0 24px 0'
+  },
+  progressContainer: {
+    marginBottom: '24px'
+  },
+  progressInfo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '8px'
+  },
+  progressLabel: {
+    fontSize: '14px',
+    color: '#6B7280'
+  },
+  progressValue: {
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#1640FF'
+  },
+  progressBar: {
+    height: '8px',
+    backgroundColor: '#E5E7EB',
+    borderRadius: '4px',
+    overflow: 'hidden'
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#1640FF',
+    borderRadius: '4px',
+    transition: 'width 1s ease-in-out'
+  },
+  internshipDetails: {
+    display: 'flex',
+    gap: '32px',
+    marginBottom: '24px'
+  },
+  detailItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px'
+  },
+  detailLabel: {
+    fontSize: '14px',
+    color: '#6B7280'
+  },
+  detailValue: {
+    fontSize: '16px',
+    fontWeight: '500',
+    color: '#1F2937'
+  },
+  quickLinks: {
+    display: 'flex',
+    gap: '16px'
+  },
+  quickLinkButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '12px 16px',
+    border: '1px solid #E5E7EB',
+    borderRadius: '12px',
+    backgroundColor: '#ffffff',
+    color: '#4B5563',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  statsContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+    gap: '24px',
+    marginBottom: '32px'
+  },
+  statCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '16px',
+    padding: '24px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center'
+  },
+  statIcon: {
+    fontSize: '24px',
+    marginBottom: '16px'
+  },
+  statValue: {
+    fontSize: '32px',
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: '8px'
+  },
+  statTitle: {
+    fontSize: '14px',
+    color: '#6B7280'
+  },
+  section: {
+    marginBottom: '32px'
+  },
+  sectionTitle: {
+    fontFamily: "'Poppins', sans-serif",
+    fontSize: '24px',
+    fontWeight: '600',
+    color: '#1F2937',
+    margin: '0 0 24px 0'
+  },
+  classesContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+    gap: '24px'
+  },
+  classCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '24px',
+    padding: '24px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+    position: 'relative'
+  },
+  classHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '16px'
+  },
+  classTitle: {
+    fontFamily: "'Poppins', sans-serif",
+    fontSize: '18px',
+    fontWeight: '600',
+    color: '#1F2937',
+    margin: 0
+  },
+  joinButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '8px 16px',
+    border: 'none',
+    borderRadius: '8px',
+    backgroundColor: '#1640FF',
+    color: '#ffffff',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
+  },
+  classDetails: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    marginBottom: '16px'
+  },
+  classDetail: {
+    display: 'flex',
+    gap: '8px'
+  },
+  classLabel: {
+    fontSize: '14px',
+    color: '#6B7280',
+    minWidth: '60px'
+  },
+  classValue: {
+    fontSize: '14px',
+    color: '#1F2937'
+  },
+  classTimeline: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '16px',
+    paddingTop: '16px',
+    borderTop: '1px solid #F3F4F6'
+  },
+  timelineDot: {
+    width: '12px',
+    height: '12px',
+    borderRadius: '50%',
+    backgroundColor: '#E5E7EB'
+  },
+  coursesGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gap: '24px'
+  },
+  courseCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '16px',
+    padding: '24px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+    border: '1px solid #EBF5FF',
+    transition: 'all 0.2s'
+  },
+  courseTitle: {
+    fontFamily: "'Poppins', sans-serif",
+    fontSize: '18px',
+    fontWeight: '600',
+    color: '#1640FF',
+    margin: '0 0 8px 0'
+  },
+  courseProvider: {
+    fontSize: '14px',
+    color: '#6B7280',
+    margin: '0 0 12px 0'
+  },
+  courseDescription: {
+    fontSize: '14px',
+    color: '#4B5563',
+    margin: '0 0 16px 0',
+    lineHeight: '1.5'
+  },
+  courseDuration: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    color: '#6B7280',
+    marginBottom: '16px'
+  },
+  courseActions: {
+    display: 'flex',
+    gap: '12px'
+  },
+  knowMoreButton: {
+    padding: '8px 16px',
+    border: '1px solid #E5E7EB',
+    borderRadius: '8px',
+    backgroundColor: '#ffffff',
+    color: '#4B5563',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  enrollButton: {
+    padding: '8px 16px',
+    border: 'none',
+    borderRadius: '8px',
+    backgroundColor: '#EF7C00',
+    color: '#ffffff',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  activitiesContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+    gap: '16px'
+  },
+  activityCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: '16px',
+    padding: '20px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px'
+  },
+  activityIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '48px',
+    height: '48px',
+    borderRadius: '12px',
+    backgroundColor: '#F3F4F6'
+  },
+  activityContent: {
+    flex: 1
+  },
+  activityTitle: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#1F2937',
+    margin: '0 0 4px 0'
+  },
+  activityCourse: {
+    fontSize: '14px',
+    color: '#6B7280',
+    margin: '0 0 4px 0'
+  },
+  activityTime: {
+    fontSize: '12px',
+    color: '#9CA3AF',
+    margin: 0
+  },
+  activityStatus: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+};
+
+export default StudentDashboard;
