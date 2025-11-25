@@ -29,9 +29,9 @@ const AdminDashboard = () => {
     });
     
     setRecentInternships([
-      { id: 1, title: 'Smart Robotics & Industry 4.0 Automation Internship', instructor: 'John Doe', thumbnail: 'https://picsum.photos/seed/webdev/100/100.jpg' },
-      { id: 2, title: 'Applied AI & Machine Learning: From Models to Real-World Applications', instructor: 'Jane Smith', thumbnail: 'https://picsum.photos/seed/datascience/100/100.jpg' },
-      { id: 3, title: 'IoT & IIoT for Smart Systems and Industry 4.0', instructor: 'Mike Johnson', thumbnail: 'https://picsum.photos/seed/uidesign/100/100.jpg' }
+      { id: 1, title: 'Smart Robotics & Industry 4.0 Automation Internship', instructor: 'John Doe', thumbnail: '	http://localhost:3000/assets/images/course/course-04/course-01.jpg' },
+      { id: 2, title: 'Applied AI & Machine Learning: From Models to Real-World Applications', instructor: 'Jane Smith', thumbnail: 'http://localhost:3000/assets/images/course/course-04/course-02.jpg' },
+      { id: 3, title: 'IoT & IIoT for Smart Systems and Industry 4.0', instructor: 'Mike Johnson', thumbnail: '	http://localhost:3000/assets/images/course/course-04/course-03.jpg' }
     ]);
     
     setRecentSignups([
