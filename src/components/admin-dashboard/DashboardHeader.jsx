@@ -19,9 +19,7 @@ const DashboardHeader = ({ isSidebarOpen, toggleSidebar }) => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
-const handleMyCourses = () => {
-  router.push('/course-style-3'); // your target link
-};
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -110,14 +108,13 @@ const handleMyCourses = () => {
 
           {/* Right Section - Actions */}
           <div className="header-right">
-         <button 
-  className="create-course-btn"
-  onClick={handleMyCourses}
->
-  <FiBook size={16} />
-  <span>My Courses</span>
-</button>
-
+            <button 
+              className="create-course-btn"
+              onClick={handleCreateCourse}
+            >
+              <FiBook size={16} />
+              <span>Create New Course</span>
+            </button>
             
             <div className="action-icons">
               <button 

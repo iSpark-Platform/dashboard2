@@ -1,103 +1,51 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from "react";
 import { 
-  FiHome, 
-  FiRadio, 
-  FiCompass, FiCalendar,FiBookOpen,FiAward,FiMessageSquare,FiCpu,
-  FiGrid, 
-  FiCheckSquare, 
-  FiUser, 
-  FiBell,
-  FiSettings,
-  FiHelpCircle,
-  FiClock,
-  FiMessageCircle,
-  FiChevronDown
-} from 'react-icons/fi';
+  FiHome, FiBookOpen, FiFolder, FiUsers, FiCheckSquare, 
+  FiCalendar, FiUser, FiBell, FiMessageSquare, FiCpu,
+  FiSettings, FiClock, FiMessageCircle, FiHelpCircle
+} from "react-icons/fi";
 import Link from "next/link";
 
 const DashboardSidebar = ({ isOpen }) => {
-  const [activeItem, setActiveItem] = useState('Home');
-  const [openDropdown, setOpenDropdown] = useState(null);
-  const dropdownRefs = useRef({});
-  const [maxHeights, setMaxHeights] = useState({});
+  const [activeItem, setActiveItem] = useState("Dashboard");
 
- const navItems = [
-  { name: "Dashboard", icon: FiHome, path: "/studashboard" },
-
-  { name: "Exams & Marks", icon: FiGrid, path: "/studashboard/exams" },
-
-  { name: "Assignments", icon: FiCheckSquare, path: "/studashboard/assignment" },
-
-  { name: "Attendance", icon: FiCalendar, path: "/studashboard/student-attendance" },
-
-  { name: "Profile", icon: FiUser, path: "/studashboard/profile" },
-
-  { name: "Study Materials", icon: FiBookOpen, path: "/studashboard/study" },
-
-  { name: "Certifications", icon: FiAward, path: "/studashboard/certification" },
-
-  { name: "Notifications", icon: FiBell, path: "/studashboard/notification" },
-  { name: "Message", icon: FiMessageSquare, path: "/studashboard/message" },
-  { name: "AI Assistant", icon: FiCpu, path: "/studashboard/ai-assisstant" },
-];
-
-  const bottomItems = [
-    { name: 'Settings', icon: FiSettings, path: '/studashboard/settings' },
-    { name: 'Report History', icon: FiClock, path: '/studashboard/reports' },
-    { name: 'Send Feedback', icon: FiMessageCircle, path: '/studashboard/feedback' },
-    { name: 'Help', icon: FiHelpCircle, path: '/studashboard/help' }
+  const navItems = [
+    { name: "Dashboard", icon: FiHome, path: "/dashboard" },
+    { name: "My Internships", icon: FiBookOpen, path: "/dashboard/internship" },
+    { name: "Study Materials", icon: FiFolder, path: "/dashboard/studymaterials" },
+    { name: "Students", icon: FiUsers, path: "/dashboard/students" },
+    { name: "Assignment", icon: FiCheckSquare, path: "/dashboard/test" },
+    { name: "Attendance", icon: FiCalendar, path: "/dashboard/attendance" },
+    { name: "Profile", icon: FiUser, path: "/dashboard/profile" },
+    { name: "Notification", icon: FiBell, path: "/dashboard/notification" },
+    { name: "Message", icon: FiMessageSquare, path: "/dashboard/message" },
+    { name: "AI Assistant", icon: FiCpu, path: "/dashboard/ai-assisstant" },
   ];
 
-  const toggleDropdown = (name) => {
-    setOpenDropdown(prev => prev === name ? null : name);
-  };
-
-  useEffect(() => {
-    const newHeights = {};
-    Object.keys(dropdownRefs.current).forEach(key => {
-      const el = dropdownRefs.current[key];
-      if (el) {
-        newHeights[key] = openDropdown === key ? `${el.scrollHeight}px` : '0px';
-      }
-    });
-    setMaxHeights(newHeights);
-  }, [openDropdown]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const newHeights = {};
-      Object.keys(dropdownRefs.current).forEach(key => {
-        const el = dropdownRefs.current[key];
-        if (el) {
-          newHeights[key] = openDropdown === key ? `${el.scrollHeight}px` : '0px';
-        }
-      });
-      setMaxHeights(newHeights);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [openDropdown]);
+  const bottomItems = [
+    { name: "Settings", icon: FiSettings, path: "/dashboard/settings" },
+    { name: "Report History", icon: FiClock, path: "/dashboard/reports" },
+    { name: "Send Feedback", icon: FiMessageCircle, path: "/dashboard/feedback" },
+    { name: "Help", icon: FiHelpCircle, path: "/dashboard/help" },
+  ];
 
   return (
     <>
-      <aside className={`dashboard-sidebar ${isOpen ? 'open' : 'closed'}`}>
+      <aside className={`dashboard-sidebar ${isOpen ? "open" : "closed"}`}>
         <div className="sidebar-content">
-
           {/* Main Navigation */}
           <nav className="main-nav">
-            {navItems.map(item => {
+            {navItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.name} href={item.path} className="nav-link">
                   <div
-                    className={`nav-item ${activeItem === item.name ? 'active' : ''}`}
+                    className={`nav-item ${activeItem === item.name ? "active" : ""}`}
                     onClick={() => setActiveItem(item.name)}
                   >
-                    <div className="nav-item-content">
-                      <Icon className="nav-icon" />
-                      <span className="nav-text">{item.name}</span>
-                    </div>
+                    <Icon className="nav-icon" />
+                    <span className="nav-text">{item.name}</span>
                   </div>
                 </Link>
               );
@@ -106,11 +54,14 @@ const DashboardSidebar = ({ isOpen }) => {
 
           {/* Bottom Section */}
           <div className="bottom-section">
-            {bottomItems.map(item => {
+            {bottomItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.name} href={item.path} className="bottom-link">
-                  <div className="bottom-item" onClick={() => setActiveItem(item.name)}>
+                  <div
+                    className={`bottom-item ${activeItem === item.name ? "active" : ""}`}
+                    onClick={() => setActiveItem(item.name)}
+                  >
                     <Icon className="bottom-icon" />
                     <span className="bottom-text">{item.name}</span>
                   </div>
@@ -118,7 +69,6 @@ const DashboardSidebar = ({ isOpen }) => {
               );
             })}
           </div>
-
         </div>
       </aside>
 
@@ -128,11 +78,11 @@ const DashboardSidebar = ({ isOpen }) => {
           height: calc(100vh - 60px);
           background-color: #fff;
           border-right: 1px solid #e5e7eb;
+          position: fixed;
+          top: 60px;
+          left: 0;
           display: flex;
           flex-direction: column;
-          position: fixed;
-          left: 0;
-          top: 60px;
           overflow-y: auto;
           transition: transform 0.3s ease;
           z-index: 900;
@@ -141,6 +91,7 @@ const DashboardSidebar = ({ isOpen }) => {
         .dashboard-sidebar.closed {
           transform: translateX(-100%);
         }
+
         .dashboard-sidebar.open {
           transform: translateX(0);
         }
@@ -165,8 +116,8 @@ const DashboardSidebar = ({ isOpen }) => {
           align-items: center;
           padding: 12px 20px;
           cursor: pointer;
-          transition: all 0.2s ease;
           border-radius: 8px;
+          transition: all 0.2s ease;
         }
 
         .nav-item:hover {
@@ -177,21 +128,11 @@ const DashboardSidebar = ({ isOpen }) => {
           background-color: #e0ebff;
         }
 
-        .nav-item.active .nav-text {
-          color: #1e40af;
-          font-weight: 500;
-        }
-
-        .nav-item-content {
-          display: flex;
-          align-items: center;
-        }
-
         .nav-icon {
           margin-right: 14px;
-          color: #6b7280;
           width: 20px;
           height: 20px;
+          color: #6b7280;
         }
 
         .nav-item.active .nav-icon {
@@ -201,7 +142,6 @@ const DashboardSidebar = ({ isOpen }) => {
         .nav-text {
           font-size: 14px;
           color: #1f2937;
-          font-weight: 400;
         }
 
         .bottom-section {
@@ -218,13 +158,17 @@ const DashboardSidebar = ({ isOpen }) => {
           display: flex;
           align-items: center;
           padding: 10px 20px;
-          border-radius: 6px;
           cursor: pointer;
-          transition: background 0.2s ease;
+          border-radius: 6px;
+          transition: all 0.2s ease;
         }
 
         .bottom-item:hover {
           background-color: #f3f4f6;
+        }
+
+        .bottom-item.active {
+          background-color: #e0ebff;
         }
 
         .bottom-icon {
@@ -232,6 +176,10 @@ const DashboardSidebar = ({ isOpen }) => {
           width: 20px;
           height: 20px;
           color: #6b7280;
+        }
+
+        .bottom-item.active .bottom-icon {
+          color: #3b82f6;
         }
 
         .bottom-text {
