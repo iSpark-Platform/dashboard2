@@ -8,7 +8,7 @@ const course_data = [
   title: 'Professional Diploma in Humanoid Robotics for Service Industries',
   rating: '4.9',
   rating_count: 5,
-  course_price: '₹ 4999',
+  course_price: '  ₹4999',
   lesson: 13,
   student: 28,
   category: 'Robotics & AI',

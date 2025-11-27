@@ -30,7 +30,7 @@ function SingleCourse({course}) {
                   </div>
                   <span className="rating-count">({course.rating} /{course.rating_count} Rating)</span>
               </div>
-              <div className="course-price">₹{Number(course.course_price).toFixed(2)}</div>
+              <div className="course-price">  ₹{Number(course.course_price).toFixed(2)}</div>
               <ul className="course-meta">
                   <li><i className="icon-24 icon-course"></i>{course.lesson} Lessons</li>
                   <li><i className="icon-25 icon-course"></i>{course.student} Students</li>

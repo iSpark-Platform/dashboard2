@@ -42,7 +42,7 @@ import {
   faFire,
   faTrophy
 } from '@fortawesome/free-solid-svg-icons';
-
+import { useRouter } from 'next/navigation';
 const MyInternships = () => {
   // State for internships data
   const [internships, setInternships] = useState([
@@ -140,7 +140,7 @@ const MyInternships = () => {
   const [sortBy, setSortBy] = useState("recent");
   const [showFilters, setShowFilters] = useState(false);
   const [hoveredCard, setHoveredCard] = useState(null);
-  
+  const router = useRouter();
   // State for create internship modal
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newInternship, setNewInternship] = useState({
@@ -242,10 +242,12 @@ const MyInternships = () => {
   };
   
   // Handle start class
-  const handleStartClass = (internshipId) => {
-    const internship = internships.find(i => i.id === internshipId);
-    alert(`Starting class for: ${internship.title}`);
+  const handleStartClass = (path) => {
+    if (path) {
+      router.push(path); // navigates to your page
+    }
   };
+
   
   // Get category icon
   const getCategoryIcon = (category) => {
@@ -525,13 +527,14 @@ const MyInternships = () => {
                       </div>
                       
                       <div className="card-actions">
-                        <button 
-                          className="primary-action-btn"
-                          onClick={() => handleStartClass(internship.id)}
-                        >
-                          <FontAwesomeIcon icon={faVideo} />
-                          <span>Start Class</span>
-                        </button>
+  <button 
+        className="primary-action-btn"
+        onClick={() => handleStartClass('/coming-soon')}
+      >
+        <FontAwesomeIcon icon={faVideo} />
+        <span>Start Class</span>
+      </button>
+
                         
                         <div className="secondary-actions">
                           <button 

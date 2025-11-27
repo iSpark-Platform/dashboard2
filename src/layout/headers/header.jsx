@@ -15,10 +15,10 @@ import ProfileDropdown from '../../components/profile-dropdown/profile-dropdown'
 
 
 const categories = [
-    { link: '/course-style-1', title: 'Humanoid Robotics' },
-    { link: '/course-style-1', title: 'Artificial Intelligence' },
-    { link: '/course-style-1', title: 'Cloud & Edge Technologies' },
-    { link: '/course-style-1', title: 'Cybersecurity & Digital Forensics' },
+    { link: '/courses', title: 'Humanoid Robotics' },
+    { link: '/courses', title: 'Artificial Intelligence' },
+    { link: '/courses', title: 'Cloud & Edge Technologies' },
+    { link: '/courses', title: 'Cybersecurity & Digital Forensics' },
 
     
 ]

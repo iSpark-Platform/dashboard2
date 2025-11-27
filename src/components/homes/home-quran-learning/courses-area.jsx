@@ -41,7 +41,7 @@ const CoursesArea = () => {
                             </div>
                             <div className="content-wrap">
                                 <div className="course-price">
-                                  ₹{Number(course.course_price).toFixed(2)}
+                                    ₹{Number(course.course_price).toFixed(2)}
                                 </div>
                                 <p>{course.short_desc}</p>
                                 <div className="read-more-btn">

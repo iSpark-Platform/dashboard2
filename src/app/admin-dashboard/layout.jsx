@@ -1,51 +1,65 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import DashboardSidebar from "@/components/admin-dashboard/Admin-DashboardSidebar";
 import DashboardHeader from "@/components/admin-dashboard/Admin-DashboardHeader";
 
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  useEffect(() => {
+    setMounted(true); // To prevent hydration mismatch
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
+  if (!mounted) return null; // Avoid SSR theme issues
+
   return (
     <>
       <div className="dashboard-layout">
         {/* Header */}
-        <DashboardHeader 
+        <DashboardHeader
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
+          toggleTheme={toggleTheme} // pass to header for button
+          currentTheme={theme}
         />
 
-        {/* Sidebar - Pass isOpen prop directly */}
+        {/* Sidebar */}
         <DashboardSidebar isOpen={isSidebarOpen} />
 
         {/* Mobile Overlay */}
         {isSidebarOpen && (
-          <div 
-            className="sidebar-overlay"
-            onClick={toggleSidebar}
-          />
+          <div className="sidebar-overlay" onClick={toggleSidebar} />
         )}
 
         {/* Main Content */}
-        <main className={`main-content ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-          <div className="content-inner">
-            {children}
-          </div>
+        <main
+          className={`main-content ${
+            isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+          }`}
+        >
+          <div className="content-inner">{children}</div>
         </main>
       </div>
 
       <style jsx>{`
         .dashboard-layout {
           min-height: 100vh;
-          background-color: #f8fafc;
+          background-color: ${theme === "dark" ? "#1f2937" : "#f8fafc"};
+          transition: background-color 0.3s ease;
           position: relative;
         }
 
-        /* Mobile Overlay */
         .sidebar-overlay {
           display: none;
           position: fixed;
@@ -74,7 +88,6 @@ export default function DashboardLayout({ children }) {
           }
         }
 
-        /* Main Content */
         .main-content {
           margin-top: 60px;
           min-height: calc(100vh - 60px);
@@ -89,7 +102,6 @@ export default function DashboardLayout({ children }) {
           margin-left: 0;
         }
 
-        /* Mobile: no margin (sidebar overlays) */
         @media (max-width: 768px) {
           .main-content.sidebar-open {
             margin-left: 0;
@@ -99,11 +111,8 @@ export default function DashboardLayout({ children }) {
         .content-inner {
           padding: 24px;
           overflow-y: auto;
-        }
-
-        /* Smooth scrolling */
-        .content-inner {
           scroll-behavior: smooth;
+          color: ${theme === "dark" ? "#f8fafc" : "#111827"};
         }
       `}</style>
     </>

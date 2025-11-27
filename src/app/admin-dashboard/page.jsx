@@ -16,7 +16,8 @@ const AdminDashboard = () => {
   const [todayActivities, setTodayActivities] = useState([]);
   const [pendingPayments, setPendingPayments] = useState(0);
   const [platformUpdates, setPlatformUpdates] = useState([]);
-  
+  const [showValidatePaymentsModal, setShowValidatePaymentsModal] = useState(false);
+
   // Modal states
   const [showCreateInternshipModal, setShowCreateInternshipModal] = useState(false);
   const [showApproveInstructorsModal, setShowApproveInstructorsModal] = useState(false);

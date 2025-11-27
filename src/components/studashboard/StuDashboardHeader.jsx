@@ -35,19 +35,19 @@ const handleMyCourses = () => {
     router.push('/dashboard/courses');
   };
 
-  const handleCart = () => {
-    console.log('Opening cart...');
-    router.push('/dashboard/cart');
-  };
+const handleCart = () => {
+  console.log('Opening cart...');
+  router.push('/cart');
+};
 
   const handleNotifications = () => {
     console.log('Opening notifications...');
-    router.push('/dashboard/notifications');
+    router.push('/studashboard/notification');
   };
 
   const handleMessages = () => {
     console.log('Opening messages...');
-    router.push('/dashboard/messages');
+    router.push('/studashboard/message');
   };
 
   const handleProfile = () => {
@@ -95,19 +95,45 @@ const handleMyCourses = () => {
           </div>
 
           {/* Center Section - Search */}
-          <div className="header-center">
-            <form onSubmit={handleSearch} className="search-container">
-              <FiSearch className='search-icon'/>
-              <input
-                type="text"
-                placeholder="Search for Tuts Videos, Tutors, Tests and more..."
-                className="search-input"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </form>
-          </div>
-
+           <div style={{ width: "100%" }} className="header-center">
+         <form onSubmit={handleSearch} style={{ width: "100%", margin: 0 }}>
+           <div style={{ position: "relative", width: "100%" }}>
+             <FiSearch
+               className="search-icon"
+               style={{
+                 position: "absolute",
+                 left: 16,
+                 top: "50%",
+                 transform: "translateY(-50%)",
+                 width: 18,
+                 height: 18,
+                 color: "#9ca3af",
+                 pointerEvents: "none",
+               }}
+             />
+       
+             <input
+               type="text"
+               placeholder="Search for Tuts Videos, Tutors, Tests and more..."
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+               style={{
+                 width: "100%",
+                 height: 44,
+                 padding: "0 16px 0 46px",
+                 border: "1px solid #e5e7eb",
+                 borderRadius: 10,
+                 fontSize: 14,
+                 outline: "none",
+                 backgroundColor: "#f9fafb",
+                 transition: "all 0.2s ease",
+                 boxSizing: "border-box",
+               }}
+             />
+           </div>
+         </form>
+       </div>
+       
           {/* Right Section - Actions */}
           <div className="header-right">
          <button 

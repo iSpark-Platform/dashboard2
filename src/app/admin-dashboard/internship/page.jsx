@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { FiSearch, FiFilter, FiPlus, FiEdit, FiUsers, FiCalendar, FiEye, FiGrid, FiList, FiUpload, FiCheckCircle, FiClock, FiUserCheck, FiFileText, FiBarChart, FiX, FiDownload } from 'react-icons/fi';
-
+import { useRouter } from 'next/navigation';
 const ManageInternships = () => {
   const [internships, setInternships] = useState([]);
   const [filteredInternships, setFilteredInternships] = useState([]);
@@ -13,7 +13,7 @@ const ManageInternships = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
   const itemsPerPage = 9;
-  
+   const router = useRouter();
   useEffect(() => {
     const mockInternships = [
       {
@@ -113,11 +113,16 @@ const ManageInternships = () => {
     alert('Redirecting to create internship page...');
   };
 
-  const handleViewDetails = (internship) => {
+const handleViewDetails = (internship, path) => {
+  if (path) {
+    router.push(path);
+  } else {
+ 
     setSelectedInternship(internship);
     setModalType('details');
     setShowModal(true);
-  };
+  }
+};
 
   const handleUploadMaterials = (internship) => {
     setSelectedInternship(internship);
@@ -161,7 +166,13 @@ const ManageInternships = () => {
       case 'Active':
         return [
          
-          { icon: FiEye, label: 'View Details', action: () => handleViewDetails(internship), color: '#6366f1' },
+        {
+  icon: FiEye,
+  label: 'View Details',
+  action: () => handleViewDetails(internship, '/coming-soon'), 
+  color: '#6366f1'
+},
+
           { icon: FiEdit, label: 'Edit', action: () => handleEdit(internship), color: '#7c3aed' }
         ];
       case 'Upcoming':

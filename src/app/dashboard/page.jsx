@@ -22,7 +22,7 @@ import {
   Award,
   BarChart3
 } from 'lucide-react';
-
+import { useRouter } from 'next/navigation';
 const InstructorDashboard = () => {
   const PRIMARY = "#1640FF";
   const ACCENT = "#EF7C00";
@@ -54,6 +54,8 @@ const InstructorDashboard = () => {
     { icon: Video, label: "Total Live Classes", value: "156", color: "#10b981", change: "+8%" },
     { icon: CheckCircle, label: "Completion Rate", value: "87%", color: "#8b5cf6", change: "+5%" }
   ];
+
+
   
   const internships = [
     {
@@ -93,7 +95,12 @@ const InstructorDashboard = () => {
       progress: 30
     }
   ];
-  
+  const router = useRouter();
+  const handleJoinLiveClass = (path) => {
+    if (path) {
+      router.push(path); // Navigate to your live class page
+    }
+  };
   const materials = [
     {
       id: 1,
@@ -322,28 +329,28 @@ const InstructorDashboard = () => {
                 14:00 - 15:30
               </span>
             </div>
-            <button 
-              style={{ 
-                backgroundColor: '#fff', 
-                color: PRIMARY, 
-                padding: '10px 24px', 
-                borderRadius: '8px', 
-                fontWeight: '600', 
-                fontSize: '14px',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '8px',
-                transition: 'background-color 0.2s'
-              }}
-              onClick={() => alert('🎥 Starting live class...')}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = '#fff'}
-            >
-              <Video size={18} />
-              Join Live Class
-            </button>
+             <button 
+      style={{ 
+        backgroundColor: '#fff', 
+        color: '#1640FF', // replace PRIMARY with your color
+        padding: '10px 24px', 
+        borderRadius: '8px', 
+        fontWeight: '600', 
+        fontSize: '14px',
+        border: 'none',
+        cursor: 'pointer',
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '8px',
+        transition: 'background-color 0.2s'
+      }}
+      onClick={() => handleJoinLiveClass('/coming-soon')} // <-- put your link here
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
+    >
+      <Video size={18} />
+      Join Live Class
+    </button>
           </div>
           <h3 style={{ color: '#fff', fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>
             Smart Robotics & Industry 4.0 Automation - Advanced Motion Control

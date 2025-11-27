@@ -57,7 +57,7 @@ const menu_data = [
     },
     {
         title: 'Courses',
-        link: '/course-style-3',
+        link: '/courses',
         mega_menu: true,
     //     // submenus: [
     //     //     {
@@ -144,7 +144,7 @@ const menu_data = [
     },
     {
         title: 'Blog',
-        link: '/blog-standard',
+        link: '/blog',
         mega_menu: false,
     //     submenus: [
     //         { title: 'Blog Standard', link: '/blog-standard' },

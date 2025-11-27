@@ -28,6 +28,8 @@ const navItems = [
   { name: "Profile", icon: FiUser, path: "/admin-dashboard/profile" },
 
   { name: "Notification", icon: FiBell, path: "/admin-dashboard/notification" },
+      { name: "Message", icon: FiMessageSquare, path: "/admin-dashboard/message" },
+      { name: "AI Assistant", icon: FiCpu, path: "/admin-dashboard/ai-assisstant" },
 ];
 
   const bottomItems = [

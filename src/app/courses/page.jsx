@@ -2,7 +2,7 @@ import { Wrapper } from "@/layout";
 import CourseStyleThreeMain from "@/components/course-style-3";
 
 export const metadata = {
-  title: 'Course Style Three'
+  title: 'Courses'
 }
 
 const CourseThreePage = () => {
